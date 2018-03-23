@@ -31,9 +31,11 @@ ext {
     supportLibraryVersion = '26.1.0'
     constraintVersion = '1.0.2'
     junitVersion = '4.12'
-    robolectricVersion = '3.7.1'
     testRunnerVersion = '1.0.1'
     espressoVersion = '3.0.1'
     guavaVersion = '18.0'
     mockitoVersion = '2.15.0'
+    butterknifeVersion = '8.8.1'
+    daggerVersion = '2.15'
+    rxjavaVersion = '2.1.11'
 }

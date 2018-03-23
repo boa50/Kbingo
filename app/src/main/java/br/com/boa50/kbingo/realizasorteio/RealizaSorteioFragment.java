@@ -103,7 +103,7 @@ public class RealizaSorteioFragment extends Fragment implements RealizaSorteioCo
     }
 
     @Override
-    public void apresentarPedra() {
+    public void apresentarPedra(String pedraValor) {
 
     }
 

@@ -3,6 +3,7 @@ package br.com.boa50.kbingo.realizasorteio;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import br.com.boa50.kbingo.pedras.domain.model.Pedra;
 
@@ -25,6 +26,10 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Override
     public void sortearPedra(ArrayList<Pedra> pedrasDisponiveis) {
-//        mRealizaSorteioView.apresentarPedra();
+        Collections.shuffle(pedrasDisponiveis);
+
+        String pedraValor = pedrasDisponiveis.get(0).getmLetra() + pedrasDisponiveis.get(0).getmNumero();
+
+        mRealizaSorteioView.apresentarPedra(pedraValor);
     }
 }

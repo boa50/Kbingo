@@ -2,17 +2,14 @@ package br.com.boa50.kbingo.realizasorteio;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 
 import br.com.boa50.kbingo.pedras.domain.model.Pedra;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 
 /**
@@ -39,8 +36,10 @@ public class RealizaSorteioPresenterTest {
         ArrayList<Pedra> arrayPedras = new ArrayList<>();
         arrayPedras.add(new Pedra("1","K",1));
 
+        mRealizaSorteioPresenter = new RealizaSorteioPresenter(mRealizaSorteioView);
+
         mRealizaSorteioPresenter.sortearPedra(arrayPedras);
 
-        verify(mRealizaSorteioView).apresentarPedra();
+        verify(mRealizaSorteioView).apresentarPedra("K1");
     }
 }
