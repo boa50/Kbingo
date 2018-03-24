@@ -1,7 +1,7 @@
 package br.com.boa50.kbingo.realizasorteio;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import br.com.boa50.kbingo.R;
 

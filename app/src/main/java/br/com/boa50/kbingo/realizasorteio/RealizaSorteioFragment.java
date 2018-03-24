@@ -9,9 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.List;
 
 import br.com.boa50.kbingo.R;
+import br.com.boa50.kbingo.data.Pedra;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,6 +109,17 @@ public class RealizaSorteioFragment extends Fragment implements RealizaSorteioCo
     public void apresentarPedra(String pedraValor) {
 
     }
+
+    @Override
+    public void apresentarFimSorteio() {
+
+    }
+
+    @Override
+    public void apresentarPedras(List<Pedra> pedras) {
+
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

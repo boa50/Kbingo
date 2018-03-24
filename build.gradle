@@ -37,5 +37,7 @@ ext {
     mockitoVersion = '2.15.0'
     butterknifeVersion = '8.8.1'
     daggerVersion = '2.15'
-    rxjavaVersion = '2.1.11'
+    rxjavaVersion = '2.1.12'
+    rxandroidVersion = '2.0.2'
+    hamcrestVersion = '2.0.0.0'
 }
