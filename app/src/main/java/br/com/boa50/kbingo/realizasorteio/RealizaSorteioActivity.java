@@ -5,8 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.util.ActivityUtils;
+import dagger.android.support.DaggerAppCompatActivity;
 
-public class RealizaSorteioActivity extends AppCompatActivity {
+public class RealizaSorteioActivity extends DaggerAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

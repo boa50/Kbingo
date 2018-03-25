@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter {
 
-    private RealizaSorteioContract.View mRealizaSorteioView;
+    private RealizaSorteioContract.View mView;
 
     private final PedrasRepository mPedrasRespository;
 
@@ -45,26 +45,26 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Override
     public void subscribe(BaseView view) {
-        mRealizaSorteioView = (RealizaSorteioContract.View) view;
+        mView = (RealizaSorteioContract.View) view;
         carregarPedras();
     }
 
     @Override
     public void unsubscribe() {
         mCompositeDisposable.clear();
-        mRealizaSorteioView = null;
+        mView = null;
     }
 
     @Override
     public void sortearPedra() {
-        mRealizaSorteioView.apresentarPedra(mPedras.get(++mUltimaPedraPosicao).getValorPedra());
+        mView.apresentarPedra(mPedras.get(++mUltimaPedraPosicao).getValorPedra());
 
         mPedras.get(mUltimaPedraPosicao).setmSorteada(true);
 
-        mRealizaSorteioView.apresentarPedras(mPedras);
+        mView.apresentarPedras(mPedras);
 
         if (mUltimaPedraPosicao == (mPedras.size() - 1))
-            mRealizaSorteioView.apresentarFimSorteio();
+            mView.apresentarFimSorteio();
     }
 
     private void carregarPedras(){
@@ -88,6 +88,6 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             mCompositeDisposable.add(disposable);
         }
 
-        mRealizaSorteioView.apresentarPedras(mPedras);
+        mView.apresentarPedras(mPedras);
     }
 }

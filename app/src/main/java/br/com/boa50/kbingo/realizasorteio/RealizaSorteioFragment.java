@@ -2,18 +2,38 @@ package br.com.boa50.kbingo.realizasorteio;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.Pedra;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import dagger.android.support.DaggerFragment;
 
 
-public class RealizaSorteioFragment extends Fragment implements RealizaSorteioContract.View {
+public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
 
+    @Inject
+    RealizaSorteioContract.Presenter mPresenter;
+
+    @BindView(R.id.bt_sortear_pedra) Button btSortearPedra;
+
+    @BindView(R.id.tv_pedra_sorteada) TextView tvPedraSorteada;
+
+    private Unbinder unbinder;
+
+    @Inject
     public RealizaSorteioFragment() {}
 
     public static RealizaSorteioFragment newInstance() {
@@ -23,7 +43,29 @@ public class RealizaSorteioFragment extends Fragment implements RealizaSorteioCo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.realizasorteio_frag, container, false);
+        View view = inflater.inflate(R.layout.realizasorteio_frag, container, false);
+        unbinder = ButterKnife.bind(this, view);
+
+        return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+        mPresenter.unsubscribe();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.subscribe(this);
+    }
+
+    @OnClick(R.id.bt_sortear_pedra)
+    void sortearPedra() {
+        Log.i("teste","teste do sortear pedra");
+        mPresenter.sortearPedra();
     }
 
     @Override

@@ -52,6 +52,7 @@ dependencies {
     implementation "com.android.support:support-v4:${supportLibraryVersion}"
     implementation "com.google.guava:guava:${guavaVersion}"
     implementation "com.jakewharton:butterknife:${butterknifeVersion}"
+    implementation "com.google.dagger:dagger:${daggerVersion}"
     implementation "com.google.dagger:dagger-android:${daggerVersion}"
     implementation "com.google.dagger:dagger-android-support:${daggerVersion}"
     implementation "io.reactivex.rxjava2:rxjava:${rxjavaVersion}"
@@ -61,6 +62,7 @@ dependencies {
     testImplementation "org.hamcrest:java-hamcrest:${hamcrestVersion}"
     androidTestImplementation "com.android.support.test:runner:${testRunnerVersion}"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${espressoVersion}"
-    annotationProcessor "com.jakewharton:butterknife:${butterknifeVersion}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
     annotationProcessor "com.google.dagger:dagger-android-processor:${daggerVersion}"
 }
