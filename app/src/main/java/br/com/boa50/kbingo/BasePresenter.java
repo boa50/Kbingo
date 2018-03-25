@@ -6,6 +6,8 @@ package br.com.boa50.kbingo;
 
 public interface BasePresenter {
 
-    void start();
+    void subscribe(BaseView view);
+
+    void unsubscribe();
 
 }

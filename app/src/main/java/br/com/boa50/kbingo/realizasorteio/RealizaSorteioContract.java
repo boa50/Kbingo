@@ -25,7 +25,5 @@ public interface RealizaSorteioContract {
 
         void sortearPedra();
 
-        void takeView(RealizaSorteioContract.View view);
-
     }
 }

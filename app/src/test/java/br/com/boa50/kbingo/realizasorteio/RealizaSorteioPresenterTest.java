@@ -15,13 +15,14 @@ import br.com.boa50.kbingo.data.source.PedrasRepository;
 import br.com.boa50.kbingo.util.schedulers.ImmediateScheduleProvider;
 import io.reactivex.Flowable;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 
 /**
@@ -29,8 +30,6 @@ import static org.hamcrest.Matchers.*;
  */
 
 public class RealizaSorteioPresenterTest {
-
-    private static List<Pedra> PEDRAS;
 
     @Mock
     private RealizaSorteioContract.View mRealizaSorteioView;
@@ -45,14 +44,15 @@ public class RealizaSorteioPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         mRealizaSorteioPresenter = new RealizaSorteioPresenter(mPedrasRepository, new ImmediateScheduleProvider());
-        mRealizaSorteioPresenter.takeView(mRealizaSorteioView);
 
-        PEDRAS = Lists.newArrayList(
-                new Pedra("1","K","01"),
-                new Pedra("2","K","02")
+        List<Pedra> PEDRAS = Lists.newArrayList(
+                new Pedra("1", "K", "01"),
+                new Pedra("2", "K", "02")
         );
 
         when(mPedrasRepository.getPedras()).thenReturn(Flowable.just(PEDRAS));
+
+        mRealizaSorteioPresenter.subscribe(mRealizaSorteioView);
     }
 
     @Test
@@ -64,9 +64,14 @@ public class RealizaSorteioPresenterTest {
 
     @Test
     public void sortearPedra_atualizarPedraSorteada() {
+        ArgumentCaptor<List<Pedra>> pedras = ArgumentCaptor.forClass(List.class);
+
         mRealizaSorteioPresenter.sortearPedra();
 
-        verify(mRealizaSorteioView).apresentarPedras();
+        verify(mRealizaSorteioView, times(2)).apresentarPedras(pedras.capture());
+
+        assertThat(pedras.getValue().get(0).ismSorteada(), equalTo(true));
+        assertThat(pedras.getValue().get(1).ismSorteada(), equalTo(false));
     }
 
     @Test

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import br.com.boa50.kbingo.BaseView;
 import br.com.boa50.kbingo.data.Pedra;
 import br.com.boa50.kbingo.data.source.PedrasRepository;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
@@ -42,28 +43,28 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         mUltimaPedraPosicao = -1;
     }
 
-    public void start() {
+    @Override
+    public void subscribe(BaseView view) {
+        mRealizaSorteioView = (RealizaSorteioContract.View) view;
+        carregarPedras();
+    }
 
+    @Override
+    public void unsubscribe() {
+        mCompositeDisposable.clear();
+        mRealizaSorteioView = null;
     }
 
     @Override
     public void sortearPedra() {
-        carregarPedras();
-
         mRealizaSorteioView.apresentarPedra(mPedras.get(++mUltimaPedraPosicao).getValorPedra());
 
         mPedras.get(mUltimaPedraPosicao).setmSorteada(true);
 
-        //TODO ver como fica a situação das pedras embaralhadas
         mRealizaSorteioView.apresentarPedras(mPedras);
 
         if (mUltimaPedraPosicao == (mPedras.size() - 1))
             mRealizaSorteioView.apresentarFimSorteio();
-    }
-
-    @Override
-    public void takeView(RealizaSorteioContract.View view) {
-        mRealizaSorteioView = view;
     }
 
     private void carregarPedras(){
@@ -86,5 +87,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
             mCompositeDisposable.add(disposable);
         }
+
+        mRealizaSorteioView.apresentarPedras(mPedras);
     }
 }
