@@ -1,5 +1,6 @@
 package br.com.boa50.kbingo.realizasorteio;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private List<Pedra> mPedras;
 
-    private int mUltimaPedraPosicao;
+    private List<Integer> posicoes;
 
     @Inject
     RealizaSorteioPresenter(PedrasRepository pedrasRespository, BaseSchedulerProvider schedulerProvider) {
@@ -41,8 +42,6 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         mScheduleProvider = checkNotNull(schedulerProvider, "Schedule Provider cannot null");
 
         mCompositeDisposable = new CompositeDisposable();
-
-        mUltimaPedraPosicao = -1;
     }
 
     @Override
@@ -59,14 +58,17 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Override
     public void sortearPedra() {
-        mView.apresentarPedra(mPedras.get(++mUltimaPedraPosicao).getValorPedra());
-
-        mPedras.get(mUltimaPedraPosicao).setmSorteada(true);
-
-        mView.apresentarPedras(mPedras);
-
-        if (mUltimaPedraPosicao == (mPedras.size() - 1))
+        if (posicoes.isEmpty()) {
             mView.apresentarFimSorteio();
+        } else {
+            mView.apresentarPedra(mPedras.get(posicoes.get(0)));
+
+            mPedras.get(posicoes.get(0)).setmSorteada(true);
+
+            posicoes.remove(0);
+
+            mView.apresentarPedras(mPedras);
+        }
     }
 
     private void carregarPedras(){
@@ -82,14 +84,18 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                     .subscribe(
                             pedras -> {
                                 mPedras = pedras;
-                                Collections.shuffle(mPedras);
+                                mView.apresentarPedras(mPedras);
+
+                                posicoes = new ArrayList<>();
+                                for (int i = 0; i < mPedras.size(); i++) {
+                                    posicoes.add(i);
+                                }
+                                Collections.shuffle(posicoes);
                             },
                             throwable -> mPedras = null
                     );
 
             mCompositeDisposable.add(disposable);
         }
-
-        mView.apresentarPedras(mPedras);
     }
 }

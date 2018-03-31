@@ -14,7 +14,7 @@ public interface RealizaSorteioContract {
 
     interface View extends BaseView<Presenter> {
 
-        void apresentarPedra(String pedraValor);
+        void apresentarPedra(Pedra pedra);
 
         void apresentarFimSorteio();
 

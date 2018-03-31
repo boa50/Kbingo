@@ -19,7 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,36 +59,36 @@ public class RealizaSorteioPresenterTest {
     public void sortearPedra_apresentarPedra() {
         mRealizaSorteioPresenter.sortearPedra();
 
-        verify(mRealizaSorteioView).apresentarPedra(anyString());
+        verify(mRealizaSorteioView).apresentarPedra(any(Pedra.class));
     }
 
     @Test
     public void sortearPedra_atualizarPedraSorteada() {
-        ArgumentCaptor<List<Pedra>> pedras = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<Pedra> pedra = ArgumentCaptor.forClass(Pedra.class);
 
         mRealizaSorteioPresenter.sortearPedra();
 
-        verify(mRealizaSorteioView, times(2)).apresentarPedras(pedras.capture());
+        verify(mRealizaSorteioView).apresentarPedra(pedra.capture());
 
-        assertThat(pedras.getValue().get(0).ismSorteada(), equalTo(true));
-        assertThat(pedras.getValue().get(1).ismSorteada(), equalTo(false));
+        assertThat(pedra.getValue().ismSorteada(), equalTo(true));
     }
 
     @Test
     public void sortearDuasPedras_apresentarPedrasDiferentes() {
-        ArgumentCaptor<String> pedraValor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Pedra> pedra = ArgumentCaptor.forClass(Pedra.class);
 
         mRealizaSorteioPresenter.sortearPedra();
-        verify(mRealizaSorteioView).apresentarPedra(pedraValor.capture());
-        String pedra1 = pedraValor.getValue();
+        verify(mRealizaSorteioView).apresentarPedra(pedra.capture());
+        String pedra1 = pedra.getValue().getValorPedra();
 
         mRealizaSorteioPresenter.sortearPedra();
-        verify(mRealizaSorteioView, times(2)).apresentarPedra(pedraValor.capture());
-        assertThat(pedra1, is(not(equalTo(pedraValor.getValue()))));
+        verify(mRealizaSorteioView, times(2)).apresentarPedra(pedra.capture());
+        assertThat(pedra1, is(not(equalTo(pedra.getValue().getValorPedra()))));
     }
 
     @Test
     public void sortearTodasPedras_EncerrarSorteio() {
+        mRealizaSorteioPresenter.sortearPedra();
         mRealizaSorteioPresenter.sortearPedra();
         mRealizaSorteioPresenter.sortearPedra();
 
