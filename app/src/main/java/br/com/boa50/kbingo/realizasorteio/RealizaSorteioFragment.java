@@ -15,13 +15,14 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.Pedra;
+import br.com.boa50.kbingo.di.ActivityScoped;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
-
+@ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
 
     @Inject

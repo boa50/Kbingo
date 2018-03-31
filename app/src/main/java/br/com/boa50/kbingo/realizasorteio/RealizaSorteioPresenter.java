@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import br.com.boa50.kbingo.BaseView;
 import br.com.boa50.kbingo.data.Pedra;
 import br.com.boa50.kbingo.data.source.PedrasRepository;
+import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -19,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by boa50 on 3/11/18.
  */
 
+@ActivityScoped
 public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter {
 
     private RealizaSorteioContract.View mView;
