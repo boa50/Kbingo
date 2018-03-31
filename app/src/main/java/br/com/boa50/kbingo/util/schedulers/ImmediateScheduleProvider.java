@@ -8,6 +8,7 @@ import io.reactivex.schedulers.Schedulers;
  * Usado para criar uma comunicação sincrona
  */
 
+
 public class ImmediateScheduleProvider implements BaseSchedulerProvider {
     @Override
     public Scheduler computation() {

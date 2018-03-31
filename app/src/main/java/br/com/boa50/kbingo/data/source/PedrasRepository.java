@@ -4,6 +4,9 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import br.com.boa50.kbingo.data.Pedra;
 import io.reactivex.Flowable;
 
@@ -11,7 +14,11 @@ import io.reactivex.Flowable;
  * Created by boa50 on 3/24/18.
  */
 
+@Singleton
 public class PedrasRepository implements PedrasDataSource {
+
+    @Inject
+    PedrasRepository() {}
 
     @Override
     public Flowable<List<Pedra>> getPedras() {

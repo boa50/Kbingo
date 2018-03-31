@@ -1,8 +1,6 @@
 package br.com.boa50.kbingo.realizasorteio;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,13 +63,12 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @OnClick(R.id.bt_sortear_pedra)
     void sortearPedra() {
-        Log.i("teste","teste do sortear pedra");
         mPresenter.sortearPedra();
     }
 
     @Override
     public void apresentarPedra(String pedraValor) {
-
+        tvPedraSorteada.setText(pedraValor);
     }
 
     @Override
