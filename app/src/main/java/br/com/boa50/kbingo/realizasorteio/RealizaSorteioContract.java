@@ -19,11 +19,15 @@ public interface RealizaSorteioContract {
         void apresentarFimSorteio();
 
         void apresentarPedras(List<Pedra> pedras);
+
+        void reiniciarSorteio();
     }
 
     interface Presenter extends BasePresenter {
 
         void sortearPedra();
+
+        void resetarPedras();
 
     }
 }

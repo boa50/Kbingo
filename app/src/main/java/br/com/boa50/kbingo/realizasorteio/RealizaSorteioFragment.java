@@ -40,6 +40,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @BindView(R.id.rv_lista_pedras) RecyclerView rvListaPedras;
 
+    @BindView(R.id.bt_novo_sorteio) Button btNovoSorteio;
+
     private Unbinder unbinder;
 
     @Inject
@@ -76,6 +78,11 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         mPresenter.sortearPedra();
     }
 
+    @OnClick(R.id.bt_novo_sorteio)
+    void resetarPedras() {
+        mPresenter.resetarPedras();
+    }
+
     @Override
     public void apresentarPedra(Pedra pedra) {
         tvPedraSorteada.setText(pedra.getValorPedra());
@@ -94,6 +101,13 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         } else {
             rvListaPedras.getAdapter().notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void reiniciarSorteio() {
+        tvPedraSorteada.setText("K99");
+
+        rvListaPedras.getAdapter().notifyDataSetChanged();
     }
 
     private static class ApresentarPedrasAdapter extends RecyclerView.Adapter<ApresentarPedrasAdapter.ViewHolder> {
@@ -125,7 +139,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             return mPedras.size();
         }
 
-        public static class ViewHolder extends RecyclerView.ViewHolder {
+        static class ViewHolder extends RecyclerView.ViewHolder {
             TextView mTextView;
 
             ViewHolder(View view) {

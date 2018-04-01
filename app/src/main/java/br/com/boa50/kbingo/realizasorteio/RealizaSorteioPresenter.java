@@ -1,5 +1,8 @@
 package br.com.boa50.kbingo.realizasorteio;
 
+import android.support.annotation.RestrictTo;
+import android.support.annotation.VisibleForTesting;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -71,6 +74,17 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         }
     }
 
+    @Override
+    public void resetarPedras() {
+        for (Pedra pedra : mPedras) {
+            pedra.setmSorteada(false);
+        }
+
+        preencherPosicoesSorteio();
+
+        mView.reiniciarSorteio();
+    }
+
     private void carregarPedras(){
         if (mPedras == null) {
             mCompositeDisposable.clear();
@@ -85,17 +99,29 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                             pedras -> {
                                 mPedras = pedras;
                                 mView.apresentarPedras(mPedras);
-
-                                posicoes = new ArrayList<>();
-                                for (int i = 0; i < mPedras.size(); i++) {
-                                    posicoes.add(i);
-                                }
-                                Collections.shuffle(posicoes);
+                                preencherPosicoesSorteio();
                             },
                             throwable -> mPedras = null
                     );
 
             mCompositeDisposable.add(disposable);
         }
+    }
+
+    private void preencherPosicoesSorteio() {
+        if (posicoes == null)
+            posicoes = new ArrayList<>();
+        else
+            posicoes.clear();
+
+        for (int i = 0; i < mPedras.size(); i++) {
+            posicoes.add(i);
+        }
+        Collections.shuffle(posicoes);
+    }
+
+    @RestrictTo(RestrictTo.Scope.TESTS)
+    List<Integer> getPosicoes() {
+        return posicoes;
     }
 }

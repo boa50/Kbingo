@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,6 +31,8 @@ import static org.mockito.Mockito.when;
  */
 
 public class RealizaSorteioPresenterTest {
+
+    List<Pedra> PEDRAS;
 
     @Mock
     private RealizaSorteioContract.View mRealizaSorteioView;
@@ -45,7 +48,7 @@ public class RealizaSorteioPresenterTest {
 
         mRealizaSorteioPresenter = new RealizaSorteioPresenter(mPedrasRepository, new ImmediateScheduleProvider());
 
-        List<Pedra> PEDRAS = Lists.newArrayList(
+        PEDRAS = Lists.newArrayList(
                 new Pedra("1", "K", "01"),
                 new Pedra("2", "K", "02")
         );
@@ -59,6 +62,7 @@ public class RealizaSorteioPresenterTest {
     public void sortearPedra_apresentarPedra() {
         mRealizaSorteioPresenter.sortearPedra();
 
+        assertThat(mRealizaSorteioPresenter.getPosicoes().size(), equalTo(PEDRAS.size() - 1));
         verify(mRealizaSorteioView).apresentarPedra(any(Pedra.class));
     }
 
@@ -92,6 +96,22 @@ public class RealizaSorteioPresenterTest {
         mRealizaSorteioPresenter.sortearPedra();
         mRealizaSorteioPresenter.sortearPedra();
 
+        assertThat(mRealizaSorteioPresenter.getPosicoes().isEmpty(), equalTo(true));
         verify(mRealizaSorteioView).apresentarFimSorteio();
+    }
+
+    @Test
+    public void resetarPedras_ReiniciarSorteio() {
+        ArgumentCaptor<Pedra> pedra = ArgumentCaptor.forClass(Pedra.class);
+
+        mRealizaSorteioPresenter.sortearPedra();
+        verify(mRealizaSorteioView).apresentarPedra(pedra.capture());
+
+        mRealizaSorteioPresenter.resetarPedras();
+
+        assertThat(mRealizaSorteioPresenter.getPosicoes().size(), equalTo(PEDRAS.size()));
+
+        assertThat(pedra.getValue().ismSorteada(), equalTo(false));
+        verify(mRealizaSorteioView).reiniciarSorteio();
     }
 }
