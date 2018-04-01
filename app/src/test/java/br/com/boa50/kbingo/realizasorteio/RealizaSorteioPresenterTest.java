@@ -75,6 +75,7 @@ public class RealizaSorteioPresenterTest {
         verify(mRealizaSorteioView).apresentarPedra(pedra.capture());
 
         assertThat(pedra.getValue().ismSorteada(), equalTo(true));
+        verify(mRealizaSorteioView).atualizarPedras();
     }
 
     @Test

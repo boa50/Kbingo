@@ -94,20 +94,20 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     @Override
-    public void apresentarPedras(List<Pedra> pedras) {
-        if (rvListaPedras.getAdapter() == null) {
-            rvListaPedras.setLayoutManager(new GridLayoutManager(getActivity(), GRID_COLUNAS));
-            rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(),pedras));
-        } else {
-            rvListaPedras.getAdapter().notifyDataSetChanged();
-        }
+    public void iniciarPedras(List<Pedra> pedras) {
+        rvListaPedras.setLayoutManager(new GridLayoutManager(getActivity(), GRID_COLUNAS));
+        rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), pedras));
+    }
+
+    @Override
+    public void atualizarPedras() {
+        rvListaPedras.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void reiniciarSorteio() {
         tvPedraSorteada.setText("K99");
-
-        rvListaPedras.getAdapter().notifyDataSetChanged();
+        atualizarPedras();
     }
 
     private static class ApresentarPedrasAdapter extends RecyclerView.Adapter<ApresentarPedrasAdapter.ViewHolder> {
@@ -132,6 +132,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             holder.mTextView.setText(mPedras.get(position).getValorPedra());
             if (mPedras.get(position).ismSorteada())
                 holder.mTextView.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_light));
+            else
+                holder.mTextView.setTextColor(mContext.getResources().getColor(android.R.color.black));
         }
 
         @Override

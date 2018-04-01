@@ -18,7 +18,9 @@ public interface RealizaSorteioContract {
 
         void apresentarFimSorteio();
 
-        void apresentarPedras(List<Pedra> pedras);
+        void iniciarPedras(List<Pedra> pedras);
+
+        void atualizarPedras();
 
         void reiniciarSorteio();
     }

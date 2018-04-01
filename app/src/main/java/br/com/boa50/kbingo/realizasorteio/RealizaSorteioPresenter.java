@@ -70,7 +70,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
             posicoes.remove(0);
 
-            mView.apresentarPedras(mPedras);
+            mView.atualizarPedras();
         }
     }
 
@@ -98,7 +98,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                     .subscribe(
                             pedras -> {
                                 mPedras = pedras;
-                                mView.apresentarPedras(mPedras);
+                                mView.iniciarPedras(mPedras);
                                 preencherPosicoesSorteio();
                             },
                             throwable -> mPedras = null
