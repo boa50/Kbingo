@@ -1,13 +1,12 @@
 package br.com.boa50.kbingo.data.source;
 
-import com.google.common.collect.Lists;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import br.com.boa50.kbingo.data.Letra;
 import br.com.boa50.kbingo.data.Pedra;
 import io.reactivex.Flowable;
 
@@ -19,27 +18,23 @@ import io.reactivex.Flowable;
 public class PedrasRepository implements PedrasDataSource {
 
     @Inject
+    LetrasRepository letrasRepository;
+
+    @Inject
     PedrasRepository() {}
 
     @Override
     public Flowable<List<Pedra>> getPedras() {
 
+        List<Letra> letras = letrasRepository.getLetras();
         List<Pedra> pedras = new ArrayList<>();
 
-        String letra = "K";
         for (int i = 1; i <= 75; i++) {
-            if (i == 16)
-                letra = "I";
-            else if (i == 31)
-                letra = "N";
-            else if (i == 46)
-                letra = "K";
-            else if (i == 61)
-                letra = "A";
-
-            String valorNumero = i < 10 ? "0" + Integer.toString(i) : Integer.toString(i);
-
-            pedras.add(new Pedra(Integer.toString(i),letra,valorNumero));
+            pedras.add(new Pedra(
+                            Integer.toString(i),
+                            letras.get((i-1)/15).getmNome(),
+                            i < 10 ? "0" + Integer.toString(i) : Integer.toString(i)
+                    ));
         }
 
         return Flowable.just(pedras);
