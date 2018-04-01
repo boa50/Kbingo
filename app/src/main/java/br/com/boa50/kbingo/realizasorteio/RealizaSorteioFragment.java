@@ -1,7 +1,10 @@
 package br.com.boa50.kbingo.realizasorteio;
 
+import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +29,7 @@ import dagger.android.support.DaggerFragment;
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
 
-    private final int GRID_COLUNAS = 5;
+    private final int GRID_COLUNAS = 15;
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
@@ -87,7 +90,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     public void apresentarPedras(List<Pedra> pedras) {
         if (rvListaPedras.getAdapter() == null) {
             rvListaPedras.setLayoutManager(new GridLayoutManager(getActivity(), GRID_COLUNAS));
-            rvListaPedras.setAdapter(new ApresentarPedrasAdapter(pedras));
+            rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(),pedras));
         } else {
             rvListaPedras.getAdapter().notifyDataSetChanged();
         }
@@ -95,22 +98,26 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     private static class ApresentarPedrasAdapter extends RecyclerView.Adapter<ApresentarPedrasAdapter.ViewHolder> {
         private List<Pedra> mPedras;
+        private Context mContext;
 
-        public ApresentarPedrasAdapter(List<Pedra> pedras) {
+        ApresentarPedrasAdapter(Context context, List<Pedra> pedras) {
+            mContext = context;
             mPedras = pedras;
         }
 
         @Override
         public ApresentarPedrasAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            TextView v = (TextView) LayoutInflater.from(parent.getContext())
-                    .inflate(android.R.layout.simple_list_item_1,parent,false);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.apresentarpedrasadapter_item,parent,false);
 
-            return new ViewHolder(v);
+            return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(ApresentarPedrasAdapter.ViewHolder holder, int position) {
             holder.mTextView.setText(mPedras.get(position).getValorPedra());
+            if (mPedras.get(position).ismSorteada())
+                holder.mTextView.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_light));
         }
 
         @Override
@@ -121,9 +128,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         public static class ViewHolder extends RecyclerView.ViewHolder {
             TextView mTextView;
 
-            public ViewHolder(TextView textView) {
-                super(textView);
-                mTextView = textView;
+            ViewHolder(View view) {
+                super(view);
+                mTextView = view.findViewById(R.id.textView);
             }
         }
     }
