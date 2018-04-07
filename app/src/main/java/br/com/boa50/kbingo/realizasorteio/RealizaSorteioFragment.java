@@ -34,8 +34,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @BindView(R.id.bt_sortear_pedra) Button btSortearPedra;
 
-    @BindView(R.id.tv_pedra_sorteada) TextView tvPedraSorteada;
-
     @BindView(R.id.rv_lista_pedras) RecyclerView rvListaPedras;
 
     @BindView(R.id.bt_novo_sorteio) Button btNovoSorteio;
@@ -83,7 +81,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void apresentarPedra(Pedra pedra) {
-        tvPedraSorteada.setText(pedra.getValorPedra());
+        btSortearPedra.setText(pedra.getValorPedra());
     }
 
     @Override
@@ -104,7 +102,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void reiniciarSorteio() {
-        tvPedraSorteada.setText("K99");
+        btSortearPedra.setText("Sortear\nPedra");
         atualizarPedras();
     }
 

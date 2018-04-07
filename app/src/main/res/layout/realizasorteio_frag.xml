@@ -16,29 +16,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_pedra_sorteada"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:text="K99"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_lista_pedras" />
-
     <Button
         android:id="@+id/bt_sortear_pedra"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Sortear Pedra"
+        android:layout_marginTop="16dp"
+        android:textSize="20dp"
+        android:text="Sortear\nPedra"
+        android:background="@drawable/pedra"
         app:layout_constraintBottom_toTopOf="@id/bt_novo_sorteio"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_pedra_sorteada" />
+        app:layout_constraintTop_toBottomOf="@+id/rv_lista_pedras" />
 
     <Button
         android:id="@+id/bt_novo_sorteio"
