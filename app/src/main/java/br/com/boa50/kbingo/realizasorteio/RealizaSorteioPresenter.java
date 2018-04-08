@@ -114,7 +114,8 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             posicoes.clear();
 
         for (int i = 0; i < mPedras.size(); i++) {
-            posicoes.add(i);
+            if (!mPedras.get(i).ismHeader())
+                posicoes.add(i);
         }
         Collections.shuffle(posicoes);
     }

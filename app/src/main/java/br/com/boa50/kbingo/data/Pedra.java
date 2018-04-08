@@ -12,6 +12,8 @@ public class Pedra {
 
     private String mNumero;
 
+    private boolean mHeader;
+
     //TODO colocar esse campo como transiente no banco(VER SE É POSSÍVEL)
     private boolean mSorteada;
 
@@ -19,6 +21,14 @@ public class Pedra {
         this.mId = mId;
         this.mLetra = mLetra;
         this.mNumero = mNumero;
+        this.mSorteada = false;
+    }
+
+    public Pedra(String mId, String mLetra, String mNumero, boolean mHeader) {
+        this.mId = mId;
+        this.mLetra = mLetra;
+        this.mNumero = mNumero;
+        this.mHeader = mHeader;
         this.mSorteada = false;
     }
 
@@ -52,6 +62,14 @@ public class Pedra {
 
     public void setmSorteada(boolean mSorteada) {
         this.mSorteada = mSorteada;
+    }
+
+    public boolean ismHeader() {
+        return mHeader;
+    }
+
+    public void setmHeader(boolean mHeader) {
+        this.mHeader = mHeader;
     }
 
     public String getValorPedra(){

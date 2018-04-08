@@ -30,11 +30,22 @@ public class PedrasRepository implements PedrasDataSource {
         List<Pedra> pedras = new ArrayList<>();
 
         for (int i = 1; i <= 75; i++) {
+            String letra = letras.get((i-1)/15).getmNome();
+
+            if (i % 15 == 1) {
+                pedras.add(new Pedra(
+                   "0" + Integer.toString(i),
+                        letra,
+                        "",
+                        true
+                ));
+            }
+
             pedras.add(new Pedra(
-                            Integer.toString(i),
-                            letras.get((i-1)/15).getmNome(),
-                            i < 10 ? "0" + Integer.toString(i) : Integer.toString(i)
-                    ));
+                    Integer.toString(i),
+                    letra,
+                    i < 10 ? "0" + Integer.toString(i) : Integer.toString(i)
+            ));
         }
 
         return Flowable.just(pedras);

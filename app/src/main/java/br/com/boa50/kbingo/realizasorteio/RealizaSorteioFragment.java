@@ -91,7 +91,17 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void iniciarPedras(List<Pedra> pedras) {
-        rvListaPedras.setLayoutManager(new GridLayoutManager(getActivity(), GRID_COLUNAS));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), GRID_COLUNAS);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (pedras.get(position).ismHeader())
+                    return GRID_COLUNAS;
+                else
+                    return 1;
+            }
+        });
+        rvListaPedras.setLayoutManager(gridLayoutManager);
         rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), pedras));
     }
 
@@ -125,6 +135,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         @Override
         public void onBindViewHolder(ApresentarPedrasAdapter.ViewHolder holder, int position) {
+//            if (mPedras.get(position).ismHeader())
+
+
             holder.mTextView.setText(mPedras.get(position).getValorPedra());
             if (mPedras.get(position).ismSorteada())
                 holder.mTextView.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_light));

@@ -31,7 +31,9 @@ import static org.mockito.Mockito.when;
 
 public class RealizaSorteioPresenterTest {
 
-    List<Pedra> PEDRAS;
+    private List<Pedra> PEDRAS;
+
+    private int QUANTIDADE_PEDRAS_SORTEAVEIS;
 
     @Mock
     private RealizaSorteioContract.View mRealizaSorteioView;
@@ -48,11 +50,19 @@ public class RealizaSorteioPresenterTest {
         mRealizaSorteioPresenter = new RealizaSorteioPresenter(mPedrasRepository, new ImmediateScheduleProvider());
 
         PEDRAS = Lists.newArrayList(
+                new Pedra("0", "K", "", true),
                 new Pedra("1", "K", "01"),
                 new Pedra("2", "K", "02")
         );
 
         when(mPedrasRepository.getPedras()).thenReturn(Flowable.just(PEDRAS));
+
+        int contagemHeader = 0;
+        for (Pedra pedra : PEDRAS)
+            if (pedra.ismHeader())
+                contagemHeader ++;
+
+        QUANTIDADE_PEDRAS_SORTEAVEIS = PEDRAS.size() - contagemHeader;
 
         mRealizaSorteioPresenter.subscribe(mRealizaSorteioView);
     }
@@ -61,7 +71,7 @@ public class RealizaSorteioPresenterTest {
     public void sortearPedra_apresentarPedra() {
         mRealizaSorteioPresenter.sortearPedra();
 
-        assertThat(mRealizaSorteioPresenter.getPosicoes().size(), equalTo(PEDRAS.size() - 1));
+        assertThat(mRealizaSorteioPresenter.getPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS - 1));
         verify(mRealizaSorteioView).apresentarPedra(any(Pedra.class));
     }
 
@@ -109,7 +119,7 @@ public class RealizaSorteioPresenterTest {
 
         mRealizaSorteioPresenter.resetarPedras();
 
-        assertThat(mRealizaSorteioPresenter.getPosicoes().size(), equalTo(PEDRAS.size()));
+        assertThat(mRealizaSorteioPresenter.getPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS));
 
         assertThat(pedra.getValue().ismSorteada(), equalTo(false));
         verify(mRealizaSorteioView).reiniciarSorteio();
