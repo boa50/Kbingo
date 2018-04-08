@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ import dagger.android.support.DaggerFragment;
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
 
-    private final int GRID_COLUNAS = 15;
+    private final int GRID_COLUNAS = 5;
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
@@ -86,8 +85,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void apresentarFimSorteio() {
-        Toast.makeText(getActivity(),"Sorteio Finalizado",Toast.LENGTH_LONG).show();
+        btSortearPedra.setText(getResources().getText(R.string.sorteio_fim));
     }
+
 
     @Override
     public void iniciarPedras(List<Pedra> pedras) {
@@ -112,7 +112,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void reiniciarSorteio() {
-        btSortearPedra.setText("Sortear\nPedra");
+        btSortearPedra.setText(getResources().getText(R.string.bt_sortear_pedra));
         atualizarPedras();
     }
 
@@ -135,14 +135,24 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         @Override
         public void onBindViewHolder(ApresentarPedrasAdapter.ViewHolder holder, int position) {
-//            if (mPedras.get(position).ismHeader())
+            if (mPedras.get(position).ismHeader()) {
+                holder.mTextView.setBackgroundResource(R.color.pedraAzulDodger);
+                holder.mTextView.setText(mPedras.get(position).getmLetra());
+                holder.mTextView.setTextColor(mContext.getResources().getColor(R.color.headerTexto));
+            } else {
+                holder.mTextView.setText(mPedras.get(position).getmNumero());
+                holder.mTextView.setBackgroundResource(R.drawable.pedra);
 
+                //TODO ajustar altura das pedras
+                GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) holder.mTextView.getLayoutParams();
+                params.height = 100;
+                holder.mTextView.setLayoutParams(params);
 
-            holder.mTextView.setText(mPedras.get(position).getValorPedra());
-            if (mPedras.get(position).ismSorteada())
-                holder.mTextView.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_light));
-            else
-                holder.mTextView.setTextColor(mContext.getResources().getColor(android.R.color.black));
+                if (mPedras.get(position).ismSorteada())
+                    holder.mTextView.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_light));
+                else
+                    holder.mTextView.setTextColor(mContext.getResources().getColor(R.color.textoPadrao));
+            }
         }
 
         @Override

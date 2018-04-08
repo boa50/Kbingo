@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="textoPadrao">#000000</color>
+
+    <!--Realizar sorteio-->
+    <color name="pedraAzulDodger">#1E90FF</color>
+    <color name="pedraBranco">#FFFFFF</color>
+    <color name="headerTexto">#FFFFFF</color>
 </resources>

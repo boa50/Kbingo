@@ -14,7 +14,6 @@ public class Pedra {
 
     private boolean mHeader;
 
-    //TODO colocar esse campo como transiente no banco(VER SE É POSSÍVEL)
     private boolean mSorteada;
 
     public Pedra(String mId, String mLetra, String mNumero) {

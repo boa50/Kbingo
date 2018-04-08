@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Kbingo</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Realizar sorteio-->
+    <string name="bt_sortear_pedra">Sortear\nPedra</string>
+    <string name="bt_novo_sorteio">Realizar Novo Sorteio</string>
+    <string name="sorteio_fim">Sorteio\nFinalizado</string>
 </resources>

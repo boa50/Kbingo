@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 
 import br.com.boa50.kbingo.data.Letra;
 import br.com.boa50.kbingo.data.Pedra;
+import br.com.boa50.kbingo.util.StringUtils;
 import io.reactivex.Flowable;
 
 /**
@@ -44,7 +45,7 @@ public class PedrasRepository implements PedrasDataSource {
             pedras.add(new Pedra(
                     Integer.toString(i),
                     letra,
-                    i < 10 ? "0" + Integer.toString(i) : Integer.toString(i)
+                    StringUtils.addZerosToNumberString(i)
             ));
         }
 

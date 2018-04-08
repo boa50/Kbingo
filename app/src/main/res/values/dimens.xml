@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Realizar sorteio-->
+    <dimen name="sortear_pedra_tamanho_texto">20sp</dimen>
+    <dimen name="sortear_pedra_tamanho_pedra_grande">200dp</dimen>
+</resources>
