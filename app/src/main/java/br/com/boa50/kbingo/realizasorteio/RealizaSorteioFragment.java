@@ -1,9 +1,11 @@
 package br.com.boa50.kbingo.realizasorteio;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +28,7 @@ import dagger.android.support.DaggerFragment;
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
 
-    private final int GRID_COLUNAS = 5;
+    private int GRID_COLUNAS = 15;
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
@@ -66,6 +68,17 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     public void onResume() {
         super.onResume();
         mPresenter.subscribe(this);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            GRID_COLUNAS = 15;
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            GRID_COLUNAS = 5;
+        }
+
+        if (rvListaPedras.getAdapter() != null) {
+            iniciarPedras(null);
+            atualizarPedras();
+        }
     }
 
     @OnClick(R.id.bt_sortear_pedra)
@@ -102,7 +115,11 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             }
         });
         rvListaPedras.setLayoutManager(gridLayoutManager);
-        rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), pedras));
+
+        if ((rvListaPedras.getAdapter() == null) && (pedras != null))
+            rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), pedras));
+        else
+            Log.i("TESTE_coisa","aqui2");
     }
 
     @Override
