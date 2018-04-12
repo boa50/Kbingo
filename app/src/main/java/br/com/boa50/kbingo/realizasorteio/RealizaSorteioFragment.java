@@ -74,11 +74,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             GRID_COLUNAS = 5;
         }
-
-        if (rvListaPedras.getAdapter() != null) {
-            iniciarPedras(null);
-            atualizarPedras();
-        }
     }
 
     @OnClick(R.id.bt_sortear_pedra)
@@ -118,8 +113,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         if ((rvListaPedras.getAdapter() == null) && (pedras != null))
             rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), pedras));
-        else
-            Log.i("TESTE_coisa","aqui2");
     }
 
     @Override
