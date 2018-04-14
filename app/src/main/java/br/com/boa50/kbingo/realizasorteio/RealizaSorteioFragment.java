@@ -204,9 +204,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 params.topMargin = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_margin_top);
 
                 if (mPedras.get(position).ismSorteada())
-                    holder.mTextView.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_light));
+                    holder.mTextView.setEnabled(true);
                 else
-                    holder.mTextView.setTextColor(mContext.getResources().getColor(R.color.textoPadrao));
+                    holder.mTextView.setEnabled(false);
             }
 
             if (position == 0)

@@ -10,6 +10,7 @@
         android:layout_width="@dimen/pedra_pequena_lado"
         android:layout_height="@dimen/pedra_pequena_lado"
         android:gravity="center"
+        android:textColor="@color/pedra_pequena"
         android:layout_margin="2dp" />
 
 </android.support.v7.widget.LinearLayoutCompat>
