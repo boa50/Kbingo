@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
+import br.com.boa50.kbingo.util.GridSpacesItemDecoration;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -28,7 +29,10 @@ import dagger.android.support.DaggerFragment;
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
 
-    private int GRID_COLUNAS = 15;
+    final int QTDE_PEDRAS_LINHA_LANDSCAPE = 8;
+    final int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
+
+    private int gridColunas;
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
@@ -70,9 +74,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         mPresenter.subscribe(this);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            GRID_COLUNAS = 15;
+            gridColunas = QTDE_PEDRAS_LINHA_LANDSCAPE;
         } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            GRID_COLUNAS = 5;
+            gridColunas = QTDE_PEDRAS_LINHA_PORTRAIT;
         }
     }
 
@@ -99,19 +103,24 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void iniciarPedras(List<Pedra> pedras) {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), GRID_COLUNAS);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), gridColunas);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 if (pedras.get(position).ismHeader())
-                    return GRID_COLUNAS;
+                    return gridColunas;
                 else
                     return 1;
             }
         });
+        gridLayoutManager.setAutoMeasureEnabled(false);
         rvListaPedras.setLayoutManager(gridLayoutManager);
+        rvListaPedras.setHasFixedSize(true);
+
+        int[] headersPositions = {0,16,32,48,64};
 
         if ((rvListaPedras.getAdapter() == null) && (pedras != null))
+            rvListaPedras.addItemDecoration(new GridSpacesItemDecoration(pedras.size(), headersPositions));
             rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), pedras));
     }
 
@@ -126,7 +135,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         atualizarPedras();
     }
 
-    private static class ApresentarPedrasAdapter extends RecyclerView.Adapter<ApresentarPedrasAdapter.ViewHolder> {
+    static class ApresentarPedrasAdapter extends RecyclerView.Adapter<ApresentarPedrasAdapter.ViewHolder> {
         private List<Pedra> mPedras;
         private Context mContext;
 
@@ -138,14 +147,18 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         @Override
         public ApresentarPedrasAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.apresentarpedrasadapter_item,parent,false);
+                    .inflate(R.layout.apresentarpedrasadapter_item, parent,false);
 
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(ApresentarPedrasAdapter.ViewHolder holder, int position) {
+
+            LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) holder.mTextView.getLayoutParams();
             if (mPedras.get(position).ismHeader()) {
+                params.width = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
+
                 holder.mTextView.setBackgroundResource(R.color.pedraAzulDodger);
                 holder.mTextView.setText(mPedras.get(position).getmLetra());
                 holder.mTextView.setTextColor(mContext.getResources().getColor(R.color.headerTexto));
@@ -153,16 +166,14 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 holder.mTextView.setText(mPedras.get(position).getmNumero());
                 holder.mTextView.setBackgroundResource(R.drawable.pedra);
 
-                //TODO ajustar altura das pedras
-                GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) holder.mTextView.getLayoutParams();
-                params.height = 100;
-                holder.mTextView.setLayoutParams(params);
+                params.width = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);
 
                 if (mPedras.get(position).ismSorteada())
                     holder.mTextView.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_light));
                 else
                     holder.mTextView.setTextColor(mContext.getResources().getColor(R.color.textoPadrao));
             }
+            holder.mTextView.setLayoutParams(params);
         }
 
         @Override
@@ -171,11 +182,11 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
-            TextView mTextView;
+            @BindView(R.id.textView) TextView mTextView;
 
             ViewHolder(View view) {
                 super(view);
-                mTextView = view.findViewById(R.id.textView);
+                ButterKnife.bind(this, view);
             }
         }
     }
