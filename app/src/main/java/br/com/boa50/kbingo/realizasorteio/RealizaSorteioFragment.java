@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,22 +164,38 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
             LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) holder.mTextView.getLayoutParams();
             if (mPedras.get(position).ismHeader()) {
-                params.width = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
-
                 holder.mTextView.setBackgroundResource(R.color.pedraAzulDodger);
                 holder.mTextView.setText(mPedras.get(position).getmLetra());
                 holder.mTextView.setTextColor(mContext.getResources().getColor(R.color.headerTexto));
+                holder.mTextView.setTextSize(
+                        TypedValue.COMPLEX_UNIT_PX,
+                        mContext.getResources().getDimension(R.dimen.header_texto)
+                );
+
+                params.height = mContext.getResources().getDimensionPixelSize(R.dimen.header_hight);
+                params.width = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
+                params.topMargin = mContext.getResources().getDimensionPixelSize(R.dimen.header_margin_top);
             } else {
                 holder.mTextView.setText(mPedras.get(position).getmNumero());
                 holder.mTextView.setBackgroundResource(R.drawable.pedra);
+                holder.mTextView.setTextSize(
+                        TypedValue.COMPLEX_UNIT_PX,
+                        mContext.getResources().getDimension(R.dimen.pedra_pequena_texto)
+                );
 
+                params.height = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);
                 params.width = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);
+                params.topMargin = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_margin_top);
 
                 if (mPedras.get(position).ismSorteada())
                     holder.mTextView.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_light));
                 else
                     holder.mTextView.setTextColor(mContext.getResources().getColor(R.color.textoPadrao));
             }
+
+            if (position == 0)
+                params.topMargin = 0;
+
             holder.mTextView.setLayoutParams(params);
         }
 

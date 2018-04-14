@@ -19,14 +19,14 @@
 
     <Button
         android:id="@+id/bt_sortear_pedra"
-        android:layout_width="@dimen/sortear_pedra_tamanho_pedra_grande"
-        android:layout_height="@dimen/sortear_pedra_tamanho_pedra_grande"
+        android:layout_width="@dimen/pedra_grande_lado"
+        android:layout_height="@dimen/pedra_grande_lado"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/pedra"
         android:text="@string/bt_sortear_pedra"
-        android:textSize="@dimen/sortear_pedra_tamanho_texto"
+        android:textSize="@dimen/pedra_grande_texto"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/rv_lista_pedras"
         app:layout_constraintEnd_toEndOf="parent"
