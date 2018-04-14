@@ -6,17 +6,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GridSpacesItemDecoration extends RecyclerView.ItemDecoration {
-    private int space;
-    private int qtdeItens;
-    private int qtdeHeaders;
-    private int[] headersPositions;
+    private int qtdItens;
+    private int qtdHeaders;
+    private List<Integer> headersPositions;
+    private List<Integer> positions;
+    private List<Integer> spaces;
 
-    public GridSpacesItemDecoration(int qtdeItens, int[] headersPositions) {
-        this.space = 80;
-        this.qtdeItens = qtdeItens;
-        this.qtdeHeaders = headersPositions.length;
+    public GridSpacesItemDecoration(int qtdItens, List<Integer> headersPositions) {
+        this.qtdItens = qtdItens;
+        this.qtdHeaders = headersPositions.size();
         this.headersPositions = headersPositions;
     }
 
@@ -24,40 +25,46 @@ public class GridSpacesItemDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view,
                                RecyclerView parent, RecyclerView.State state) {
 
-
         if (parent.getLayoutManager() instanceof GridLayoutManager) {
             GridLayoutManager grid = (GridLayoutManager) parent.getLayoutManager();
 
-
-            int qtdeColunas = grid.getSpanCount();
-            ArrayList<Integer> posicoes = new ArrayList<Integer>();
-
-            if ((qtdeItens - qtdeHeaders) % qtdeColunas > 0) {
-                for (int i = 0; i < headersPositions.length; i++) {
-                    int proxPosition;
-                    if (i == headersPositions.length - 1) {
-                        proxPosition = qtdeItens;
-                    } else {
-                        proxPosition = headersPositions[i+1];
-                    }
-
-                    int qtdeAgrupados = proxPosition - headersPositions[i] - 1;
-                    int qtdeSobrou = qtdeAgrupados % qtdeColunas;
-
-                    posicoes.add(proxPosition - qtdeSobrou);
-                    posicoes.add(proxPosition - 1);
-                }
-
-            }
+            if (positions == null)
+                fillPositionsSpaces(grid.getSpanCount(), parent.getWidth());
 
             int viewPosition = parent.getChildLayoutPosition(view);
 
-            for (int i = 0; i < posicoes.size(); i = i+2) {
-                if (viewPosition >= posicoes.get(i) && viewPosition <= posicoes.get(i+1)) {
-                    outRect.right = -space;
-                    outRect.left = space;
+            for (int i = 0; i < positions.size()/2; i++) {
+                if (viewPosition >= positions.get(i*2) && viewPosition <= positions.get(i*2+1)) {
+                    outRect.right = -spaces.get(i);
+                    outRect.left = spaces.get(i);
                 }
             }
+        }
+    }
+
+    private void fillPositionsSpaces(int qtdColumns, int parentWidth){
+        positions = new ArrayList<>();
+        spaces = new ArrayList<>();
+        int columnSize = parentWidth/qtdColumns;
+
+        if ((qtdItens - qtdHeaders) % qtdColumns > 0) {
+            for (int i = 0; i < headersPositions.size(); i++) {
+                int nextPosition;
+                if (i == headersPositions.size() - 1) {
+                    nextPosition = qtdItens;
+                } else {
+                    nextPosition = headersPositions.get(i+1);
+                }
+
+                int qtdGrouped = nextPosition - headersPositions.get(i) - 1;
+                int qtdLast = qtdGrouped % qtdColumns;
+
+                spaces.add((columnSize * (qtdColumns - qtdLast)) / 2);
+
+                positions.add(nextPosition - qtdLast);
+                positions.add(nextPosition - 1);
+            }
+
         }
     }
 }

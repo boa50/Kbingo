@@ -20,6 +20,7 @@ import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.GridSpacesItemDecoration;
+import br.com.boa50.kbingo.util.PedraUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -117,11 +118,16 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         rvListaPedras.setLayoutManager(gridLayoutManager);
         rvListaPedras.setHasFixedSize(true);
 
-        int[] headersPositions = {0,16,32,48,64};
 
-        if ((rvListaPedras.getAdapter() == null) && (pedras != null))
-            rvListaPedras.addItemDecoration(new GridSpacesItemDecoration(pedras.size(), headersPositions));
+        if ((rvListaPedras.getAdapter() == null) && (pedras != null)) {
+            rvListaPedras.addItemDecoration(
+                    new GridSpacesItemDecoration(
+                            pedras.size(),
+                            PedraUtils.getHeadersPositions(pedras)
+                    )
+            );
             rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), pedras));
+        }
     }
 
     @Override
