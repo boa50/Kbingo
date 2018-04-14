@@ -2,6 +2,7 @@ package br.com.boa50.kbingo.realizasorteio;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -164,13 +165,14 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
             LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) holder.mTextView.getLayoutParams();
             if (mPedras.get(position).ismHeader()) {
-                holder.mTextView.setBackgroundResource(R.color.pedraAzulDodger);
+                holder.mTextView.setBackgroundResource(R.color.headerBackground);
                 holder.mTextView.setText(mPedras.get(position).getmLetra());
                 holder.mTextView.setTextColor(mContext.getResources().getColor(R.color.headerTexto));
                 holder.mTextView.setTextSize(
                         TypedValue.COMPLEX_UNIT_PX,
                         mContext.getResources().getDimension(R.dimen.header_texto)
                 );
+                holder.mTextView.setTypeface(null, Typeface.BOLD);
 
                 params.height = mContext.getResources().getDimensionPixelSize(R.dimen.header_hight);
                 params.width = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
@@ -182,6 +184,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                         TypedValue.COMPLEX_UNIT_PX,
                         mContext.getResources().getDimension(R.dimen.pedra_pequena_texto)
                 );
+                holder.mTextView.setTypeface(null, Typeface.NORMAL);
 
                 params.height = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);
                 params.width = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);

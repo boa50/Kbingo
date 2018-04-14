@@ -9,7 +9,7 @@
         android:translateY="-75.80269">
         <path
             android:pathData="M177.69731 148.5A72.697311 72.697311 0 0 1 105 221.19731 72.697311 72.697311 0 0 1 32.302689 148.5 72.697311 72.697311 0 0 1 105 75.802689 72.697311 72.697311 0 0 1 177.69731 148.5Z"
-            android:fillColor="@color/pedraAzulDodger" />
+            android:fillColor="@color/pedraBorda" />
         <path
             android:pathData="M153.64305 148.5A48.643055 48.643055 0 0 1 105 197.14305 48.643055 48.643055 0 0 1 56.356945 148.5 48.643055 48.643055 0 0 1 105 99.856945 48.643055 48.643055 0 0 1 153.64305 148.5Z"
             android:fillColor="@color/pedraBranco" />
@@ -18,6 +18,6 @@
             android:strokeWidth="2.552229"
             android:fillColor="@color/pedraBranco"
             android:strokeMiterLimit="4"
-            android:strokeColor="@color/pedraAzulDodger" />
+            android:strokeColor="@color/pedraBorda" />
     </group>
 </vector>
