@@ -67,9 +67,9 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
             mPedras.get(posicoes.get(0)).setmSorteada(true);
 
-            posicoes.remove(0);
+            mView.atualizarPedra(posicoes.get(0));
 
-            mView.atualizarPedras();
+            posicoes.remove(0);
         }
     }
 

@@ -90,16 +90,28 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @OnClick(R.id.bt_novo_sorteio)
     void resetarPedras() {
+        btSortearPedra.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimension(R.dimen.pedra_grande_texto)
+        );
         mPresenter.resetarPedras();
     }
 
     @Override
     public void apresentarPedra(Pedra pedra) {
+        btSortearPedra.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimension(R.dimen.pedra_grande_texto_sorteada)
+        );
         btSortearPedra.setText(pedra.getValorPedra());
     }
 
     @Override
     public void apresentarFimSorteio() {
+        btSortearPedra.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimension(R.dimen.pedra_grande_texto)
+        );
         btSortearPedra.setText(getResources().getText(R.string.sorteio_fim));
     }
 
@@ -120,7 +132,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         rvListaPedras.setLayoutManager(gridLayoutManager);
         rvListaPedras.setHasFixedSize(true);
 
-
         if ((rvListaPedras.getAdapter() == null) && (pedras != null)) {
             rvListaPedras.addItemDecoration(
                     new GridSpacesItemDecoration(
@@ -133,14 +144,16 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     @Override
-    public void atualizarPedras() {
-        rvListaPedras.getAdapter().notifyDataSetChanged();
+    public void atualizarPedra(int position) {
+        rvListaPedras.getAdapter().notifyItemChanged(position);
+        rvListaPedras.smoothScrollToPosition(position);
     }
 
     @Override
     public void reiniciarSorteio() {
         btSortearPedra.setText(getResources().getText(R.string.bt_sortear_pedra));
-        atualizarPedras();
+        rvListaPedras.smoothScrollToPosition(0);
+        rvListaPedras.getAdapter().notifyDataSetChanged();
     }
 
     static class ApresentarPedrasAdapter extends RecyclerView.Adapter<ApresentarPedrasAdapter.ViewHolder> {

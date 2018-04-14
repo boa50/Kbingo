@@ -20,7 +20,7 @@ public interface RealizaSorteioContract {
 
         void iniciarPedras(List<Pedra> pedras);
 
-        void atualizarPedras();
+        void atualizarPedra(int position);
 
         void reiniciarSorteio();
     }

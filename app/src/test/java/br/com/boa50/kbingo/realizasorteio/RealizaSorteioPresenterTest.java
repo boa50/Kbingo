@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -84,7 +85,7 @@ public class RealizaSorteioPresenterTest {
         verify(mRealizaSorteioView).apresentarPedra(pedra.capture());
 
         assertThat(pedra.getValue().ismSorteada(), equalTo(true));
-        verify(mRealizaSorteioView).atualizarPedras();
+        verify(mRealizaSorteioView).atualizarPedra(anyInt());
     }
 
     @Test
