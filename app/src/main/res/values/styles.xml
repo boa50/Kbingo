@@ -15,5 +15,15 @@
         <item name="android:layout_margin">8dp</item>
         <item name="background">@color/colorSecondary</item>
     </style>
+    
+    <style name="Pedra">
+        <item name="pedra_cor_primaria">@color/pedraPrimariaEnabled</item>
+        <item name="pedra_cor_secundaria">@color/pedraSecundariaEnabled</item>
+    </style>
+
+    <style name="PedraDisabled" parent="Pedra">
+        <item name="pedra_cor_primaria">@color/pedraPrimariaDisabled</item>
+        <item name="pedra_cor_secundaria">@color/pedraSecundariaDisabled</item>
+    </style>
 
 </resources>

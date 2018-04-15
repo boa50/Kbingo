@@ -17,8 +17,10 @@
     <color name="textoPadrao">@color/textSecondary</color>
 
     <!--Realizar sorteio-->
-    <color name="pedraPrimaria">@color/colorPrimary</color>
-    <color name="pedraSecundaria">@color/textPrimary</color>
+    <color name="pedraPrimariaEnabled">@color/colorPrimary</color>
+    <color name="pedraSecundariaEnabled">@color/textPrimary</color>
+    <color name="pedraPrimariaDisabled">#757575</color>
+    <color name="pedraSecundariaDisabled">@color/textPrimary</color>
     <color name="pedraTextoEnabled">#D50000</color>
     <color name="headerBackground">@color/colorPrimaryDark</color>
     <color name="headerTexto">@color/textPrimary</color>
