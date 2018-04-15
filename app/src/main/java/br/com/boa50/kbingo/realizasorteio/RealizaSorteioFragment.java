@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -268,9 +267,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 int dimenTopMargin;
 
                 if (pedra.ismHeader()) {
-                    mTextView.setBackgroundResource(R.color.headerBackground);
                     mTextView.setText(pedra.getmLetra());
-//                    mTextView.setTextColor(mContext.getResources().getColor(R.color.headerTexto));
+                    mTextView.setBackgroundResource(R.color.headerBackground);
+                    mTextView.setTextColor(mContext.getResources().getColor(R.color.headerTexto));
+
                     dimenTextSize = R.dimen.header_texto;
                     typeface = Typeface.BOLD;
 
@@ -281,6 +281,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 } else {
                     mTextView.setText(pedra.getmNumero());
                     mTextView.setBackgroundResource(R.drawable.pedra);
+                    mTextView.setTextColor(mContext.getResources().getColorStateList(R.color.pedra_pequena_text));
+
                     dimenTextSize = R.dimen.pedra_pequena_texto;
                     typeface = Typeface.NORMAL;
 
