@@ -34,7 +34,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private CompositeDisposable mCompositeDisposable;
 
-    private List<Pedra> mPedras;
+    private ArrayList<Pedra> mPedras;
 
     private List<Integer> posicoes;
 
@@ -84,9 +84,15 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         mView.reiniciarSorteio();
     }
 
+    @Override
+    public void setPedras(ArrayList<Pedra> mPedras) {
+        this.mPedras = mPedras;
+    }
+
     private void carregarPedras(){
         if (mPedras == null) {
             mCompositeDisposable.clear();
+            mPedras = new ArrayList<>();
 
             Disposable disposable = mPedrasRespository
                     .getPedras()
@@ -96,7 +102,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                     .observeOn(mScheduleProvider.ui())
                     .subscribe(
                             pedras -> {
-                                mPedras = pedras;
+                                mPedras.addAll(pedras);
                                 mView.iniciarPedras(mPedras);
                                 preencherPosicoesSorteio();
                             },
@@ -104,6 +110,9 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                     );
 
             mCompositeDisposable.add(disposable);
+        } else {
+            mView.iniciarPedras(mPedras);
+            preencherPosicoesSorteio();
         }
     }
 
@@ -114,7 +123,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             posicoes.clear();
 
         for (int i = 0; i < mPedras.size(); i++) {
-            if (!mPedras.get(i).ismHeader())
+            if (!mPedras.get(i).ismHeader() && !mPedras.get(i).ismSorteada())
                 posicoes.add(i);
         }
         Collections.shuffle(posicoes);

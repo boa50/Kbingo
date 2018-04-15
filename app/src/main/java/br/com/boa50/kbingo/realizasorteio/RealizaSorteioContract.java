@@ -1,6 +1,6 @@
 package br.com.boa50.kbingo.realizasorteio;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import br.com.boa50.kbingo.BasePresenter;
 import br.com.boa50.kbingo.BaseView;
@@ -18,7 +18,7 @@ public interface RealizaSorteioContract {
 
         void apresentarFimSorteio();
 
-        void iniciarPedras(List<Pedra> pedras);
+        void iniciarPedras(ArrayList<Pedra> pedras);
 
         void atualizarPedra(int position);
 
@@ -31,5 +31,6 @@ public interface RealizaSorteioContract {
 
         void resetarPedras();
 
+        void setPedras(ArrayList<Pedra> pedras);
     }
 }
