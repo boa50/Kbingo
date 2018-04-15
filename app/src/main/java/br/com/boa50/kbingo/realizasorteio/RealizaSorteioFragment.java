@@ -209,38 +209,37 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         @Override
         public void onBindViewHolder(ApresentarPedrasAdapter.ViewHolder holder, int position) {
 
+            holder.bindData(mPedras.get(position));
+
             LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) holder.mTextView.getLayoutParams();
-            if (mPedras.get(position).ismHeader()) {
-                holder.mTextView.setBackgroundResource(R.color.headerBackground);
-                holder.mTextView.setText(mPedras.get(position).getmLetra());
-                holder.mTextView.setTextColor(mContext.getResources().getColor(R.color.headerTexto));
-                holder.mTextView.setTextSize(
-                        TypedValue.COMPLEX_UNIT_PX,
-                        mContext.getResources().getDimension(R.dimen.header_texto)
-                );
-                holder.mTextView.setTypeface(null, Typeface.BOLD);
-
-                params.height = mContext.getResources().getDimensionPixelSize(R.dimen.header_hight);
-                params.width = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
-                params.topMargin = mContext.getResources().getDimensionPixelSize(R.dimen.header_margin_top);
-            } else {
-                holder.mTextView.setText(mPedras.get(position).getmNumero());
-                holder.mTextView.setBackgroundResource(R.drawable.pedra);
-                holder.mTextView.setTextSize(
-                        TypedValue.COMPLEX_UNIT_PX,
-                        mContext.getResources().getDimension(R.dimen.pedra_pequena_texto)
-                );
-                holder.mTextView.setTypeface(null, Typeface.NORMAL);
-
-                params.height = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);
-                params.width = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);
-                params.topMargin = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_margin_top);
-
-                if (mPedras.get(position).ismSorteada())
-                    holder.mTextView.setEnabled(true);
-                else
-                    holder.mTextView.setEnabled(false);
-            }
+//            if (mPedras.get(position).ismHeader()) {
+//                holder.mTextView.setBackgroundResource(R.color.headerBackground);
+//                holder.mTextView.setText(mPedras.get(position).getmLetra());
+//                holder.mTextView.setTextColor(mContext.getResources().getColor(R.color.headerTexto));
+//                holder.mTextView.setTextSize(
+//                        TypedValue.COMPLEX_UNIT_PX,
+//                        mContext.getResources().getDimension(R.dimen.header_texto)
+//                );
+//                holder.mTextView.setTypeface(null, Typeface.BOLD);
+//
+//                params.height = mContext.getResources().getDimensionPixelSize(R.dimen.header_hight);
+//                params.width = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
+//                params.topMargin = mContext.getResources().getDimensionPixelSize(R.dimen.header_margin_top);
+//            } else {
+//                holder.mTextView.setText(mPedras.get(position).getmNumero());
+//                holder.mTextView.setBackgroundResource(R.drawable.pedra);
+//                holder.mTextView.setTextSize(
+//                        TypedValue.COMPLEX_UNIT_PX,
+//                        mContext.getResources().getDimension(R.dimen.pedra_pequena_texto)
+//                );
+//                holder.mTextView.setTypeface(null, Typeface.NORMAL);
+//
+//                params.height = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);
+//                params.width = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);
+//                params.topMargin = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_margin_top);
+//
+//                holder.mTextView.setEnabled(mPedras.get(position).ismSorteada());
+//            }
 
             if (position == 0)
                 params.topMargin = 0;
@@ -253,12 +252,55 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             return mPedras.size();
         }
 
-        static class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.textView) TextView mTextView;
 
             ViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
+            }
+
+            void bindData(Pedra pedra){
+                LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) mTextView.getLayoutParams();
+                int dimenTextSize;
+                int typeface;
+                int dimenHeight;
+                int dimenTopMargin;
+
+                if (pedra.ismHeader()) {
+                    mTextView.setBackgroundResource(R.color.headerBackground);
+                    mTextView.setText(pedra.getmLetra());
+//                    mTextView.setTextColor(mContext.getResources().getColor(R.color.headerTexto));
+                    dimenTextSize = R.dimen.header_texto;
+                    typeface = Typeface.BOLD;
+
+                    dimenHeight = R.dimen.header_hight;
+                    dimenTopMargin = R.dimen.header_margin_top;
+
+                    params.width = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
+                } else {
+                    mTextView.setText(pedra.getmNumero());
+                    mTextView.setBackgroundResource(R.drawable.pedra);
+                    dimenTextSize = R.dimen.pedra_pequena_texto;
+                    typeface = Typeface.NORMAL;
+
+                    dimenHeight = R.dimen.pedra_pequena_lado;
+                    dimenTopMargin = R.dimen.pedra_pequena_margin_top;
+
+                    params.width = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);
+                }
+
+                mTextView.setTextSize(
+                        TypedValue.COMPLEX_UNIT_PX,
+                        mContext.getResources().getDimension(dimenTextSize)
+                );
+                mTextView.setTypeface(null, typeface);
+                mTextView.setEnabled(pedra.ismSorteada());
+
+                params.height = mContext.getResources().getDimensionPixelSize(dimenHeight);
+                params.topMargin = mContext.getResources().getDimensionPixelSize(dimenTopMargin);
+
+                mTextView.setLayoutParams(params);
             }
         }
     }
