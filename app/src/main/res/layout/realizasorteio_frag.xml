@@ -5,15 +5,61 @@
     android:layout_height="match_parent"
     tools:context="br.com.boa50.kbingo.realizasorteio.RealizaSorteioFragment">
 
+    <LinearLayout
+        android:id="@+id/ll_botoes_lista_pedras"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/rv_lista_pedras"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:theme="@style/AppTheme.ButtonToBar"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="K"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:theme="@style/AppTheme.ButtonToBar"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="I"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:theme="@style/AppTheme.ButtonToBar"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="N"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:theme="@style/AppTheme.ButtonToBar"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="K"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:theme="@style/AppTheme.ButtonToBar"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="A"/>
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_lista_pedras"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="425dp"
         android:foregroundGravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/ll_botoes_lista_pedras" />
 
     <Button
         android:id="@+id/bt_sortear_pedra"
