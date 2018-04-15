@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     final int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
 
     private int gridColunas;
+
+    private int scrollPosition = 0;
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
@@ -145,15 +148,45 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void atualizarPedra(int position) {
+        controlarScroll(position);
         rvListaPedras.getAdapter().notifyItemChanged(position);
-        rvListaPedras.smoothScrollToPosition(position);
     }
 
     @Override
     public void reiniciarSorteio() {
         btSortearPedra.setText(getResources().getText(R.string.bt_sortear_pedra));
-        rvListaPedras.smoothScrollToPosition(0);
+        controlarScroll(0);
         rvListaPedras.getAdapter().notifyDataSetChanged();
+    }
+
+    private void controlarScroll(int position){
+        if (position > 64) {
+            if (position > scrollPosition)
+                rvListaPedras.smoothScrollToPosition(80);
+            else
+                rvListaPedras.smoothScrollToPosition(64);
+        } else if (position > 48) {
+            if (position > scrollPosition)
+                rvListaPedras.smoothScrollToPosition(63);
+            else
+                rvListaPedras.smoothScrollToPosition(48);
+        } else if (position > 32) {
+            if (position > scrollPosition)
+                rvListaPedras.smoothScrollToPosition(47);
+            else
+                rvListaPedras.smoothScrollToPosition(32);
+        } else if (position > 16) {
+            if (position > scrollPosition)
+                rvListaPedras.smoothScrollToPosition(31);
+            else
+                rvListaPedras.smoothScrollToPosition(16);
+        } else {
+            if (position > scrollPosition)
+                rvListaPedras.smoothScrollToPosition(15);
+            else
+                rvListaPedras.smoothScrollToPosition(0);
+        }
+        scrollPosition = position;
     }
 
     static class ApresentarPedrasAdapter extends RecyclerView.Adapter<ApresentarPedrasAdapter.ViewHolder> {
