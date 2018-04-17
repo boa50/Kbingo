@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -50,6 +51,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @BindView(R.id.bt_novo_sorteio) Button btNovoSorteio;
 
+    @BindView(R.id.ll_botoes_lista_pedras) LinearLayout llBotoesListaPedras;
+
     private Unbinder unbinder;
     private int mGridColunas;
     private int mScrollPosition = 0;
@@ -76,6 +79,24 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mUltimaPedraValor = "";
         }
 
+        for (int i = 0; i < 5; i++) {
+            Button button = new Button(new ContextThemeWrapper(getContext(), R.style.AppTheme_ButtonToBar));
+            button.setText("a");
+            //TODO melhorar a geração de IDs automaticamente
+            button.setId(i);
+            llBotoesListaPedras.addView(button);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    1.0f
+            );
+            button.setLayoutParams(params);
+
+            final int position = i;
+            button.setOnClickListener((View v) -> {
+                controlarScroll(position * 16 + 1);
+            });
+        }
 
         return view;
     }

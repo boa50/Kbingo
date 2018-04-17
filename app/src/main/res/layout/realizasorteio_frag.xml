@@ -13,44 +13,7 @@
         app:layout_constraintBottom_toTopOf="@id/rv_lista_pedras"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:theme="@style/AppTheme.ButtonToBar"
-            style="?android:attr/borderlessButtonStyle"
-            android:text="K"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:theme="@style/AppTheme.ButtonToBar"
-            style="?android:attr/borderlessButtonStyle"
-            android:text="I"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:theme="@style/AppTheme.ButtonToBar"
-            style="?android:attr/borderlessButtonStyle"
-            android:text="N"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:theme="@style/AppTheme.ButtonToBar"
-            style="?android:attr/borderlessButtonStyle"
-            android:text="K"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:theme="@style/AppTheme.ButtonToBar"
-            style="?android:attr/borderlessButtonStyle"
-            android:text="A"/>
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_lista_pedras"
