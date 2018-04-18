@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -77,25 +78,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mUltimaPedraValor = savedInstanceState.getString(STATE_PEDRA_ULTIMA);
         } else {
             mUltimaPedraValor = "";
-        }
-
-        for (int i = 0; i < 5; i++) {
-            Button button = new Button(new ContextThemeWrapper(getContext(), R.style.AppTheme_ButtonToBar));
-            button.setText("a");
-            //TODO melhorar a geração de IDs automaticamente
-            button.setId(i);
-            llBotoesListaPedras.addView(button);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    1.0f
-            );
-            button.setLayoutParams(params);
-
-            final int position = i;
-            button.setOnClickListener((View v) -> {
-                controlarScroll(position * 16 + 1);
-            });
         }
 
         return view;
@@ -173,13 +155,20 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     @Override
     public void iniciarPedras(ArrayList<Pedra> pedras) {
         mPedras = pedras;
+        List<Integer> headerPositions = PedraUtils.getHeadersPositions(mPedras);
+        List<String> headerLetras = new ArrayList<>();
+
+        for (int i : headerPositions) {
+            headerLetras.add(mPedras.get(i).getmLetra());
+        }
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), mGridColunas);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (mPedras.get(position).ismHeader())
+                if (mPedras.get(position).ismHeader()) {
                     return mGridColunas;
-                else
+                } else
                     return 1;
             }
         });
@@ -190,10 +179,37 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         rvListaPedras.addItemDecoration(
                 new GridSpacesItemDecoration(
                         pedras.size(),
-                        PedraUtils.getHeadersPositions(pedras)
+                        headerPositions
                 )
         );
         rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), mPedras));
+
+        iniciarBotoesHeader(headerLetras);
+    }
+
+    private void iniciarBotoesHeader(List<String> headers) {
+        for (int i = 0; i < 5; i++) {
+            Button button = new Button(new ContextThemeWrapper(getContext(), R.style.AppTheme_ButtonToBar));
+            button.setText(headers.get(i));
+
+            if (Build.VERSION.SDK_INT < 17)
+                button.setId(i);
+            else
+                button.setId(View.generateViewId());
+
+            llBotoesListaPedras.addView(button);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    1.0f
+            );
+            button.setLayoutParams(params);
+
+            final int position = i;
+            button.setOnClickListener((View v) -> {
+                controlarScroll(position * 16 + 1);
+            });
+        }
     }
 
     @Override
