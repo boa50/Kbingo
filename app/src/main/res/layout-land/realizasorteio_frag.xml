@@ -11,7 +11,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingLeft="8dp"
-        android:paddingStart="8dp">
+        android:paddingStart="8dp"
+        android:paddingRight="8dp"
+        android:paddingEnd="8dp">
 
         <LinearLayout
             android:id="@+id/ll_botoes_lista_pedras"

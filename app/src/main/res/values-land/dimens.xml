@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Realizar sorteio-->
+    <dimen name="pedra_pequena_lado">95dp</dimen>
+    <dimen name="pedra_pequena_texto">27sp</dimen>
+</resources>

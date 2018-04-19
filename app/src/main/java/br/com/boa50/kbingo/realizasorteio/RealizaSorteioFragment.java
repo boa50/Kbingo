@@ -40,7 +40,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private static final String STATE_PEDRAS = "pedras";
     private static final String STATE_PEDRA_ULTIMA = "ultimaPedra";
 
-    final int QTDE_PEDRAS_LINHA_LANDSCAPE = 8;
+    final int QTDE_PEDRAS_LINHA_LANDSCAPE = 6;
     final int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
 
     @Inject
@@ -68,6 +68,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.realizasorteio_frag, container, false);
@@ -206,9 +207,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             button.setLayoutParams(params);
 
             final int position = i;
-            button.setOnClickListener((View v) -> {
-                controlarScroll(position * 16 + 1);
-            });
+            button.setOnClickListener((View v) -> controlarScroll(position * 16 + 1));
         }
     }
 

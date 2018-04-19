@@ -4,10 +4,10 @@
     <dimen name="pedra_grande_texto">20sp</dimen>
     <dimen name="pedra_grande_texto_sorteada">40sp</dimen>
     <dimen name="pedra_grande_lado">200dp</dimen>
-    <dimen name="pedra_pequena_lado">70dp</dimen>
-    <dimen name="pedra_pequena_texto">20sp</dimen>
+    <dimen name="pedra_pequena_lado">105dp</dimen>
+    <dimen name="pedra_pequena_texto">30sp</dimen>
     <dimen name="pedra_pequena_margin_top">4dp</dimen>
     <dimen name="header_hight">80dp</dimen>
     <dimen name="header_texto">30sp</dimen>
-    <dimen name="header_margin_top">16dp</dimen>
+    <dimen name="header_margin_top">8dp</dimen>
 </resources>
