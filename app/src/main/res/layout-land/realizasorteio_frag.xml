@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundPadrao"
     tools:context="br.com.boa50.kbingo.realizasorteio.RealizaSorteioFragment">
 
     <LinearLayout
@@ -19,6 +20,8 @@
             android:id="@+id/ll_botoes_lista_pedras"
             android:layout_width="match_parent"
             android:layout_height="75dp"
+            android:elevation="4dp"
+            android:background="@color/backgroundPadrao"
             android:orientation="horizontal" />
 
         <android.support.v7.widget.RecyclerView

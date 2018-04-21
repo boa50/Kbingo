@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundPadrao"
     tools:context="br.com.boa50.kbingo.realizasorteio.RealizaSorteioFragment">
 
     <LinearLayout
@@ -10,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:orientation="horizontal"
+        android:elevation="4dp"
+        android:background="@color/backgroundPadrao"
         app:layout_constraintBottom_toTopOf="@id/rv_lista_pedras"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

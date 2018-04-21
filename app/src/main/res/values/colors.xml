@@ -15,6 +15,7 @@
 
 
     <color name="textoPadrao">@color/textSecondary</color>
+    <color name="backgroundPadrao">#FAFAFA</color>
 
     <!--Realizar sorteio-->
     <color name="pedraPrimariaEnabled">@color/colorPrimary</color>
