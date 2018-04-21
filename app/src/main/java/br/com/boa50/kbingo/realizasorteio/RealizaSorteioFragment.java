@@ -243,7 +243,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     private void controlarScroll(int position, boolean smooth){
         for (int i = 4; i >= 0; i--) {
-            if (position > 16 * i) {
+            if (position >= 16 * i) {
                 if (smooth && (position > mScrollPosition))
                     mScrollPosition = (16 * i) + 15;
                 else
