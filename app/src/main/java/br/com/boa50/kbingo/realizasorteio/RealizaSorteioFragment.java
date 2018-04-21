@@ -61,6 +61,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private int mScrollChangeOrientation;
     private ArrayList<Pedra> mPedras;
     private String mUltimaPedraValor;
+    private ArrayList<Integer> mButtonIds;
 
     @Inject
     public RealizaSorteioFragment() {}
@@ -192,13 +193,22 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), mPedras));
 
         if (mScrollChangeOrientation > 0)
-            controlarScroll(mScrollChangeOrientation, false);
+            rvListaPedras.scrollToPosition(mScrollChangeOrientation);
 
         rvListaPedras.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 mScrollPosition = ((GridLayoutManager)rvListaPedras.getLayoutManager()).findFirstVisibleItemPosition();
+
+                for (int i = 0; i < mButtonIds.size(); i++) {
+                    Button button = getActivity().findViewById(mButtonIds.get(i));
+                    if (i == mScrollPosition/16) {
+                        button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                    } else {
+                        button.setTextColor(getResources().getColor(R.color.textDisabled));
+                    }
+                }
             }
         });
 
@@ -206,6 +216,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     private void iniciarBotoesHeader(List<String> headers) {
+        mButtonIds = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Button button = new Button(new ContextThemeWrapper(getContext(), R.style.AppTheme_ButtonToBar));
             button.setText(headers.get(i));
@@ -214,6 +225,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 button.setId(i);
             else
                 button.setId(View.generateViewId());
+
+            mButtonIds.add(button.getId());
 
             llBotoesListaPedras.addView(button);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -224,7 +237,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             button.setLayoutParams(params);
 
             final int position = i;
-            button.setOnClickListener((View v) -> controlarScroll(position * 16 + 1, true));
+            button.setOnClickListener((View v) -> controlarScroll(position * 16 + 1, false));
         }
     }
 
@@ -244,7 +257,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private void controlarScroll(int position, boolean smooth){
         for (int i = 4; i >= 0; i--) {
             if (position >= 16 * i) {
-                if (smooth && (position > mScrollPosition))
+                if (position > mScrollPosition)
                     mScrollPosition = (16 * i) + 15;
                 else
                     mScrollPosition = 16 * i;
