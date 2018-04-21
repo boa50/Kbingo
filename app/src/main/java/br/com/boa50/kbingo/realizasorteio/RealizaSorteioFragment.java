@@ -193,7 +193,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), mPedras));
 
         if (mScrollChangeOrientation > 0)
-            rvListaPedras.scrollToPosition(mScrollChangeOrientation);
+            rvListaPedras.scrollToPosition((mScrollChangeOrientation/16)*16);
 
         rvListaPedras.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -212,10 +212,12 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             }
         });
 
-        iniciarBotoesHeader(headerLetras);
+        if (mButtonIds == null || mButtonIds.isEmpty())
+            iniciarBotoesHeader(headerLetras);
     }
 
     private void iniciarBotoesHeader(List<String> headers) {
+
         mButtonIds = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Button button = new Button(new ContextThemeWrapper(getContext(), R.style.AppTheme_ButtonToBar));
