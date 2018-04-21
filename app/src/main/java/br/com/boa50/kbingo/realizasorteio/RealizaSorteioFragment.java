@@ -39,6 +39,7 @@ import dagger.android.support.DaggerFragment;
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
     private static final String STATE_PEDRAS = "pedras";
     private static final String STATE_PEDRA_ULTIMA = "ultimaPedra";
+    private static final String STATE_SCROLL_ULTIMO = "ultimoScroll";
 
     final int QTDE_PEDRAS_LINHA_LANDSCAPE = 6;
     final int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
@@ -57,6 +58,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private Unbinder unbinder;
     private int mGridColunas;
     private int mScrollPosition = 0;
+    private int mScrollChangeOrientation;
     private ArrayList<Pedra> mPedras;
     private String mUltimaPedraValor;
 
@@ -77,8 +79,11 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         if (savedInstanceState != null) {
             mPedras = (ArrayList<Pedra>) savedInstanceState.getSerializable(STATE_PEDRAS);
             mUltimaPedraValor = savedInstanceState.getString(STATE_PEDRA_ULTIMA);
+            mScrollChangeOrientation = savedInstanceState.getInt(STATE_SCROLL_ULTIMO);
         } else {
             mUltimaPedraValor = "";
+            mScrollPosition = 0;
+            mScrollChangeOrientation = -1;
         }
 
         return view;
@@ -89,6 +94,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         super.onSaveInstanceState(outState);
         outState.putSerializable(STATE_PEDRAS, mPedras);
         outState.putString(STATE_PEDRA_ULTIMA, mUltimaPedraValor);
+        outState.putInt(STATE_SCROLL_ULTIMO, ((GridLayoutManager)rvListaPedras.getLayoutManager()).findLastVisibleItemPosition());
     }
 
     @Override
@@ -185,6 +191,17 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         );
         rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), mPedras));
 
+        if (mScrollChangeOrientation > 0)
+            controlarScroll(mScrollChangeOrientation, false);
+
+        rvListaPedras.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                mScrollPosition = ((GridLayoutManager)rvListaPedras.getLayoutManager()).findFirstVisibleItemPosition();
+            }
+        });
+
         iniciarBotoesHeader(headerLetras);
     }
 
@@ -207,51 +224,38 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             button.setLayoutParams(params);
 
             final int position = i;
-            button.setOnClickListener((View v) -> controlarScroll(position * 16 + 1));
+            button.setOnClickListener((View v) -> controlarScroll(position * 16 + 1, true));
         }
     }
 
     @Override
     public void atualizarPedra(int position) {
-        controlarScroll(position);
+        controlarScroll(position, true);
         rvListaPedras.getAdapter().notifyItemChanged(position);
     }
 
     @Override
     public void reiniciarSorteio() {
         btSortearPedra.setText(getResources().getText(R.string.bt_sortear_pedra));
-        controlarScroll(0);
+        controlarScroll(0, true);
         rvListaPedras.getAdapter().notifyDataSetChanged();
     }
 
-    private void controlarScroll(int position){
-        if (position > 64) {
-            if (position > mScrollPosition)
-                rvListaPedras.smoothScrollToPosition(80);
-            else
-                rvListaPedras.smoothScrollToPosition(64);
-        } else if (position > 48) {
-            if (position > mScrollPosition)
-                rvListaPedras.smoothScrollToPosition(63);
-            else
-                rvListaPedras.smoothScrollToPosition(48);
-        } else if (position > 32) {
-            if (position > mScrollPosition)
-                rvListaPedras.smoothScrollToPosition(47);
-            else
-                rvListaPedras.smoothScrollToPosition(32);
-        } else if (position > 16) {
-            if (position > mScrollPosition)
-                rvListaPedras.smoothScrollToPosition(31);
-            else
-                rvListaPedras.smoothScrollToPosition(16);
-        } else {
-            if (position > mScrollPosition)
-                rvListaPedras.smoothScrollToPosition(15);
-            else
-                rvListaPedras.smoothScrollToPosition(0);
+    private void controlarScroll(int position, boolean smooth){
+        for (int i = 4; i >= 0; i--) {
+            if (position > 16 * i) {
+                if (smooth && (position > mScrollPosition))
+                    mScrollPosition = (16 * i) + 15;
+                else
+                    mScrollPosition = 16 * i;
+                break;
+            }
         }
-        mScrollPosition = position;
+
+        if (smooth)
+            rvListaPedras.smoothScrollToPosition(mScrollPosition);
+        else
+            rvListaPedras.scrollToPosition(mScrollPosition);
     }
 
     static class ApresentarPedrasAdapter extends RecyclerView.Adapter<ApresentarPedrasAdapter.ViewHolder> {
