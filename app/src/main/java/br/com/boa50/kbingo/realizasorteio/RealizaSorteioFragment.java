@@ -41,7 +41,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private static final String STATE_PEDRA_ULTIMA = "ultimaPedra";
     private static final String STATE_SCROLL_ULTIMO = "ultimoScroll";
 
-    final int QTDE_PEDRAS_LINHA_LANDSCAPE = 6;
+    final int QTDE_PEDRAS_LINHA_LANDSCAPE = 5;
     final int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
 
     @Inject
