@@ -6,26 +6,44 @@
     android:background="@color/backgroundPadrao"
     tools:context="br.com.boa50.kbingo.realizasorteio.RealizaSorteioFragment">
 
-    <LinearLayout
-        android:id="@+id/ll_botoes_lista_pedras"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:orientation="horizontal"
-        android:elevation="4dp"
-        android:background="@color/backgroundPadrao"
-        app:layout_constraintBottom_toTopOf="@id/rv_lista_pedras"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--<LinearLayout-->
+        <!--android:id="@+id/ll_botoes_lista_pedras"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="75dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:elevation="4dp"-->
+        <!--android:background="@color/backgroundPadrao"-->
+        <!--app:layout_constraintBottom_toTopOf="@id/rv_lista_pedras"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_lista_pedras"
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/rv_lista_pedras"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="420dp"-->
+        <!--android:foregroundGravity="center_horizontal"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/ll_botoes_lista_pedras" />-->
+
+    <android.support.v4.view.ViewPager
+        android:background="@color/colorSecondary"
+        android:id="@+id/vp_pedras_sorteadas"
         android:layout_width="match_parent"
-        android:layout_height="420dp"
-        android:foregroundGravity="center_horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_botoes_lista_pedras" />
+        android:layout_height="500dp">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tl_pedras_sorteadas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            android:elevation="4dp"
+            android:background="#33b5e5"/>
+
+    </android.support.v4.view.ViewPager>
+
+
 
     <Button
         android:id="@+id/bt_sortear_pedra"
@@ -41,7 +59,7 @@
         app:layout_constraintBottom_toTopOf="@id/bt_novo_sorteio"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_lista_pedras" />
+        app:layout_constraintTop_toBottomOf="@+id/vp_pedras_sorteadas" />
 
     <Button
         android:id="@+id/bt_novo_sorteio"

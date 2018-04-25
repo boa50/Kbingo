@@ -6,7 +6,13 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
@@ -39,29 +45,38 @@ import dagger.android.support.DaggerFragment;
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
     private static final String STATE_PEDRAS = "pedras";
     private static final String STATE_PEDRA_ULTIMA = "ultimaPedra";
-    private static final String STATE_SCROLL_ULTIMO = "ultimoScroll";
+//    private static final String STATE_SCROLL_ULTIMO = "ultimoScroll";
 
-    final int QTDE_PEDRAS_LINHA_LANDSCAPE = 5;
+    final int QTDE_PEDRAS_LINHA_LANDSCAPE = 6;
     final int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
 
-    @BindView(R.id.bt_sortear_pedra) Button btSortearPedra;
+    @BindView(R.id.bt_sortear_pedra)
+    Button btSortearPedra;
 
-    @BindView(R.id.rv_lista_pedras) RecyclerView rvListaPedras;
+    @BindView(R.id.vp_pedras_sorteadas)
+    ViewPager vpPedrasSorteadas;
 
-    @BindView(R.id.bt_novo_sorteio) Button btNovoSorteio;
+    @BindView(R.id.tl_pedras_sorteadas)
+    TabLayout tlPedrasSorteadas;
 
-    @BindView(R.id.ll_botoes_lista_pedras) LinearLayout llBotoesListaPedras;
+//    @BindView(R.id.rv_lista_pedras) RecyclerView rvListaPedras;
+
+    @BindView(R.id.bt_novo_sorteio)
+    Button btNovoSorteio;
+
+//    @BindView(R.id.ll_botoes_lista_pedras) LinearLayout llBotoesListaPedras;
 
     private Unbinder unbinder;
     private int mGridColunas;
-    private int mScrollPosition = 0;
-    private int mScrollChangeOrientation;
+    PedrasSorteadasPageAdapter mPageAdapter;
+//    private int mScrollPosition = 0;
+//    private int mScrollChangeOrientation;
     private ArrayList<Pedra> mPedras;
     private String mUltimaPedraValor;
-    private ArrayList<Integer> mButtonIds;
+//    private ArrayList<Integer> mButtonIds;
 
     @Inject
     public RealizaSorteioFragment() {}
@@ -80,12 +95,16 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         if (savedInstanceState != null) {
             mPedras = (ArrayList<Pedra>) savedInstanceState.getSerializable(STATE_PEDRAS);
             mUltimaPedraValor = savedInstanceState.getString(STATE_PEDRA_ULTIMA);
-            mScrollChangeOrientation = savedInstanceState.getInt(STATE_SCROLL_ULTIMO);
+//            mScrollChangeOrientation = savedInstanceState.getInt(STATE_SCROLL_ULTIMO);
         } else {
             mUltimaPedraValor = "";
-            mScrollPosition = 0;
-            mScrollChangeOrientation = -1;
+//            mScrollPosition = 0;
+//            mScrollChangeOrientation = -1;
         }
+
+        mPageAdapter = new PedrasSorteadasPageAdapter(getActivity().getSupportFragmentManager());
+        vpPedrasSorteadas.setAdapter(mPageAdapter);
+        tlPedrasSorteadas.setupWithViewPager(vpPedrasSorteadas);
 
         return view;
     }
@@ -95,7 +114,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         super.onSaveInstanceState(outState);
         outState.putSerializable(STATE_PEDRAS, mPedras);
         outState.putString(STATE_PEDRA_ULTIMA, mUltimaPedraValor);
-        outState.putInt(STATE_SCROLL_ULTIMO, ((GridLayoutManager)rvListaPedras.getLayoutManager()).findLastVisibleItemPosition());
+//        outState.putInt(STATE_SCROLL_ULTIMO, ((GridLayoutManager)rvListaPedras.getLayoutManager()).findLastVisibleItemPosition());
     }
 
     @Override
@@ -181,192 +200,214 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             }
         });
         gridLayoutManager.setAutoMeasureEnabled(false);
-        rvListaPedras.setLayoutManager(gridLayoutManager);
-        rvListaPedras.setHasFixedSize(true);
+//        rvListaPedras.setLayoutManager(gridLayoutManager);
+//        rvListaPedras.setHasFixedSize(true);
+//
+//        rvListaPedras.addItemDecoration(
+//                new GridSpacesItemDecoration(
+//                        pedras.size(),
+//                        headerPositions
+//                )
+//        );
+//        rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), mPedras));
+//
+//        if (mScrollChangeOrientation > 0)
+//            rvListaPedras.scrollToPosition((mScrollChangeOrientation/16)*16);
+//
+//        rvListaPedras.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                mScrollPosition = ((GridLayoutManager)rvListaPedras.getLayoutManager()).findFirstVisibleItemPosition();
+//
+//                for (int i = 0; i < mButtonIds.size(); i++) {
+//                    Button button = getActivity().findViewById(mButtonIds.get(i));
+//                    if (i == mScrollPosition/16) {
+//                        button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+//                    } else {
+//                        button.setTextColor(getResources().getColor(R.color.textDisabled));
+//                    }
+//                }
+//            }
+//        });
 
-        rvListaPedras.addItemDecoration(
-                new GridSpacesItemDecoration(
-                        pedras.size(),
-                        headerPositions
-                )
-        );
-        rvListaPedras.setAdapter(new ApresentarPedrasAdapter(getContext(), mPedras));
-
-        if (mScrollChangeOrientation > 0)
-            rvListaPedras.scrollToPosition((mScrollChangeOrientation/16)*16);
-
-        rvListaPedras.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                mScrollPosition = ((GridLayoutManager)rvListaPedras.getLayoutManager()).findFirstVisibleItemPosition();
-
-                for (int i = 0; i < mButtonIds.size(); i++) {
-                    Button button = getActivity().findViewById(mButtonIds.get(i));
-                    if (i == mScrollPosition/16) {
-                        button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    } else {
-                        button.setTextColor(getResources().getColor(R.color.textDisabled));
-                    }
-                }
-            }
-        });
-
-        if (mButtonIds == null || mButtonIds.isEmpty())
-            iniciarBotoesHeader(headerLetras);
+//        if (mButtonIds == null || mButtonIds.isEmpty())
+//            iniciarBotoesHeader(headerLetras);
     }
 
-    private void iniciarBotoesHeader(List<String> headers) {
-
-        mButtonIds = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            Button button = new Button(new ContextThemeWrapper(getContext(), R.style.AppTheme_ButtonToBar));
-            button.setText(headers.get(i));
-
-            if (Build.VERSION.SDK_INT < 17)
-                button.setId(i);
-            else
-                button.setId(View.generateViewId());
-
-            mButtonIds.add(button.getId());
-
-            llBotoesListaPedras.addView(button);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    1.0f
-            );
-            button.setLayoutParams(params);
-
-            final int position = i;
-            button.setOnClickListener((View v) -> controlarScroll(position * 16 + 1, false));
-        }
-    }
+//    private void iniciarBotoesHeader(List<String> headers) {
+//
+//        mButtonIds = new ArrayList<>();
+//        for (int i = 0; i < 5; i++) {
+//            Button button = new Button(new ContextThemeWrapper(getContext(), R.style.AppTheme_ButtonToBar));
+//            button.setText(headers.get(i));
+//
+//            if (Build.VERSION.SDK_INT < 17)
+//                button.setId(i);
+//            else
+//                button.setId(View.generateViewId());
+//
+//            mButtonIds.add(button.getId());
+//
+//            llBotoesListaPedras.addView(button);
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    1.0f
+//            );
+//            button.setLayoutParams(params);
+//
+//            final int position = i;
+////            button.setOnClickListener((View v) -> controlarScroll(position * 16 + 1, false));
+//        }
+//    }
 
     @Override
     public void atualizarPedra(int position) {
-        controlarScroll(position, true);
-        rvListaPedras.getAdapter().notifyItemChanged(position);
+//        controlarScroll(position, true);
+//        rvListaPedras.getAdapter().notifyItemChanged(position);
     }
 
     @Override
     public void reiniciarSorteio() {
         btSortearPedra.setText(getResources().getText(R.string.bt_sortear_pedra));
-        controlarScroll(0, true);
-        rvListaPedras.getAdapter().notifyDataSetChanged();
+//        controlarScroll(0, true);
+//        rvListaPedras.getAdapter().notifyDataSetChanged();
     }
 
-    private void controlarScroll(int position, boolean smooth){
-        for (int i = 4; i >= 0; i--) {
-            if (position >= 16 * i) {
-                if (position > mScrollPosition)
-                    mScrollPosition = (16 * i) + 15;
-                else
-                    mScrollPosition = 16 * i;
-                break;
-            }
-        }
+    public class PedrasSorteadasPageAdapter extends FragmentPagerAdapter {
 
-        if (smooth)
-            rvListaPedras.smoothScrollToPosition(mScrollPosition);
-        else
-            rvListaPedras.scrollToPosition(mScrollPosition);
-    }
-
-    static class ApresentarPedrasAdapter extends RecyclerView.Adapter<ApresentarPedrasAdapter.ViewHolder> {
-        private List<Pedra> mPedras;
-        private Context mContext;
-
-        ApresentarPedrasAdapter(Context context, List<Pedra> pedras) {
-            mContext = context;
-            mPedras = pedras;
+        public PedrasSorteadasPageAdapter(FragmentManager fm) {
+            super(fm);
         }
 
         @Override
-        public ApresentarPedrasAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.apresentarpedrasadapter_item, parent,false);
-
-            return new ViewHolder(view);
+        public Fragment getItem(int position) {
+            return new PedrasSorteadasFragment();
         }
 
         @Override
-        public void onBindViewHolder(ApresentarPedrasAdapter.ViewHolder holder, int position) {
-            holder.bindData(mPedras.get(position));
-
-            LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) holder.mTextView.getLayoutParams();
-
-            if (position == 0)
-                params.topMargin = 0;
-
-            holder.mTextView.setLayoutParams(params);
+        public int getCount() {
+            return 5;
         }
 
         @Override
-        public int getItemCount() {
-            return mPedras.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            @BindView(R.id.textView) TextView mTextView;
-
-            ViewHolder(View view) {
-                super(view);
-                ButterKnife.bind(this, view);
-            }
-
-            void bindData(Pedra pedra){
-                LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) mTextView.getLayoutParams();
-                int dimenTextSize;
-                int typeface;
-                int dimenHeight;
-                int dimenTopMargin;
-
-                if (pedra.ismHeader()) {
-                    mTextView.setText(pedra.getmLetra());
-                    mTextView.setBackgroundResource(R.color.headerBackground);
-                    mTextView.setTextColor(mContext.getResources().getColor(R.color.headerTexto));
-
-                    dimenTextSize = R.dimen.header_texto;
-                    typeface = Typeface.BOLD;
-
-                    dimenHeight = R.dimen.header_hight;
-                    dimenTopMargin = R.dimen.header_margin_top;
-
-                    params.width = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
-                } else {
-                    mTextView.setText(pedra.getmNumero());
-                    mTextView.setTextColor(mContext.getResources().getColorStateList(R.color.pedra_pequena_text));
-
-                    ContextThemeWrapper wrapper;
-                    if (pedra.ismSorteada())
-                        wrapper = new ContextThemeWrapper(mContext, R.style.Pedra);
-                    else
-                        wrapper = new ContextThemeWrapper(mContext, R.style.PedraDisabled);
-                    Drawable drawable = ResourcesCompat.getDrawable(mContext.getResources(), R.drawable.pedra, wrapper.getTheme());
-                    mTextView.setBackground(drawable);
-
-                    dimenTextSize = R.dimen.pedra_pequena_texto;
-                    typeface = Typeface.NORMAL;
-
-                    dimenHeight = R.dimen.pedra_pequena_lado;
-                    dimenTopMargin = R.dimen.pedra_pequena_margin_top;
-
-                    params.width = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);
-                }
-
-                mTextView.setTextSize(
-                        TypedValue.COMPLEX_UNIT_PX,
-                        mContext.getResources().getDimension(dimenTextSize)
-                );
-                mTextView.setTypeface(null, typeface);
-                mTextView.setEnabled(pedra.ismSorteada());
-
-                params.height = mContext.getResources().getDimensionPixelSize(dimenHeight);
-                params.topMargin = mContext.getResources().getDimensionPixelSize(dimenTopMargin);
-
-                mTextView.setLayoutParams(params);
-            }
+        public CharSequence getPageTitle(int position) {
+            return "teste" + Integer.toString(position + 1);
         }
     }
+
+    public static class PedrasSorteadasFragment extends Fragment {
+
+        @BindView(R.id.tvTeste)
+        TextView tvTeste;
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.pedrassorteadas_frag, container, false);
+            ButterKnife.bind(this, view);
+
+            tvTeste.setText("Oitava");
+
+            return view;
+        }
+    }
+
+//    static class ApresentarPedrasAdapter extends RecyclerView.Adapter<ApresentarPedrasAdapter.ViewHolder> {
+//        private List<Pedra> mPedras;
+//        private Context mContext;
+//
+//        ApresentarPedrasAdapter(Context context, List<Pedra> pedras) {
+//            mContext = context;
+//            mPedras = pedras;
+//        }
+//
+//        @Override
+//        public ApresentarPedrasAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//            View view = LayoutInflater.from(parent.getContext())
+//                    .inflate(R.layout.apresentarpedrasadapter_item, parent,false);
+//
+//            return new ViewHolder(view);
+//        }
+//
+//        @Override
+//        public void onBindViewHolder(ApresentarPedrasAdapter.ViewHolder holder, int position) {
+//            holder.bindData(mPedras.get(position));
+//
+//            LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) holder.mTextView.getLayoutParams();
+//
+//            if (position == 0)
+//                params.topMargin = 0;
+//
+//            holder.mTextView.setLayoutParams(params);
+//        }
+//
+//        @Override
+//        public int getItemCount() {
+//            return mPedras.size();
+//        }
+//
+//        class ViewHolder extends RecyclerView.ViewHolder {
+//            @BindView(R.id.textView) TextView mTextView;
+//
+//            ViewHolder(View view) {
+//                super(view);
+//                ButterKnife.bind(this, view);
+//            }
+//
+//            void bindData(Pedra pedra){
+//                LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) mTextView.getLayoutParams();
+//                int dimenTextSize;
+//                int typeface;
+//                int dimenHeight;
+//                int dimenTopMargin;
+//
+//                if (pedra.ismHeader()) {
+//                    mTextView.setText(pedra.getmLetra());
+//                    mTextView.setBackgroundResource(R.color.headerBackground);
+//                    mTextView.setTextColor(mContext.getResources().getColor(R.color.headerTexto));
+//
+//                    dimenTextSize = R.dimen.header_texto;
+//                    typeface = Typeface.BOLD;
+//
+//                    dimenHeight = R.dimen.header_hight;
+//                    dimenTopMargin = R.dimen.header_margin_top;
+//
+//                    params.width = LinearLayoutCompat.LayoutParams.MATCH_PARENT;
+//                } else {
+//                    mTextView.setText(pedra.getmNumero());
+//                    mTextView.setTextColor(mContext.getResources().getColorStateList(R.color.pedra_pequena_text));
+//
+//                    ContextThemeWrapper wrapper;
+//                    if (pedra.ismSorteada())
+//                        wrapper = new ContextThemeWrapper(mContext, R.style.Pedra);
+//                    else
+//                        wrapper = new ContextThemeWrapper(mContext, R.style.PedraDisabled);
+//                    Drawable drawable = ResourcesCompat.getDrawable(mContext.getResources(), R.drawable.pedra, wrapper.getTheme());
+//                    mTextView.setBackground(drawable);
+//
+//                    dimenTextSize = R.dimen.pedra_pequena_texto;
+//                    typeface = Typeface.NORMAL;
+//
+//                    dimenHeight = R.dimen.pedra_pequena_lado;
+//                    dimenTopMargin = R.dimen.pedra_pequena_margin_top;
+//
+//                    params.width = mContext.getResources().getDimensionPixelSize(R.dimen.pedra_pequena_lado);
+//                }
+//
+//                mTextView.setTextSize(
+//                        TypedValue.COMPLEX_UNIT_PX,
+//                        mContext.getResources().getDimension(dimenTextSize)
+//                );
+//                mTextView.setTypeface(null, typeface);
+//                mTextView.setEnabled(pedra.ismSorteada());
+//
+//                params.height = mContext.getResources().getDimensionPixelSize(dimenHeight);
+//                params.topMargin = mContext.getResources().getDimensionPixelSize(dimenTopMargin);
+//
+//                mTextView.setLayoutParams(params);
+//            }
+//        }
+//    }
 }
