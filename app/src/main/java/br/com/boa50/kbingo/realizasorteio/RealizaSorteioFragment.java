@@ -2,9 +2,8 @@ package br.com.boa50.kbingo.realizasorteio;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -13,16 +12,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.GridLayout;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -31,10 +28,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.R;
+import br.com.boa50.kbingo.data.Letra;
 import br.com.boa50.kbingo.data.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
-import br.com.boa50.kbingo.util.GridSpacesItemDecoration;
-import br.com.boa50.kbingo.util.PedraUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,8 +39,10 @@ import dagger.android.support.DaggerFragment;
 
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
-    private static final String STATE_PEDRAS = "pedras";
-    private static final String STATE_PEDRA_ULTIMA = "ultimaPedra";
+    private static final String ARGS_PEDRAS = "pedras";
+    private static final String ARGS_PEDRA_ULTIMA = "ultimaPedra";
+    private static final String ARGS_GRID_COLUNAS = "gridColunas";
+    private static final String ARGS_LETRA_POSITION = "letraPosition";
 //    private static final String STATE_SCROLL_ULTIMO = "ultimoScroll";
 
     final int QTDE_PEDRAS_LINHA_LANDSCAPE = 6;
@@ -75,6 +73,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 //    private int mScrollPosition = 0;
 //    private int mScrollChangeOrientation;
     private ArrayList<Pedra> mPedras;
+    private List<Letra> mLetras;
     private String mUltimaPedraValor;
 //    private ArrayList<Integer> mButtonIds;
 
@@ -93,8 +92,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         unbinder = ButterKnife.bind(this, view);
 
         if (savedInstanceState != null) {
-            mPedras = (ArrayList<Pedra>) savedInstanceState.getSerializable(STATE_PEDRAS);
-            mUltimaPedraValor = savedInstanceState.getString(STATE_PEDRA_ULTIMA);
+            mPedras = savedInstanceState.getParcelableArrayList(ARGS_PEDRAS);
+            mUltimaPedraValor = savedInstanceState.getString(ARGS_PEDRA_ULTIMA);
 //            mScrollChangeOrientation = savedInstanceState.getInt(STATE_SCROLL_ULTIMO);
         } else {
             mUltimaPedraValor = "";
@@ -102,18 +101,14 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 //            mScrollChangeOrientation = -1;
         }
 
-        mPageAdapter = new PedrasSorteadasPageAdapter(getActivity().getSupportFragmentManager());
-        vpPedrasSorteadas.setAdapter(mPageAdapter);
-        tlPedrasSorteadas.setupWithViewPager(vpPedrasSorteadas);
-
         return view;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(STATE_PEDRAS, mPedras);
-        outState.putString(STATE_PEDRA_ULTIMA, mUltimaPedraValor);
+        outState.putParcelableArrayList(ARGS_PEDRAS, mPedras);
+        outState.putString(ARGS_PEDRA_ULTIMA, mUltimaPedraValor);
 //        outState.putInt(STATE_SCROLL_ULTIMO, ((GridLayoutManager)rvListaPedras.getLayoutManager()).findLastVisibleItemPosition());
     }
 
@@ -182,24 +177,25 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     @Override
     public void iniciarPedras(ArrayList<Pedra> pedras) {
         mPedras = pedras;
-        List<Integer> headerPositions = PedraUtils.getHeadersPositions(mPedras);
-        List<String> headerLetras = new ArrayList<>();
+//        List<Integer> headerPositions = PedraUtils.getHeadersPositions(mPedras);
+//        List<String> headerLetras = new ArrayList<>();
+//
+//        for (int i : headerPositions) {
+//            headerLetras.add(mPedras.get(i).getmLetra());
+//        }
+//
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), mGridColunas);
+//        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//            @Override
+//            public int getSpanSize(int position) {
+//                if (mPedras.get(position).ismHeader()) {
+//                    return mGridColunas;
+//                } else
+//                    return 1;
+//            }
+//        });
+//        gridLayoutManager.setAutoMeasureEnabled(false);
 
-        for (int i : headerPositions) {
-            headerLetras.add(mPedras.get(i).getmLetra());
-        }
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), mGridColunas);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if (mPedras.get(position).ismHeader()) {
-                    return mGridColunas;
-                } else
-                    return 1;
-            }
-        });
-        gridLayoutManager.setAutoMeasureEnabled(false);
 //        rvListaPedras.setLayoutManager(gridLayoutManager);
 //        rvListaPedras.setHasFixedSize(true);
 //
@@ -235,6 +231,15 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 //            iniciarBotoesHeader(headerLetras);
     }
 
+    @Override
+    public void iniciarLayout(List<Letra> letras) {
+        mLetras = letras;
+
+        mPageAdapter = new PedrasSorteadasPageAdapter(getActivity().getSupportFragmentManager());
+        vpPedrasSorteadas.setAdapter(mPageAdapter);
+        tlPedrasSorteadas.setupWithViewPager(vpPedrasSorteadas);
+    }
+
 //    private void iniciarBotoesHeader(List<String> headers) {
 //
 //        mButtonIds = new ArrayList<>();
@@ -264,15 +269,15 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void atualizarPedra(int position) {
-//        controlarScroll(position, true);
-//        rvListaPedras.getAdapter().notifyItemChanged(position);
+        mPageAdapter.notifyDataSetChanged();
+        vpPedrasSorteadas.setCurrentItem(position/15);
     }
 
     @Override
     public void reiniciarSorteio() {
         btSortearPedra.setText(getResources().getText(R.string.bt_sortear_pedra));
-//        controlarScroll(0, true);
-//        rvListaPedras.getAdapter().notifyDataSetChanged();
+        mPageAdapter.notifyDataSetChanged();
+        vpPedrasSorteadas.setCurrentItem(0);
     }
 
     public class PedrasSorteadasPageAdapter extends FragmentPagerAdapter {
@@ -283,34 +288,96 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         @Override
         public Fragment getItem(int position) {
-            return new PedrasSorteadasFragment();
+            Fragment fragment = new PedrasSorteadasFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARGS_GRID_COLUNAS, mGridColunas);
+            args.putInt(ARGS_LETRA_POSITION, position);
+            args.putParcelableArrayList(ARGS_PEDRAS, mPedras);
+            fragment.setArguments(args);
+            return fragment;
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return mLetras.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "K";
+            return mLetras.get(position).getmNome();
+        }
+
+//        @Override
+//        public int getItemPosition(Object object) {
+//            return POSITION_NONE; //Gambiarra para atualizar as pedras
+//        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            return super.instantiateItem(container, position);
         }
     }
 
     public static class PedrasSorteadasFragment extends Fragment {
 
-//        @BindView(R.id.tvTeste)
-//        TextView tvTeste;
+        @BindView(R.id.gl_pedras_sorteadas)
+        GridLayout glPedrasSorteadas;
+
+        private Context mContext;
+        private int mLetraPosition;
+        private ArrayList<Pedra> mPedras;
 
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.pedrassorteadas_frag, container, false);
-//            ButterKnife.bind(this, view);
-//
-//            tvTeste.setText("Oitava");
+            ButterKnife.bind(this, view);
+
+            Bundle args = getArguments();
+            mLetraPosition = args.getInt(ARGS_LETRA_POSITION);
+            mPedras = args.getParcelableArrayList(ARGS_PEDRAS);
+            mContext = view.getContext();
+
+            glPedrasSorteadas.setColumnCount(args.getInt(ARGS_GRID_COLUNAS));
+
+            for (int i = 0; i < 15; i++) {
+                TextView textView = new TextView(view.getContext());
+                glPedrasSorteadas.addView(textView);
+                estilizarTextViewPedra(textView, i);
+            }
 
             return view;
+        }
+
+        private void estilizarTextViewPedra(TextView textView, int position) {
+            Resources resources = mContext.getResources();
+            Pedra pedra = mPedras.get(position + (mLetraPosition * 15));
+
+            GridLayout.LayoutParams params = (GridLayout.LayoutParams) textView.getLayoutParams();
+            params.width = resources.getDimensionPixelSize(R.dimen.pedra_pequena_lado);
+            params.height = resources.getDimensionPixelSize(R.dimen.pedra_pequena_lado);
+            int marginPx = resources.getDimensionPixelSize(R.dimen.pedra_pequena_margin);
+            params.setMargins(marginPx, marginPx, marginPx, marginPx);
+            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+            textView.setLayoutParams(params);
+            textView.setText(pedra.getmNumero());
+            textView.setGravity(Gravity.CENTER);
+
+            textView.setTextSize(
+                    TypedValue.COMPLEX_UNIT_PX,
+                    resources.getDimension(R.dimen.pedra_pequena_texto)
+            );
+
+            textView.setTextColor(resources.getColorStateList(R.color.pedra_pequena_text));
+            textView.setEnabled(pedra.ismSorteada());
+
+            ContextThemeWrapper wrapper;
+            if (pedra.ismSorteada())
+                wrapper = new ContextThemeWrapper(mContext, R.style.Pedra);
+            else
+                wrapper = new ContextThemeWrapper(mContext, R.style.PedraDisabled);
+            Drawable drawable = ResourcesCompat.getDrawable(resources, R.drawable.pedra, wrapper.getTheme());
+            textView.setBackground(drawable);
         }
     }
 

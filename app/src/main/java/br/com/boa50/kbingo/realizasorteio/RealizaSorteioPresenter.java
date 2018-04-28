@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.BaseView;
 import br.com.boa50.kbingo.data.Pedra;
+import br.com.boa50.kbingo.data.source.LetrasRepository;
 import br.com.boa50.kbingo.data.source.PedrasRepository;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
@@ -30,6 +31,8 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private final PedrasRepository mPedrasRespository;
 
+    private final LetrasRepository mLetrasRespository;
+
     private final BaseSchedulerProvider mScheduleProvider;
 
     private CompositeDisposable mCompositeDisposable;
@@ -39,8 +42,9 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     private List<Integer> posicoes;
 
     @Inject
-    RealizaSorteioPresenter(PedrasRepository pedrasRespository, BaseSchedulerProvider schedulerProvider) {
+    RealizaSorteioPresenter(PedrasRepository pedrasRespository, LetrasRepository letrasRepository, BaseSchedulerProvider schedulerProvider) {
         mPedrasRespository = checkNotNull(pedrasRespository, "Pedras Repository cannot be null");
+        mLetrasRespository = checkNotNull(letrasRepository, "Letras Repository cannot be null");
         mScheduleProvider = checkNotNull(schedulerProvider, "Schedule Provider cannot null");
 
         mCompositeDisposable = new CompositeDisposable();
@@ -114,6 +118,8 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             mView.iniciarPedras(mPedras);
             preencherPosicoesSorteio();
         }
+
+        mView.iniciarLayout(mLetrasRespository.getLetras());
     }
 
     private void preencherPosicoesSorteio() {
@@ -123,9 +129,10 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             posicoes.clear();
 
         for (int i = 0; i < mPedras.size(); i++) {
-            if (!mPedras.get(i).ismHeader() && !mPedras.get(i).ismSorteada())
+            if (!mPedras.get(i).ismSorteada())
                 posicoes.add(i);
         }
+
         Collections.shuffle(posicoes);
     }
 

@@ -15,8 +15,6 @@ public class Pedra implements Parcelable{
 
     private String mNumero;
 
-    private boolean mHeader;
-
     private boolean mSorteada;
 
     public Pedra(String mId, String mLetra, String mNumero) {
@@ -26,19 +24,10 @@ public class Pedra implements Parcelable{
         this.mSorteada = false;
     }
 
-    public Pedra(String mId, String mLetra, String mNumero, boolean mHeader) {
-        this.mId = mId;
-        this.mLetra = mLetra;
-        this.mNumero = mNumero;
-        this.mHeader = mHeader;
-        this.mSorteada = false;
-    }
-
     protected Pedra(Parcel in) {
         mId = in.readString();
         mLetra = in.readString();
         mNumero = in.readString();
-        mHeader = in.readByte() != 0;
         mSorteada = in.readByte() != 0;
     }
 
@@ -86,14 +75,6 @@ public class Pedra implements Parcelable{
         this.mSorteada = mSorteada;
     }
 
-    public boolean ismHeader() {
-        return mHeader;
-    }
-
-    public void setmHeader(boolean mHeader) {
-        this.mHeader = mHeader;
-    }
-
     public String getValorPedra(){
         return mLetra + mNumero;
     }
@@ -108,7 +89,6 @@ public class Pedra implements Parcelable{
         parcel.writeString(mId);
         parcel.writeString(mLetra);
         parcel.writeString(mNumero);
-        parcel.writeByte((byte) (mHeader ? 1 : 0));
         parcel.writeByte((byte) (mSorteada ? 1 : 0));
     }
 }

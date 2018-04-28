@@ -33,15 +33,6 @@ public class PedrasRepository implements PedrasDataSource {
         for (int i = 1; i <= 75; i++) {
             String letra = letras.get((i-1)/15).getmNome();
 
-            if (i % 15 == 1) {
-                pedras.add(new Pedra(
-                   "0" + Integer.toString(i),
-                        letra,
-                        "",
-                        true
-                ));
-            }
-
             pedras.add(new Pedra(
                     Integer.toString(i),
                     letra,
