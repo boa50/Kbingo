@@ -293,22 +293,22 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "teste" + Integer.toString(position + 1);
+            return "K";
         }
     }
 
     public static class PedrasSorteadasFragment extends Fragment {
 
-        @BindView(R.id.tvTeste)
-        TextView tvTeste;
+//        @BindView(R.id.tvTeste)
+//        TextView tvTeste;
 
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.pedrassorteadas_frag, container, false);
-            ButterKnife.bind(this, view);
-
-            tvTeste.setText("Oitava");
+//            ButterKnife.bind(this, view);
+//
+//            tvTeste.setText("Oitava");
 
             return view;
         }
