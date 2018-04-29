@@ -10,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayout;
@@ -280,7 +281,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         vpPedrasSorteadas.setCurrentItem(0);
     }
 
-    public class PedrasSorteadasPageAdapter extends FragmentPagerAdapter {
+    public class PedrasSorteadasPageAdapter extends FragmentStatePagerAdapter {
 
         public PedrasSorteadasPageAdapter(FragmentManager fm) {
             super(fm);
@@ -311,6 +312,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 //        public int getItemPosition(Object object) {
 //            return POSITION_NONE; //Gambiarra para atualizar as pedras
 //        }
+
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
@@ -354,12 +356,14 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             Pedra pedra = mPedras.get(position + (mLetraPosition * 15));
 
             GridLayout.LayoutParams params = (GridLayout.LayoutParams) textView.getLayoutParams();
-            params.width = resources.getDimensionPixelSize(R.dimen.pedra_pequena_lado);
+            params.width = resources.getDimensionPixelSize(R.dimen.pedra_pequena_lado);;
             params.height = resources.getDimensionPixelSize(R.dimen.pedra_pequena_lado);
             int marginPx = resources.getDimensionPixelSize(R.dimen.pedra_pequena_margin);
             params.setMargins(marginPx, marginPx, marginPx, marginPx);
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
             textView.setLayoutParams(params);
+
+            textView.setId(Integer.parseInt(pedra.getmId()));
             textView.setText(pedra.getmNumero());
             textView.setGravity(Gravity.CENTER);
 
