@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,6 +33,7 @@ import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.Letra;
 import br.com.boa50.kbingo.data.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
+import br.com.boa50.kbingo.util.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -270,8 +272,15 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void atualizarPedra(int position) {
-        mPageAdapter.notifyDataSetChanged();
         vpPedrasSorteadas.setCurrentItem(position/15);
+
+        String tag = mPageAdapter.mapFragment.get(position/15);
+
+        PedrasSorteadasFragment fragment =  (PedrasSorteadasFragment) mPageAdapter.getFragment(position/15);
+        fragment.atualizarPedras(mPedras.get(position).getmId());
+
+        mPageAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -281,10 +290,14 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         vpPedrasSorteadas.setCurrentItem(0);
     }
 
-    public class PedrasSorteadasPageAdapter extends FragmentStatePagerAdapter {
+    public class PedrasSorteadasPageAdapter extends FragmentPagerAdapter {
+
+        public HashMap<Integer, String> mapFragment = new HashMap<>();
+        public FragmentManager fragmentManager;
 
         public PedrasSorteadasPageAdapter(FragmentManager fm) {
             super(fm);
+            fragmentManager = fm;
         }
 
         @Override
@@ -295,6 +308,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             args.putInt(ARGS_LETRA_POSITION, position);
             args.putParcelableArrayList(ARGS_PEDRAS, mPedras);
             fragment.setArguments(args);
+//            fragmentManager.beginTransaction().add(fragment, Integer.toString(position));
+//            mapFragment.put(position, fragment.getTag());
             return fragment;
         }
 
@@ -313,10 +328,21 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 //            return POSITION_NONE; //Gambiarra para atualizar as pedras
 //        }
 
-
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            return super.instantiateItem(container, position);
+            Object object = super.instantiateItem(container, position);
+            if (object instanceof Fragment) {
+                mapFragment.put(position, ((Fragment) object).getTag());
+            }
+            return object;
+        }
+
+        public Fragment getFragment(int position) {
+            String tag = mapFragment.get(position);
+            if (tag != null) {
+                return fragmentManager.findFragmentByTag(tag);
+            }
+            return null;
         }
     }
 
@@ -349,6 +375,11 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             }
 
             return view;
+        }
+
+        public void atualizarPedras(String id) {
+            TextView tv = this.getView().findViewById(Integer.parseInt(id));
+            tv.setText("abc");
         }
 
         private void estilizarTextViewPedra(TextView textView, int position) {
