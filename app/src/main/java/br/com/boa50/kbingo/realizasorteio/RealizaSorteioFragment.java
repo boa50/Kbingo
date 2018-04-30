@@ -1,19 +1,21 @@
 package br.com.boa50.kbingo.realizasorteio;
 
+import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Animatable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayout;
+import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
@@ -24,8 +26,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -33,7 +35,6 @@ import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.Letra;
 import br.com.boa50.kbingo.data.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
-import br.com.boa50.kbingo.util.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -274,43 +275,35 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     public void atualizarPedra(int position) {
         vpPedrasSorteadas.setCurrentItem(position/15);
 
-        String tag = mPageAdapter.mapFragment.get(position/15);
-
         PedrasSorteadasFragment fragment =  (PedrasSorteadasFragment) mPageAdapter.getFragment(position/15);
-        fragment.atualizarPedras(mPedras.get(position).getmId());
-
-        mPageAdapter.notifyDataSetChanged();
-
+        fragment.transitarTextViewPedra(mPedras.get(position).getmId());
     }
 
     @Override
     public void reiniciarSorteio() {
         btSortearPedra.setText(getResources().getText(R.string.bt_sortear_pedra));
+
+        for (int i = 0; i < mPageAdapter.getCount(); i++) {
+            ((PedrasSorteadasFragment) mPageAdapter.getFragment(i)).inicializarPedras();
+        }
         mPageAdapter.notifyDataSetChanged();
         vpPedrasSorteadas.setCurrentItem(0);
     }
 
     public class PedrasSorteadasPageAdapter extends FragmentPagerAdapter {
 
-        public HashMap<Integer, String> mapFragment = new HashMap<>();
-        public FragmentManager fragmentManager;
+        private SparseArray<String> mSparseFragment;
+        private FragmentManager mFragmentManager;
 
         public PedrasSorteadasPageAdapter(FragmentManager fm) {
             super(fm);
-            fragmentManager = fm;
+            mFragmentManager = fm;
+            mSparseFragment = new SparseArray<>();
         }
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = new PedrasSorteadasFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARGS_GRID_COLUNAS, mGridColunas);
-            args.putInt(ARGS_LETRA_POSITION, position);
-            args.putParcelableArrayList(ARGS_PEDRAS, mPedras);
-            fragment.setArguments(args);
-//            fragmentManager.beginTransaction().add(fragment, Integer.toString(position));
-//            mapFragment.put(position, fragment.getTag());
-            return fragment;
+            return PedrasSorteadasFragment.newInstance(mGridColunas, position, mPedras);
         }
 
         @Override
@@ -323,24 +316,19 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             return mLetras.get(position).getmNome();
         }
 
-//        @Override
-//        public int getItemPosition(Object object) {
-//            return POSITION_NONE; //Gambiarra para atualizar as pedras
-//        }
-
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             Object object = super.instantiateItem(container, position);
             if (object instanceof Fragment) {
-                mapFragment.put(position, ((Fragment) object).getTag());
+                mSparseFragment.append(position, ((Fragment) object).getTag());
             }
             return object;
         }
 
         public Fragment getFragment(int position) {
-            String tag = mapFragment.get(position);
+            String tag = mSparseFragment.get(position);
             if (tag != null) {
-                return fragmentManager.findFragmentByTag(tag);
+                return mFragmentManager.findFragmentByTag(tag);
             }
             return null;
         }
@@ -355,6 +343,18 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         private int mLetraPosition;
         private ArrayList<Pedra> mPedras;
 
+        static PedrasSorteadasFragment newInstance(int gridColunas, int letraPosition, ArrayList<Pedra> pedras) {
+            PedrasSorteadasFragment fragment = new PedrasSorteadasFragment();
+
+            Bundle args = new Bundle();
+            args.putInt(ARGS_GRID_COLUNAS, gridColunas);
+            args.putInt(ARGS_LETRA_POSITION, letraPosition);
+            args.putParcelableArrayList(ARGS_PEDRAS, pedras);
+            fragment.setArguments(args);
+
+            return fragment;
+        }
+
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -368,18 +368,19 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
             glPedrasSorteadas.setColumnCount(args.getInt(ARGS_GRID_COLUNAS));
 
-            for (int i = 0; i < 15; i++) {
-                TextView textView = new TextView(view.getContext());
-                glPedrasSorteadas.addView(textView);
-                estilizarTextViewPedra(textView, i);
-            }
+            inicializarPedras();
 
             return view;
         }
 
-        public void atualizarPedras(String id) {
-            TextView tv = this.getView().findViewById(Integer.parseInt(id));
-            tv.setText("abc");
+        public void inicializarPedras() {
+            glPedrasSorteadas.removeAllViews();
+
+            for (int i = 0; i < 15; i++) {
+                TextView textView = new TextView(mContext);
+                glPedrasSorteadas.addView(textView);
+                estilizarTextViewPedra(textView, i);
+            }
         }
 
         private void estilizarTextViewPedra(TextView textView, int position) {
@@ -404,15 +405,22 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             );
 
             textView.setTextColor(resources.getColorStateList(R.color.pedra_pequena_text));
-            textView.setEnabled(pedra.ismSorteada());
+            textView.setEnabled(false);
 
-            ContextThemeWrapper wrapper;
-            if (pedra.ismSorteada())
-                wrapper = new ContextThemeWrapper(mContext, R.style.Pedra);
-            else
-                wrapper = new ContextThemeWrapper(mContext, R.style.PedraDisabled);
-            Drawable drawable = ResourcesCompat.getDrawable(resources, R.drawable.pedra, wrapper.getTheme());
+            ContextThemeWrapper wrapper = new ContextThemeWrapper(mContext, R.style.PedraDisabled);
+            AnimatedVectorDrawableCompat drawable = AnimatedVectorDrawableCompat.create(mContext, R.drawable.pedrapequena_anim);
+            Objects.requireNonNull(drawable).applyTheme(wrapper.getTheme());
             textView.setBackground(drawable);
+        }
+
+        public void transitarTextViewPedra(String id) {
+            TextView textView = Objects.requireNonNull(this.getView()).findViewById(Integer.parseInt(id));
+
+            if (Build.VERSION.SDK_INT >= 21)
+                textView.setStateListAnimator(AnimatorInflater.loadStateListAnimator(mContext, R.animator.pedrapequenatext_animator));
+
+            ((Animatable) textView.getBackground()).start();
+            textView.setEnabled(true);
         }
     }
 

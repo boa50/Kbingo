@@ -39,7 +39,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/pedra"
-        android:theme="@style/Pedra"
         android:text="@string/bt_sortear_pedra"
         android:textSize="@dimen/pedra_grande_texto"
         app:layout_constraintTop_toTopOf="parent"

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/pedra">
+    <target
+        android:animation="@anim/pedraexterna_anim"
+        android:name="externa"/>
+    <target
+        android:animation="@anim/pedraintermediaria_anim"
+        android:name="intermediaria"/>
+    <target
+        android:animation="@anim/pedrainterna_anim"
+        android:name="interna"/>
+</animated-vector>
