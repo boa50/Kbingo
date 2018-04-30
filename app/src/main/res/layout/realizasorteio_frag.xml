@@ -35,10 +35,15 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tl_pedras_sorteadas"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabGravity="fill"
+            android:layout_height="48dp"
             android:elevation="4dp"
-            android:background="#33b5e5"/>
+            app:tabGravity="fill"
+            app:tabTextColor="@color/headerTexto"
+            app:tabSelectedTextColor="@color/colorSecondary"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:tabBackground="@color/colorPrimaryDark"
+            app:tabIndicatorColor="@color/colorSecondary"
+            app:tabIndicatorHeight="4dp"/>
 
     </android.support.v4.view.ViewPager>
 
