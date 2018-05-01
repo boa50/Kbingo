@@ -6,30 +6,25 @@
     android:background="@color/backgroundPadrao"
     tools:context="br.com.boa50.kbingo.realizasorteio.RealizaSorteioFragment">
 
-    <LinearLayout
-        android:id="@+id/ll_lista_box"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_pedras_sorteadas"
         android:layout_width="700dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="8dp"
-        android:paddingStart="8dp"
-        android:paddingRight="8dp"
-        android:paddingEnd="8dp">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/ll_botoes_lista_pedras"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tl_pedras_sorteadas"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
+            android:layout_height="48dp"
             android:elevation="4dp"
-            android:background="@color/backgroundPadrao"
-            android:orientation="horizontal" />
+            app:tabGravity="fill"
+            app:tabTextColor="@color/headerTextoOpaco"
+            app:tabSelectedTextColor="@color/colorSecondary"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:tabBackground="@color/colorPrimaryDark"
+            app:tabIndicatorColor="@color/colorSecondary"
+            app:tabIndicatorHeight="4dp"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_lista_pedras"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
+    </android.support.v4.view.ViewPager>
 
     <Button
         android:id="@+id/bt_sortear_pedra"
@@ -42,7 +37,7 @@
         android:text="@string/bt_sortear_pedra"
         android:textSize="@dimen/pedra_grande_texto"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ll_lista_box"
+        app:layout_constraintStart_toEndOf="@id/vp_pedras_sorteadas"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bt_novo_sorteio"/>
 
@@ -53,7 +48,7 @@
         android:layout_height="wrap_content"
         android:text="@string/bt_novo_sorteio"
         app:layout_constraintTop_toBottomOf="@+id/bt_sortear_pedra"
-        app:layout_constraintStart_toEndOf="@id/ll_lista_box"
+        app:layout_constraintStart_toEndOf="@id/vp_pedras_sorteadas"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
