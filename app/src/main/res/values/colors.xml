@@ -25,4 +25,5 @@
     <color name="pedraTextoEnabled">#D50000</color>
     <color name="headerBackground">@color/colorPrimaryDark</color>
     <color name="headerTexto">@color/textPrimary</color>
+    <color name="headerTextoOpaco">#B3FFFFFF</color>
 </resources>

@@ -17,7 +17,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayout;
 import android.util.SparseArray;
 import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -407,9 +406,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             textView.setTextColor(resources.getColorStateList(R.color.pedra_pequena_text));
             textView.setEnabled(false);
 
-            ContextThemeWrapper wrapper = new ContextThemeWrapper(mContext, R.style.PedraDisabled);
             AnimatedVectorDrawableCompat drawable = AnimatedVectorDrawableCompat.create(mContext, R.drawable.pedrapequena_anim);
-            Objects.requireNonNull(drawable).applyTheme(wrapper.getTheme());
             textView.setBackground(drawable);
         }
 

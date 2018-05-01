@@ -1,13 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:drawable="@drawable/pedra">
-    <target
-        android:animation="@anim/pedraexterna_anim"
-        android:name="externa"/>
-    <target
-        android:animation="@anim/pedraintermediaria_anim"
-        android:name="intermediaria"/>
-    <target
-        android:animation="@anim/pedrainterna_anim"
-        android:name="interna"/>
+    <target android:name="externa">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="@android:integer/config_mediumAnimTime"
+                android:propertyName="fillColor"
+                android:valueFrom="@color/pedraPrimariaDisabled"
+                android:valueTo="@color/pedraPrimariaEnabled"
+                android:valueType="colorType"/>
+        </aapt:attr>
+    </target>
+    <target android:name="intermediaria">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="@android:integer/config_mediumAnimTime"
+                android:propertyName="fillColor"
+                android:valueFrom="@color/pedraSecundariaDisabled"
+                android:valueTo="@color/pedraSecundariaEnabled"
+                android:valueType="colorType"/>
+        </aapt:attr>
+    </target>
+    <target android:name="interna">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="@android:integer/config_mediumAnimTime"
+                    android:propertyName="fillColor"
+                    android:valueFrom="@color/pedraSecundariaDisabled"
+                    android:valueTo="@color/pedraSecundariaEnabled"
+                    android:valueType="colorType"/>
+
+                <objectAnimator
+                    android:duration="@android:integer/config_mediumAnimTime"
+                    android:propertyName="strokeColor"
+                    android:valueFrom="@color/pedraPrimariaDisabled"
+                    android:valueTo="@color/pedraPrimariaEnabled"
+                    android:valueType="colorType"/>
+            </set>
+        </aapt:attr>
+    </target>
 </animated-vector>

@@ -6,6 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- Valor default para as cores das pedras -->
+        <item name="pedra_cor_primaria">@color/pedraPrimariaDisabled</item>
+        <item name="pedra_cor_secundaria">@color/pedraSecundariaDisabled</item>
     </style>
 
     <style name="AppTheme.Button">
@@ -26,10 +30,4 @@
         <item name="pedra_cor_primaria">@color/pedraPrimariaEnabled</item>
         <item name="pedra_cor_secundaria">@color/pedraSecundariaEnabled</item>
     </style>
-
-    <style name="PedraDisabled" parent="PedraEnabled">
-        <item name="pedra_cor_primaria">@color/pedraPrimariaDisabled</item>
-        <item name="pedra_cor_secundaria">@color/pedraSecundariaDisabled</item>
-    </style>
-
 </resources>
