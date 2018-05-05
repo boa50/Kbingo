@@ -243,7 +243,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         vpPedrasSorteadas.setOffscreenPageLimit(4);
         vpPedrasSorteadas.setAdapter(mPageAdapter);
         tlPedrasSorteadas.setupWithViewPager(vpPedrasSorteadas);
-        vpPedrasSorteadas.setOffscreenPageLimit(4);
     }
 
 //    private void iniciarBotoesHeader(List<String> headers) {
