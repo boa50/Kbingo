@@ -150,6 +150,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimension(R.dimen.pedra_grande_texto)
         );
+
         mPresenter.resetarPedras();
     }
 
@@ -241,6 +242,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         mPageAdapter = new PedrasSorteadasPageAdapter(getActivity().getSupportFragmentManager());
         vpPedrasSorteadas.setAdapter(mPageAdapter);
         tlPedrasSorteadas.setupWithViewPager(vpPedrasSorteadas);
+        vpPedrasSorteadas.setOffscreenPageLimit(4);
     }
 
 //    private void iniciarBotoesHeader(List<String> headers) {
