@@ -29,6 +29,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.boa50.kbingo.CustomMatchers.indexChildOf;
 import static br.com.boa50.kbingo.CustomMatchers.withPedraBackground;
 import static br.com.boa50.kbingo.CustomMatchers.withTextColor;
+import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class RealizaSorteioEspressoTest {
@@ -42,11 +43,22 @@ public class RealizaSorteioEspressoTest {
         onView(withId(R.id.bt_sortear_pedra))
                 .perform(click());
 
+        String text = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
+
+        Drawable drawable = VectorDrawableCompat.create(
+                mActivityRule.getActivity().getResources(),
+                R.drawable.pedra,
+                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
+
         onView(withId(R.id.bt_novo_sorteio))
                 .perform(click());
 
         onView(withText("01"))
                 .check(matches(isDisplayed()));
+        onView(withText(text))
+                .check(matches(withTextColor(R.color.textDisabled)));
+        onView(withText(text))
+                .check(matches(not(withPedraBackground(drawable))));
     }
 
     @Test
@@ -61,12 +73,13 @@ public class RealizaSorteioEspressoTest {
                 R.drawable.pedra,
                 new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
 
-        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 4)).perform(click());
-        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 0)).perform(click());
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 4))
+                .perform(click());
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 0))
+                .perform(click());
 
         onView(withText(text))
                 .check(matches(withTextColor(R.color.pedraTextoEnabled)));
-
         onView(withText(text))
                 .check(matches(withPedraBackground(drawable)));
 
