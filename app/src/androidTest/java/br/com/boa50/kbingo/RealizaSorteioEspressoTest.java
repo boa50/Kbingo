@@ -24,7 +24,11 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.boa50.kbingo.CustomMatchers.indexChildOf;
+import static br.com.boa50.kbingo.CustomMatchers.withPedraBackground;
+import static br.com.boa50.kbingo.CustomMatchers.withTextColor;
 
 @RunWith(AndroidJUnit4.class)
 public class RealizaSorteioEspressoTest {
@@ -46,7 +50,7 @@ public class RealizaSorteioEspressoTest {
     }
 
     @Test
-    public void sortearPedra_mudarCorPedra() {
+    public void sortearPedra_scrollDistante_mantemCorMudada() {
         onView(withId(R.id.bt_sortear_pedra))
                 .perform(click());
 
@@ -57,11 +61,15 @@ public class RealizaSorteioEspressoTest {
                 R.drawable.pedra,
                 new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
 
-        onView(withText(text))
-                .check(matches(CustomMatchers.withTextColor(R.color.pedraTextoEnabled)));
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 4)).perform(click());
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 0)).perform(click());
 
         onView(withText(text))
-                .check(matches(CustomMatchers.withPedraBackground(drawable)));
+                .check(matches(withTextColor(R.color.pedraTextoEnabled)));
+
+        onView(withText(text))
+                .check(matches(withPedraBackground(drawable)));
+
     }
 
     private String getButtonText(final Matcher<View> matcher) {
@@ -86,10 +94,7 @@ public class RealizaSorteioEspressoTest {
         return stringHolder[0];
     }
 
-
     //TODO pausar e restartar a aplicação
-    //TODO scroll do tab layout
-    //TODO ver se a pedra continua sorteada quando mudar entre viewPagers distantes
     //TODO mudança da orientação e manutenção das pedras sorteadas
     //TODO mudança da orientação e mudança no layout?
 }

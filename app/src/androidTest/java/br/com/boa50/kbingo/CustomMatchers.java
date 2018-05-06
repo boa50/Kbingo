@@ -5,17 +5,16 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 
-import static android.support.test.internal.util.Checks.checkNotNull;
+final class CustomMatchers {
 
-public final class CustomMatchers {
-
-    public static Matcher<View> withTextColor(int color) {
-        checkNotNull(color);
+    static Matcher<View> withTextColor(int color) {
         return new BoundedMatcher<View, TextView>(TextView.class) {
             @Override
             public void describeTo(Description description) {
@@ -29,8 +28,7 @@ public final class CustomMatchers {
         };
     }
 
-    public static Matcher<View> withPedraBackground(Drawable drawable) {
-        checkNotNull(drawable);
+    static Matcher<View> withPedraBackground(Drawable drawable) {
         return new BoundedMatcher<View, TextView>(TextView.class) {
 
             @Override
@@ -40,8 +38,27 @@ public final class CustomMatchers {
 
             @Override
             protected boolean matchesSafely(TextView item) {
-                return CustomMatchers.getBitmap(drawable)
-                        .sameAs(CustomMatchers.getBitmap(item.getBackground()));
+                return getBitmap(drawable)
+                        .sameAs(getBitmap(item.getBackground()));
+            }
+        };
+    }
+
+    static Matcher<View> indexChildOf(Matcher<View> parentMatcher, int index) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with " + index + " child view: ");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+
+                if (!(view.getParent() instanceof ViewGroup)) {
+                    return parentMatcher.matches(view.getParent());
+                }
+                ViewGroup group = (ViewGroup) view.getParent();
+                return parentMatcher.matches(view.getParent()) && group.getChildAt(index).equals(view);
             }
         };
     }
