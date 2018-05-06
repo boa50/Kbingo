@@ -37,4 +37,6 @@ public class RealizaSorteioEspressoTest {
     //TODO pausar e restartar a aplicação
     //TODO scroll do tab layout
     //TODO ver se a pedra continua sorteada quando mudar entre viewPagers distantes
+    //TODO mudança da orientação e manutenção das pedras sorteadas
+    //TODO mudança da orientação e mudança no layout?
 }
