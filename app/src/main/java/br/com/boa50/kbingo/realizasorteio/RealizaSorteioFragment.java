@@ -52,7 +52,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private static final String ARGS_LETRA_POSITION = "letraPosition";
 //    private static final String STATE_SCROLL_ULTIMO = "ultimoScroll";
 
-    final int QTDE_PEDRAS_LINHA_LANDSCAPE = 6;
+    final int QTDE_PEDRAS_LINHA_LANDSCAPE = 5;
     final int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
 
     @Inject
@@ -314,13 +314,13 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             Pedra pedra = mPedras.get(position + (mLetraPosition * 15));
 
             GridLayout.LayoutParams params = (GridLayout.LayoutParams) textView.getLayoutParams();
-            params.width = resources.getDimensionPixelSize(R.dimen.pedra_pequena_lado);
-            params.height = resources.getDimensionPixelSize(R.dimen.pedra_pequena_lado);
+            params.width = 1;
+            params.height = 1;
             int marginPx = resources.getDimensionPixelSize(R.dimen.pedra_pequena_margin);
             params.setMargins(marginPx, marginPx, marginPx, marginPx);
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+            params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
             textView.setLayoutParams(params);
-
             textView.setId(Integer.parseInt(pedra.getmId()));
             textView.setText(pedra.getmNumero());
             textView.setGravity(Gravity.CENTER);
@@ -345,11 +345,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 textView.setBackground(drawable2);
 
                 textView.setEnabled(true);
-            } else {
-
-
+            } else
                 textView.setEnabled(false);
-            }
         }
 
         public void transitarTextViewPedra(String id) {
