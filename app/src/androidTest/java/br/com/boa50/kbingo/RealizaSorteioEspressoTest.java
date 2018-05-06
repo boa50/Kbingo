@@ -1,5 +1,6 @@
 package br.com.boa50.kbingo;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.test.espresso.UiController;
@@ -23,6 +24,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -85,6 +87,31 @@ public class RealizaSorteioEspressoTest {
 
     }
 
+    @Test
+    public void sortearPedra_mudarOrientacao_materCorMudada_manterScroll() {
+        onView(withId(R.id.bt_sortear_pedra))
+                .perform(click());
+
+        String text = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
+
+        Drawable drawable = VectorDrawableCompat.create(
+                mActivityRule.getActivity().getResources(),
+                R.drawable.pedra,
+                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
+
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 4))
+                .perform(click());
+
+        mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 4))
+                .check(matches(isSelected()));
+        onView(withText(text))
+                .check(matches(withTextColor(R.color.pedraTextoEnabled)));
+        onView(withText(text))
+                .check(matches(withPedraBackground(drawable)));
+    }
+
     private String getButtonText(final Matcher<View> matcher) {
         final String[] stringHolder = {null};
         onView(matcher).perform(new ViewAction() {
@@ -108,6 +135,5 @@ public class RealizaSorteioEspressoTest {
     }
 
     //TODO pausar e restartar a aplicação
-    //TODO mudança da orientação e manutenção das pedras sorteadas
     //TODO mudança da orientação e mudança no layout?
 }

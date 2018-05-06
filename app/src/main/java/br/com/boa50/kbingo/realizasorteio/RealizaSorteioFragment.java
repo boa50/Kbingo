@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -18,6 +20,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayout;
 import android.util.SparseArray;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -328,10 +331,25 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             );
 
             textView.setTextColor(resources.getColorStateList(R.color.pedra_pequena_text));
-            textView.setEnabled(false);
 
-            AnimatedVectorDrawableCompat drawable = AnimatedVectorDrawableCompat.create(mContext, R.drawable.pedrapequena_anim);
+            AnimatedVectorDrawableCompat drawable = AnimatedVectorDrawableCompat.create(
+                    mContext,
+                    R.drawable.pedrapequena_anim);
             textView.setBackground(drawable);
+
+            if (pedra.ismSorteada()) {
+                Drawable drawable2 = VectorDrawableCompat.create(
+                        mContext.getResources(),
+                        R.drawable.pedra,
+                        new ContextThemeWrapper(mContext, R.style.PedraEnabled).getTheme());
+                textView.setBackground(drawable2);
+
+                textView.setEnabled(true);
+            } else {
+
+
+                textView.setEnabled(false);
+            }
         }
 
         public void transitarTextViewPedra(String id) {
