@@ -88,11 +88,11 @@ public class RealizaSorteioEspressoTest {
     }
 
     @Test
-    public void sortearPedra_mudarOrientacao_materCorMudada_manterScroll() {
+    public void sortearPedra_mudarOrientacao_materInformacoes() {
         onView(withId(R.id.bt_sortear_pedra))
                 .perform(click());
 
-        String text = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
+        String text = getButtonText(withId(R.id.bt_sortear_pedra));
 
         Drawable drawable = VectorDrawableCompat.create(
                 mActivityRule.getActivity().getResources(),
@@ -104,11 +104,13 @@ public class RealizaSorteioEspressoTest {
 
         mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
+        onView(withId(R.id.bt_sortear_pedra))
+                .check(matches(withText(text)));
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 4))
                 .check(matches(isSelected()));
-        onView(withText(text))
+        onView(withText(text.substring(1)))
                 .check(matches(withTextColor(R.color.pedraTextoEnabled)));
-        onView(withText(text))
+        onView(withText(text.substring(1)))
                 .check(matches(withPedraBackground(drawable)));
     }
 
@@ -135,5 +137,4 @@ public class RealizaSorteioEspressoTest {
     }
 
     //TODO pausar e restartar a aplicação
-    //TODO mudança da orientação e mudança no layout?
 }

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ final class CustomMatchers {
 
             @Override
             protected boolean matchesSafely(TextView item) {
-                return item.getContext().getColor(color) == item.getCurrentTextColor();
+                return ContextCompat.getColor(item.getContext(), color) == item.getCurrentTextColor();
             }
         };
     }

@@ -50,7 +50,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private static final String ARGS_PEDRA_ULTIMA = "ultimaPedra";
     private static final String ARGS_GRID_COLUNAS = "gridColunas";
     private static final String ARGS_LETRA_POSITION = "letraPosition";
-//    private static final String STATE_SCROLL_ULTIMO = "ultimoScroll";
 
     final int QTDE_PEDRAS_LINHA_LANDSCAPE = 5;
     final int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
@@ -73,8 +72,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private Unbinder unbinder;
     private int mGridColunas;
     PedrasSorteadasPageAdapter mPageAdapter;
-//    private int mScrollPosition = 0;
-//    private int mScrollChangeOrientation;
     private ArrayList<Pedra> mPedras;
     private List<Letra> mLetras;
     private String mUltimaPedraValor;
@@ -96,11 +93,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         if (savedInstanceState != null) {
             mPedras = savedInstanceState.getParcelableArrayList(ARGS_PEDRAS);
             mUltimaPedraValor = savedInstanceState.getString(ARGS_PEDRA_ULTIMA);
-//            mScrollChangeOrientation = savedInstanceState.getInt(STATE_SCROLL_ULTIMO);
         } else {
             mUltimaPedraValor = "";
-//            mScrollPosition = 0;
-//            mScrollChangeOrientation = -1;
         }
 
         return view;
@@ -111,7 +105,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(ARGS_PEDRAS, mPedras);
         outState.putString(ARGS_PEDRA_ULTIMA, mUltimaPedraValor);
-//        outState.putInt(STATE_SCROLL_ULTIMO, ((GridLayoutManager)rvListaPedras.getLayoutManager()).findLastVisibleItemPosition());
     }
 
     @Override
@@ -345,8 +338,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 textView.setBackground(drawable2);
 
                 textView.setEnabled(true);
-            } else
+            } else {
                 textView.setEnabled(false);
+            }
         }
 
         public void transitarTextViewPedra(String id) {
