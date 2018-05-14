@@ -14,12 +14,12 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tl_pedras_sorteadas"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="72dp"
             android:elevation="4dp"
             app:tabGravity="fill"
             app:tabTextColor="@color/headerTextoOpaco"
             app:tabSelectedTextColor="@color/colorSecondary"
-            app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Large"
             app:tabBackground="@color/colorPrimaryDark"
             app:tabIndicatorColor="@color/colorSecondary"
             app:tabIndicatorHeight="4dp"/>
