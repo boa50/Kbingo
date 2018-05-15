@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme.Button">
+    <style name="ButtonColored">
         <item name="android:paddingLeft">@dimen/button_padding_left_right</item>
         <item name="android:paddingRight">@dimen/button_padding_left_right</item>
         <item name="android:textSize">@dimen/button_text_size</item>

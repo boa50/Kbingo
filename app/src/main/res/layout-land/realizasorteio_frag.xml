@@ -30,13 +30,8 @@
         android:id="@+id/bt_sortear_pedra"
         android:layout_width="@dimen/pedra_grande_lado"
         android:layout_height="@dimen/pedra_grande_lado"
-        android:layout_marginTop="@dimen/pedra_grande_margin_top"
-        android:layout_marginStart="@dimen/pedra_grande_margin_start_end"
-        android:layout_marginEnd="@dimen/pedra_grande_margin_start_end"
-        android:background="@drawable/pedra"
-        android:theme="@style/PedraEnabled"
+        style="@style/PedraGrande"
         android:text="@string/bt_sortear_pedra"
-        android:textSize="@dimen/pedra_grande_texto"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/vp_pedras_sorteadas"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +39,7 @@
 
     <Button
         android:id="@+id/bt_novo_sorteio"
-        android:theme="@style/AppTheme.Button"
+        android:theme="@style/ButtonColored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bt_novo_sorteio"
