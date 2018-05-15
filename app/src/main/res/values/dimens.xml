@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Button-->
+    <dimen name="button_padding_left_right">16dp</dimen>
+    <dimen name="button_margin">8dp</dimen>
+    <dimen name="button_text_size">14sp</dimen>
+
     <!--Realizar sorteio-->
     <dimen name="pedra_grande_texto">20sp</dimen>
     <dimen name="pedra_grande_texto_sorteada">40sp</dimen>
     <dimen name="pedra_grande_lado">200dp</dimen>
+    <dimen name="pedra_grande_margin_top">16dp</dimen>
+    <dimen name="pedra_grande_margin_start_end">8dp</dimen>
     <dimen name="pedra_pequena_texto">30sp</dimen>
     <dimen name="pedra_pequena_margin">4dp</dimen>
+    <dimen name="pedras_pager_height">425dp</dimen>
+    <dimen name="pedras_tab_height">72dp</dimen>
+    <dimen name="pedras_tab_elevation">4dp</dimen>
+    <dimen name="pedras_tab_indicator_height">4dp</dimen>
 </resources>

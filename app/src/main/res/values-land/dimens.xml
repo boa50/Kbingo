@@ -2,4 +2,5 @@
 <resources>
     <!--Realizar sorteio-->
     <dimen name="pedra_pequena_margin">12dp</dimen>
+    <dimen name="pedras_pager_width">700dp</dimen>
 </resources>

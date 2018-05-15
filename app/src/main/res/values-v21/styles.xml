@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme.Button">
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:layout_margin">8dp</item>
+        <item name="android:paddingLeft">@dimen/button_padding_left_right</item>
+        <item name="android:paddingRight">@dimen/button_padding_left_right</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+        <item name="android:layout_margin">@dimen/button_margin</item>
         <item name="android:colorButtonNormal">@color/colorSecondary</item>
-    </style>
-
-    <style name="AppTheme.ButtonToBar">
-        <item name="android:textSize">30sp</item>
-        <item name="android:colorControlHighlight">@color/colorPrimaryLight</item>
-        <item name="android:textColor">@color/textDisabled</item>
-        <item name="android:buttonStyle">?android:attr/borderlessButtonStyle</item>
     </style>
 </resources>
