@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ButtonColored">
-        <item name="android:paddingLeft">@dimen/button_padding_left_right</item>
-        <item name="android:paddingRight">@dimen/button_padding_left_right</item>
-        <item name="android:textSize">@dimen/button_text_size</item>
-        <item name="android:layout_margin">@dimen/button_margin</item>
+    <style name="ButtonColored" parent="BaseButtonColored">
         <item name="android:colorButtonNormal">@color/colorSecondary</item>
+    </style>
+
+    <style name="TabLetras.v21">
+        <item name="android:elevation">@dimen/pedras_tab_elevation</item>
     </style>
 </resources>

@@ -12,11 +12,14 @@
         <item name="pedra_cor_secundaria">@color/pedraSecundariaDisabled</item>
     </style>
 
-    <style name="ButtonColored">
+    <style name="BaseButtonColored" parent="Widget.AppCompat.Button.Colored">
         <item name="android:paddingLeft">@dimen/button_padding_left_right</item>
         <item name="android:paddingRight">@dimen/button_padding_left_right</item>
         <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:layout_margin">@dimen/button_margin</item>
+    </style>
+
+    <style name="ButtonColored" parent="BaseButtonColored">
         <item name="background">@color/colorSecondary</item>
     </style>
 
@@ -32,5 +35,15 @@
         <item name="android:background">@drawable/pedra</item>
         <item name="android:theme">@style/PedraEnabled</item>
         <item name="android:textSize">@dimen/pedra_grande_texto</item>
+    </style>
+
+    <style name="TabLetras" parent="Widget.Design.TabLayout">
+        <item name="tabGravity">fill</item>
+        <item name="tabTextColor">@color/headerTextoOpaco</item>
+        <item name="tabSelectedTextColor">@color/colorSecondary</item>
+        <item name="tabTextAppearance">@style/TextAppearance.AppCompat.Large</item>
+        <item name="tabBackground">@color/colorPrimaryDark</item>
+        <item name="tabIndicatorColor">@color/colorSecondary</item>
+        <item name="tabIndicatorHeight">@dimen/pedras_tab_indicator_height</item>
     </style>
 </resources>
