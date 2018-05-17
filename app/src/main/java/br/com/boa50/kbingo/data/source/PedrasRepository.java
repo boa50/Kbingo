@@ -11,6 +11,8 @@ import br.com.boa50.kbingo.data.Pedra;
 import br.com.boa50.kbingo.util.StringUtils;
 import io.reactivex.Flowable;
 
+import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
+
 /**
  * Created by boa50 on 3/24/18.
  */
@@ -30,8 +32,8 @@ public class PedrasRepository implements PedrasDataSource {
         List<Letra> letras = letrasRepository.getLetras();
         List<Pedra> pedras = new ArrayList<>();
 
-        for (int i = 1; i <= 75; i++) {
-            String letra = letras.get((i-1)/15).getmNome();
+        for (int i = 1; i <= QTDE_PEDRAS_LETRA*letras.size(); i++) {
+            String letra = letras.get((i-1)/ QTDE_PEDRAS_LETRA).getmNome();
 
             pedras.add(new Pedra(
                     Integer.toString(i),

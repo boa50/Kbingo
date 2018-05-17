@@ -28,6 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.boa50.kbingo.Constant.QTDE_LETRAS;
 import static br.com.boa50.kbingo.CustomMatchers.indexChildOf;
 import static br.com.boa50.kbingo.CustomMatchers.withPedraBackground;
 import static br.com.boa50.kbingo.CustomMatchers.withTextColor;
@@ -75,7 +76,7 @@ public class RealizaSorteioEspressoTest {
                 R.drawable.pedra,
                 new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
 
-        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 4))
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .perform(click());
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 0))
                 .perform(click());
@@ -99,14 +100,14 @@ public class RealizaSorteioEspressoTest {
                 R.drawable.pedra,
                 new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
 
-        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 4))
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .perform(click());
 
         mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         onView(withId(R.id.bt_sortear_pedra))
                 .check(matches(withText(text)));
-        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 4))
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .check(matches(isSelected()));
         onView(withText(text.substring(1)))
                 .check(matches(withTextColor(R.color.pedraTextoEnabled)));

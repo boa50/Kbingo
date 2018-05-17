@@ -32,6 +32,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.Letra;
 import br.com.boa50.kbingo.data.Pedra;
@@ -43,15 +44,14 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
+import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
+
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
     private static final String ARGS_PEDRAS = "pedras";
     private static final String ARGS_PEDRA_ULTIMA = "ultimaPedra";
     private static final String ARGS_GRID_COLUNAS = "gridColunas";
     private static final String ARGS_LETRA_POSITION = "letraPosition";
-
-    final int QTDE_PEDRAS_LINHA_LANDSCAPE = 5;
-    final int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
@@ -118,9 +118,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         super.onResume();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mGridColunas = QTDE_PEDRAS_LINHA_LANDSCAPE;
+            mGridColunas = Constant.QTDE_PEDRAS_LINHA_LANDSCAPE;
         } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mGridColunas = QTDE_PEDRAS_LINHA_PORTRAIT;
+            mGridColunas = Constant.QTDE_PEDRAS_LINHA_PORTRAIT;
         }
 
         if (!mUltimaPedraValor.isEmpty())
@@ -191,7 +191,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     public void atualizarPedra(int position) {
         vpPedrasSorteadas.setCurrentItem(position/15);
 
-        PedrasSorteadasFragment fragment =  (PedrasSorteadasFragment) mPageAdapter.getFragment(position/15);
+        PedrasSorteadasFragment fragment =
+                (PedrasSorteadasFragment) mPageAdapter.getFragment(position/15);
         fragment.transitarTextViewPedra(mPedras.get(position).getmId());
     }
 
@@ -262,7 +263,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         private Drawable mPedraDisabled;
         private Drawable mPedraEnabled;
 
-        static PedrasSorteadasFragment newInstance(int gridColunas, int letraPosition, ArrayList<Pedra> pedras) {
+        static PedrasSorteadasFragment newInstance(
+                int gridColunas, int letraPosition, ArrayList<Pedra> pedras) {
             PedrasSorteadasFragment fragment = new PedrasSorteadasFragment();
 
             Bundle args = new Bundle();
@@ -276,7 +278,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         @Nullable
         @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        public View onCreateView(
+                @NonNull LayoutInflater inflater,
+                @Nullable ViewGroup container,
+                @Nullable Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.pedrassorteadas_frag, container, false);
             ButterKnife.bind(this, view);
 
@@ -299,7 +304,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mPedraDisabled = PedraUtils.getPedraDrawable(mContext, false);
             mPedraEnabled = PedraUtils.getPedraDrawable(mContext, true);
 
-            for (int i = 0; i < 15; i++) {
+            for (int i = 0; i < QTDE_PEDRAS_LETRA; i++) {
                 TextView textView = new TextView(mContext);
                 glPedrasSorteadas.addView(textView);
                 estilizarTextViewPedra(textView, i);
@@ -310,14 +315,15 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             for (int i = 0; i < glPedrasSorteadas.getChildCount(); i++) {
                 TextView tv = (TextView) glPedrasSorteadas.getChildAt(i);
                 tv.setBackground(mPedraDisabled);
-                tv.setTextColor(mContext.getResources().getColorStateList(R.color.pedra_pequena_text));
+                tv.setTextColor(mContext.getResources()
+                        .getColorStateList(R.color.pedra_pequena_text));
                 tv.setEnabled(false);
             }
         }
 
         private void estilizarTextViewPedra(TextView textView, int position) {
             Resources resources = mContext.getResources();
-            Pedra pedra = mPedras.get(position + (mLetraPosition * 15));
+            Pedra pedra = mPedras.get(position + (mLetraPosition * QTDE_PEDRAS_LETRA));
 
             GridLayout.LayoutParams params = (GridLayout.LayoutParams) textView.getLayoutParams();
             params.width = 1;
@@ -348,7 +354,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         }
 
         public void transitarTextViewPedra(String id) {
-            TextView textView = Objects.requireNonNull(this.getView()).findViewById(Integer.parseInt(id));
+            TextView textView =
+                    Objects.requireNonNull(this.getView()).findViewById(Integer.parseInt(id));
 
             AnimatedVectorDrawableCompat drawableAnimated = AnimatedVectorDrawableCompat.create(
                     mContext,
@@ -356,7 +363,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             textView.setBackground(drawableAnimated);
 
             if (Build.VERSION.SDK_INT >= 21)
-                textView.setStateListAnimator(AnimatorInflater.loadStateListAnimator(mContext, R.animator.pedrapequenatext_animator));
+                textView.setStateListAnimator(
+                        AnimatorInflater.loadStateListAnimator(
+                                mContext,
+                                R.animator.pedrapequenatext_animator));
 
             ((Animatable) textView.getBackground()).start();
             textView.setEnabled(true);

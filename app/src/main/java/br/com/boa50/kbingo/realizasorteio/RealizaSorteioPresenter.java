@@ -42,7 +42,10 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     private List<Integer> posicoes;
 
     @Inject
-    RealizaSorteioPresenter(PedrasRepository pedrasRespository, LetrasRepository letrasRepository, BaseSchedulerProvider schedulerProvider) {
+    RealizaSorteioPresenter(
+            PedrasRepository pedrasRespository,
+            LetrasRepository letrasRepository,
+            BaseSchedulerProvider schedulerProvider) {
         mPedrasRespository = checkNotNull(pedrasRespository, "Pedras Repository cannot be null");
         mLetrasRespository = checkNotNull(letrasRepository, "Letras Repository cannot be null");
         mScheduleProvider = checkNotNull(schedulerProvider, "Schedule Provider cannot null");
