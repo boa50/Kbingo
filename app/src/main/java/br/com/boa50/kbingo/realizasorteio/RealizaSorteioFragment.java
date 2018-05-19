@@ -189,10 +189,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void atualizarPedra(int position) {
-        vpPedrasSorteadas.setCurrentItem(position/15);
+        vpPedrasSorteadas.setCurrentItem(position/QTDE_PEDRAS_LETRA);
 
         PedrasSorteadasFragment fragment =
-                (PedrasSorteadasFragment) mPageAdapter.getFragment(position/15);
+                (PedrasSorteadasFragment) mPageAdapter.getFragment(position/QTDE_PEDRAS_LETRA);
         fragment.transitarTextViewPedra(mPedras.get(position).getmId());
     }
 

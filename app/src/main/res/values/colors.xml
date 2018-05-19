@@ -11,8 +11,8 @@
     <color name="textSecondary">#000000</color>
     <color name="textDisabled">#9E9E9E</color>
 
-    <color name="colorAccent">#FF4081</color>
-
+    <color name="colorAccent">@color/colorSecondary</color>
+    <color name="rippleBlack">#40000000</color>
 
     <color name="textoPadrao">@color/textSecondary</color>
     <color name="backgroundPadrao">#FAFAFA</color>

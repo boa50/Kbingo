@@ -4,7 +4,7 @@
         <item name="android:colorButtonNormal">@color/colorSecondary</item>
     </style>
 
-    <style name="TabLetras.v21">
+    <style name="TabLetras" parent="BaseTabLetras">
         <item name="android:elevation">@dimen/pedras_tab_elevation</item>
     </style>
 </resources>

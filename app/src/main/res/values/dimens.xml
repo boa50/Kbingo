@@ -9,8 +9,10 @@
     <dimen name="pedra_grande_texto">20sp</dimen>
     <dimen name="pedra_grande_texto_sorteada">40sp</dimen>
     <dimen name="pedra_grande_lado">200dp</dimen>
+    <dimen name="pedra_grande_card_radius">100dp</dimen>
     <dimen name="pedra_grande_margin_top">16dp</dimen>
     <dimen name="pedra_grande_margin_start_end">8dp</dimen>
+    <dimen name="pedra_grande_card_elevation">2dp</dimen>
     <dimen name="pedra_pequena_texto">30sp</dimen>
     <dimen name="pedra_pequena_margin">4dp</dimen>
     <dimen name="pedras_pager_height">425dp</dimen>

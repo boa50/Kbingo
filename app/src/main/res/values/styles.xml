@@ -28,16 +28,21 @@
         <item name="pedra_cor_secundaria">@color/pedraSecundariaEnabled</item>
     </style>
 
-    <style name="PedraGrande">
+    <style name="PedraGrandeCard">
         <item name="android:layout_marginTop">@dimen/pedra_grande_margin_top</item>
         <item name="android:layout_marginLeft">@dimen/pedra_grande_margin_start_end</item>
         <item name="android:layout_marginRight">@dimen/pedra_grande_margin_start_end</item>
-        <item name="android:background">@drawable/pedra</item>
+        <item name="cardCornerRadius">@dimen/pedra_grande_card_radius</item>
+        <item name="cardElevation">@dimen/pedra_grande_card_elevation</item>
+    </style>
+
+    <style name="PedraGrande">
+        <item name="android:background">@drawable/pedragrande</item>
         <item name="android:theme">@style/PedraEnabled</item>
         <item name="android:textSize">@dimen/pedra_grande_texto</item>
     </style>
 
-    <style name="TabLetras" parent="Widget.Design.TabLayout">
+    <style name="BaseTabLetras" parent="Widget.Design.TabLayout">
         <item name="tabGravity">fill</item>
         <item name="tabTextColor">@color/headerTextoOpaco</item>
         <item name="tabSelectedTextColor">@color/colorSecondary</item>
@@ -46,4 +51,6 @@
         <item name="tabIndicatorColor">@color/colorSecondary</item>
         <item name="tabIndicatorHeight">@dimen/pedras_tab_indicator_height</item>
     </style>
+
+    <style name="TabLetras" parent="BaseTabLetras" />
 </resources>
