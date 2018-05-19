@@ -15,7 +15,7 @@
     <dimen name="pedra_grande_card_elevation">2dp</dimen>
     <dimen name="pedra_pequena_texto">30sp</dimen>
     <dimen name="pedra_pequena_margin">4dp</dimen>
-    <dimen name="pedras_pager_height">425dp</dimen>
+    <dimen name="pedras_pager_height">450dp</dimen>
     <dimen name="pedras_tab_height">72dp</dimen>
     <dimen name="pedras_tab_elevation">4dp</dimen>
     <dimen name="pedras_tab_indicator_height">4dp</dimen>

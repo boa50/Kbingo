@@ -1,6 +1,7 @@
 package br.com.boa50.kbingo.realizasorteio;
 
 import android.animation.AnimatorInflater;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -17,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayout;
+import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -37,6 +39,7 @@ import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.Letra;
 import br.com.boa50.kbingo.data.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
+import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.util.PedraUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -117,10 +120,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     public void onResume() {
         super.onResume();
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mGridColunas = Constant.QTDE_PEDRAS_LINHA_LANDSCAPE;
-        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mGridColunas = Constant.QTDE_PEDRAS_LINHA_PORTRAIT;
+        } else {
+            mGridColunas = Constant.QTDE_PEDRAS_LINHA_LANDSCAPE;
         }
 
         if (!mUltimaPedraValor.isEmpty())
@@ -262,6 +265,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         private ArrayList<Pedra> mPedras;
         private Drawable mPedraDisabled;
         private Drawable mPedraEnabled;
+        private int mPedrasTamanhoPx;
+        private int mPedrasMarginPx;
 
         static PedrasSorteadasFragment newInstance(
                 int gridColunas, int letraPosition, ArrayList<Pedra> pedras) {
@@ -304,6 +309,36 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mPedraDisabled = PedraUtils.getPedraDrawable(mContext, false);
             mPedraEnabled = PedraUtils.getPedraDrawable(mContext, true);
 
+            mPedrasMarginPx = Objects.requireNonNull(getContext())
+                    .getResources().getDimensionPixelSize(R.dimen.pedra_pequena_margin);
+            int ladoLimitantePixels;
+            int quantidadeLimitante;
+            int actionBarHeight = 0;
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+            TypedValue tv = new TypedValue();
+            if (Objects.requireNonNull(getActivity()).getTheme()
+                    .resolveAttribute(R.attr.actionBarSize, tv, true))
+                actionBarHeight = TypedValue
+                        .complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                ladoLimitantePixels = displayMetrics.widthPixels;
+                quantidadeLimitante = glPedrasSorteadas.getColumnCount();
+            } else {
+                ladoLimitantePixels = displayMetrics.heightPixels
+                        - actionBarHeight
+                        - getContext().getResources().getDimensionPixelSize(R.dimen.pedras_tab_height)
+                        - ActivityUtils.getStatusBarHeight(getContext().getResources());
+                quantidadeLimitante = QTDE_PEDRAS_LETRA/glPedrasSorteadas.getColumnCount();
+            }
+
+            mPedrasTamanhoPx = PedraUtils.getPedraPequenaLadoInPixels(ladoLimitantePixels,
+                    quantidadeLimitante, mPedrasMarginPx);
+
+
             for (int i = 0; i < QTDE_PEDRAS_LETRA; i++) {
                 TextView textView = new TextView(mContext);
                 glPedrasSorteadas.addView(textView);
@@ -326,12 +361,22 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             Pedra pedra = mPedras.get(position + (mLetraPosition * QTDE_PEDRAS_LETRA));
 
             GridLayout.LayoutParams params = (GridLayout.LayoutParams) textView.getLayoutParams();
-            params.width = 1;
-            params.height = 1;
-            int marginPx = resources.getDimensionPixelSize(R.dimen.pedra_pequena_margin);
-            params.setMargins(marginPx, marginPx, marginPx, marginPx);
-            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-            params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+            params.width = mPedrasTamanhoPx;
+            params.height = mPedrasTamanhoPx;
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+                params.setMargins(
+                        mPedrasMarginPx,
+                        mPedrasMarginPx,
+                        mPedrasMarginPx,
+                        mPedrasMarginPx);
+            else
+                params.setMargins(
+                        mPedrasMarginPx + mPedrasMarginPx/2,
+                        mPedrasMarginPx,
+                        mPedrasMarginPx + mPedrasMarginPx/2,
+                        mPedrasMarginPx);
+
             textView.setLayoutParams(params);
             textView.setId(Integer.parseInt(pedra.getmId()));
             textView.setText(pedra.getmNumero());

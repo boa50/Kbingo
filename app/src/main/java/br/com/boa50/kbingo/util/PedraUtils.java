@@ -21,4 +21,8 @@ public final class PedraUtils {
                 R.drawable.pedra,
                 theme);
     }
+
+    public static int getPedraPequenaLadoInPixels(int ladoLimitantePixels, int quantidadeLimitante, int marginInPixels) {
+        return (ladoLimitantePixels - (quantidadeLimitante*2)*marginInPixels)/quantidadeLimitante;
+    }
 }
