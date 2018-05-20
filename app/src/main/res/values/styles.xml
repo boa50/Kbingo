@@ -12,6 +12,11 @@
         <item name="pedra_cor_secundaria">@color/pedraSecundariaDisabled</item>
     </style>
 
+    <style name="AppTheme.Launcher"  parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
     <style name="BaseButtonColored" parent="Widget.AppCompat.Button.Colored">
         <item name="android:paddingLeft">@dimen/button_padding_left_right</item>
         <item name="android:paddingRight">@dimen/button_padding_left_right</item>
