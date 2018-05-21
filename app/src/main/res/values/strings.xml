@@ -4,5 +4,5 @@
     <!--Realizar sorteio-->
     <string name="bt_sortear_pedra">Sortear\nPedra</string>
     <string name="bt_novo_sorteio">Realizar Novo Sorteio</string>
-    <string name="sorteio_fim">Sorteio\nFinalizado</string>
+    <string name="sorteio_fim">Fim do\nSorteio</string>
 </resources>

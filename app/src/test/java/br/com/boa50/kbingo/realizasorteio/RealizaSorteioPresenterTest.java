@@ -33,8 +33,6 @@ import static org.mockito.Mockito.when;
 
 public class RealizaSorteioPresenterTest {
 
-    private List<Pedra> PEDRAS;
-
     private int QUANTIDADE_PEDRAS_SORTEAVEIS;
 
     @Mock
@@ -54,7 +52,7 @@ public class RealizaSorteioPresenterTest {
 
         mRealizaSorteioPresenter = new RealizaSorteioPresenter(mPedrasRepository, mLetrasRepository, new ImmediateScheduleProvider());
 
-        PEDRAS = Lists.newArrayList(
+        List<Pedra> PEDRAS = Lists.newArrayList(
                 new Pedra("1", "K", "01"),
                 new Pedra("2", "K", "02")
         );

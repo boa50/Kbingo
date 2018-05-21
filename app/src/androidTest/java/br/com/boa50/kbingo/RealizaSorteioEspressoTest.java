@@ -137,5 +137,6 @@ public class RealizaSorteioEspressoTest {
         return stringHolder[0];
     }
 
+    //TODO mudança de orientação no fim do sorteio
     //TODO pausar e restartar a aplicação
 }

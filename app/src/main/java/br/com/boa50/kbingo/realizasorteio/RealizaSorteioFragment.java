@@ -126,8 +126,12 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mGridColunas = Constant.QTDE_PEDRAS_LINHA_LANDSCAPE;
         }
 
-        if (!mUltimaPedraValor.isEmpty())
-            apresentarPedra(mUltimaPedraValor);
+        if (!mUltimaPedraValor.isEmpty()) {
+            if (mUltimaPedraValor == getResources().getText(R.string.sorteio_fim))
+                apresentarFimSorteio();
+            else
+                apresentarPedra(mUltimaPedraValor);
+        }
 
         mPresenter.setPedras(mPedras);
         mPresenter.subscribe(this);
@@ -169,6 +173,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 getResources().getDimension(R.dimen.pedra_grande_texto)
         );
         btSortearPedra.setText(getResources().getText(R.string.sorteio_fim));
+        mUltimaPedraValor = btSortearPedra.getText().toString();
     }
 
 
@@ -332,7 +337,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                         - actionBarHeight
                         - getContext().getResources().getDimensionPixelSize(R.dimen.pedras_tab_height)
                         - ActivityUtils.getStatusBarHeight(getContext().getResources());
-                quantidadeLimitante = QTDE_PEDRAS_LETRA/glPedrasSorteadas.getColumnCount();
+                quantidadeLimitante =
+                        (int) Math.ceil(QTDE_PEDRAS_LETRA/(float) glPedrasSorteadas.getColumnCount());
             }
 
             mPedrasTamanhoPx = PedraUtils.getPedraPequenaLadoInPixels(ladoLimitantePixels,
