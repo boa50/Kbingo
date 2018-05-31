@@ -36,8 +36,8 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
-import br.com.boa50.kbingo.data.Letra;
-import br.com.boa50.kbingo.data.Pedra;
+import br.com.boa50.kbingo.data.entity.Letra;
+import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.util.PedraUtils;

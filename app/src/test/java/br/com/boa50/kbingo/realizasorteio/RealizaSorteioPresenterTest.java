@@ -10,9 +10,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
-import br.com.boa50.kbingo.data.Pedra;
-import br.com.boa50.kbingo.data.source.LetrasRepository;
-import br.com.boa50.kbingo.data.source.PedrasRepository;
+import br.com.boa50.kbingo.data.AppRepository;
+import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.util.schedulers.ImmediateScheduleProvider;
 import io.reactivex.Flowable;
 
@@ -39,10 +38,7 @@ public class RealizaSorteioPresenterTest {
     private RealizaSorteioContract.View mRealizaSorteioView;
 
     @Mock
-    private PedrasRepository mPedrasRepository;
-
-    @Mock
-    private LetrasRepository mLetrasRepository;
+    private AppRepository mAppRepository;
 
     private RealizaSorteioPresenter mRealizaSorteioPresenter;
 
@@ -50,14 +46,14 @@ public class RealizaSorteioPresenterTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        mRealizaSorteioPresenter = new RealizaSorteioPresenter(mPedrasRepository, mLetrasRepository, new ImmediateScheduleProvider());
+        mRealizaSorteioPresenter = new RealizaSorteioPresenter(mAppRepository, new ImmediateScheduleProvider());
 
         List<Pedra> PEDRAS = Lists.newArrayList(
                 new Pedra("1", "K", "01"),
                 new Pedra("2", "K", "02")
         );
 
-        when(mPedrasRepository.getPedras()).thenReturn(Flowable.just(PEDRAS));
+        when(mAppRepository.getPedras()).thenReturn(Flowable.just(PEDRAS));
 
         QUANTIDADE_PEDRAS_SORTEAVEIS = PEDRAS.size();
 

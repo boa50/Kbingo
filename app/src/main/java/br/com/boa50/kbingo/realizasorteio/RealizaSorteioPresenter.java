@@ -9,9 +9,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.BaseView;
-import br.com.boa50.kbingo.data.Pedra;
-import br.com.boa50.kbingo.data.source.LetrasRepository;
-import br.com.boa50.kbingo.data.source.PedrasRepository;
+import br.com.boa50.kbingo.data.AppRepository;
+import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.Flowable;
@@ -29,9 +28,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private RealizaSorteioContract.View mView;
 
-    private final PedrasRepository mPedrasRespository;
-
-    private final LetrasRepository mLetrasRespository;
+    private final AppRepository mAppRepository;
 
     private final BaseSchedulerProvider mScheduleProvider;
 
@@ -43,11 +40,9 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Inject
     RealizaSorteioPresenter(
-            PedrasRepository pedrasRespository,
-            LetrasRepository letrasRepository,
+            AppRepository appRepository,
             BaseSchedulerProvider schedulerProvider) {
-        mPedrasRespository = checkNotNull(pedrasRespository, "Pedras Repository cannot be null");
-        mLetrasRespository = checkNotNull(letrasRepository, "Letras Repository cannot be null");
+        mAppRepository = checkNotNull(appRepository, "App Repository cannot be null");
         mScheduleProvider = checkNotNull(schedulerProvider, "Schedule Provider cannot null");
 
         mCompositeDisposable = new CompositeDisposable();
@@ -101,7 +96,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             mCompositeDisposable.clear();
             mPedras = new ArrayList<>();
 
-            Disposable disposable = mPedrasRespository
+            Disposable disposable = mAppRepository
                     .getPedras()
                     .flatMap(Flowable::fromIterable)
                     .toList()
@@ -122,7 +117,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             preencherPosicoesSorteio();
         }
 
-        mView.iniciarLayout(mLetrasRespository.getLetras());
+        mView.iniciarLayout(mAppRepository.getLetras());
     }
 
     private void preencherPosicoesSorteio() {

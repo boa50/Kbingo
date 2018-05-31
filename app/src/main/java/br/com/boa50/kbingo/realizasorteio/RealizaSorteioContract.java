@@ -5,8 +5,8 @@ import java.util.List;
 
 import br.com.boa50.kbingo.BasePresenter;
 import br.com.boa50.kbingo.BaseView;
-import br.com.boa50.kbingo.data.Letra;
-import br.com.boa50.kbingo.data.Pedra;
+import br.com.boa50.kbingo.data.entity.Letra;
+import br.com.boa50.kbingo.data.entity.Pedra;
 
 /**
  * Created by boa50 on 3/11/18.

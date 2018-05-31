@@ -1,4 +1,4 @@
-package br.com.boa50.kbingo.data;
+package br.com.boa50.kbingo.data.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;

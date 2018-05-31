@@ -1,4 +1,4 @@
-package br.com.boa50.kbingo.data;
+package br.com.boa50.kbingo.data.entity;
 
 /**
  * Created by boa50 on 4/1/18.
