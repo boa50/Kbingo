@@ -18,11 +18,12 @@ public class VisualizaCartelasActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.default_act);
 
-        if (getSupportFragmentManager().findFragmentById(R.id.conteudoFrame) == null)
+        if (getSupportFragmentManager().findFragmentById(R.id.conteudoFrame) == null) {
             ActivityUtils.addFragmentToActivity(
                     getSupportFragmentManager(),
                     mVisualizaCartelasFragment,
                     R.id.conteudoFrame
             );
+        }
     }
 }

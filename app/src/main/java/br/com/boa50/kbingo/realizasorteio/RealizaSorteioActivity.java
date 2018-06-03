@@ -18,11 +18,12 @@ public class RealizaSorteioActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.default_act);
 
-        if (getSupportFragmentManager().findFragmentById(R.id.conteudoFrame) == null)
+        if (getSupportFragmentManager().findFragmentById(R.id.conteudoFrame) == null) {
             ActivityUtils.addFragmentToActivity(
                     getSupportFragmentManager(),
                     mRealizaSorteioFragment,
                     R.id.conteudoFrame
             );
+        }
     }
 }
