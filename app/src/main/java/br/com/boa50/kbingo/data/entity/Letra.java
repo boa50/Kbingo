@@ -1,43 +1,51 @@
 package br.com.boa50.kbingo.data.entity;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 /**
  * Created by boa50 on 4/1/18.
  */
 
+@Entity
 public class Letra {
-    private String mId;
 
-    private String mNome;
+    @PrimaryKey
+    @NonNull
+    private String id;
 
-    private int mPosicao;
+    private String nome;
 
-    public Letra(String mId, String mNome, int mPosicao) {
-        this.mId = mId;
-        this.mNome = mNome;
-        this.mPosicao = mPosicao;
+    private int posicao;
+
+    public Letra(String id, String nome, int posicao) {
+        this.id = id;
+        this.nome = nome;
+        this.posicao = posicao;
     }
 
-    public String getmId() {
-        return mId;
+    public String getId() {
+        return id;
     }
 
-    public void setmId(String mId) {
-        this.mId = mId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getmNome() {
-        return mNome;
+    public String getNome() {
+        return nome;
     }
 
-    public void setmNome(String mNome) {
-        this.mNome = mNome;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public int getmPosicao() {
-        return mPosicao;
+    public int getPosicao() {
+        return posicao;
     }
 
-    public void setmPosicao(int mPosicao) {
-        this.mPosicao = mPosicao;
+    public void setPosicao(int posicao) {
+        this.posicao = posicao;
     }
 }

@@ -81,10 +81,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     @Inject
     public RealizaSorteioFragment() {}
 
-    public static RealizaSorteioFragment newInstance() {
-        return new RealizaSorteioFragment();
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -201,7 +197,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         PedrasSorteadasFragment fragment =
                 (PedrasSorteadasFragment) mPageAdapter.getFragment(position/QTDE_PEDRAS_LETRA);
-        fragment.transitarTextViewPedra(mPedras.get(position).getmId());
+        fragment.transitarTextViewPedra(mPedras.get(position).getId());
     }
 
     @Override
@@ -238,7 +234,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mLetras.get(position).getmNome();
+            return mLetras.get(position).getNome();
         }
 
         @NonNull
@@ -384,8 +380,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                         mPedrasMarginPx);
 
             textView.setLayoutParams(params);
-            textView.setId(Integer.parseInt(pedra.getmId()));
-            textView.setText(pedra.getmNumero());
+            textView.setId(Integer.parseInt(pedra.getId()));
+            textView.setText(pedra.getNumero());
             textView.setGravity(Gravity.CENTER);
 
             textView.setTextSize(
@@ -395,7 +391,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
             textView.setTextColor(resources.getColorStateList(R.color.pedra_pequena_text));
 
-            if (pedra.ismSorteada()) {
+            if (pedra.isSorteada()) {
                 textView.setBackground(mPedraEnabled);
                 textView.setEnabled(true);
             } else {

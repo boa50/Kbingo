@@ -17,5 +17,6 @@ public abstract class RealizaSorteioModule {
     abstract RealizaSorteioFragment realizaSorteioFragment();
 
     @ActivityScoped
-    @Binds abstract RealizaSorteioContract.Presenter realizaSorteioPresenter(RealizaSorteioPresenter presenter);
+    @Binds
+    abstract RealizaSorteioContract.Presenter realizaSorteioPresenter(RealizaSorteioPresenter presenter);
 }

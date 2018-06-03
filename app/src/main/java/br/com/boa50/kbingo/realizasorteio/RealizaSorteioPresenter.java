@@ -9,7 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.BaseView;
-import br.com.boa50.kbingo.data.AppRepository;
+import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
@@ -28,7 +28,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private RealizaSorteioContract.View mView;
 
-    private final AppRepository mAppRepository;
+    private final AppDataSource mAppDataSource;
 
     private final BaseSchedulerProvider mScheduleProvider;
 
@@ -40,9 +40,9 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Inject
     RealizaSorteioPresenter(
-            AppRepository appRepository,
+            AppDataSource appDataSource,
             BaseSchedulerProvider schedulerProvider) {
-        mAppRepository = checkNotNull(appRepository, "App Repository cannot be null");
+        mAppDataSource = checkNotNull(appDataSource, "App Repository cannot be null");
         mScheduleProvider = checkNotNull(schedulerProvider, "Schedule Provider cannot null");
 
         mCompositeDisposable = new CompositeDisposable();
@@ -67,7 +67,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         } else {
             mView.apresentarPedra(mPedras.get(posicoes.get(0)));
 
-            mPedras.get(posicoes.get(0)).setmSorteada(true);
+            mPedras.get(posicoes.get(0)).setSorteada(true);
 
             mView.atualizarPedra(posicoes.get(0));
 
@@ -78,7 +78,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     @Override
     public void resetarPedras() {
         for (Pedra pedra : mPedras) {
-            pedra.setmSorteada(false);
+            pedra.setSorteada(false);
         }
 
         preencherPosicoesSorteio();
@@ -96,7 +96,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             mCompositeDisposable.clear();
             mPedras = new ArrayList<>();
 
-            Disposable disposable = mAppRepository
+            Disposable disposable = mAppDataSource
                     .getPedras()
                     .flatMap(Flowable::fromIterable)
                     .toList()
@@ -117,7 +117,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             preencherPosicoesSorteio();
         }
 
-        mView.iniciarLayout(mAppRepository.getLetras());
+        mView.iniciarLayout(mAppDataSource.getLetras());
     }
 
     private void preencherPosicoesSorteio() {
@@ -127,7 +127,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             posicoes.clear();
 
         for (int i = 0; i < mPedras.size(); i++) {
-            if (!mPedras.get(i).ismSorteada())
+            if (!mPedras.get(i).isSorteada())
                 posicoes.add(i);
         }
 

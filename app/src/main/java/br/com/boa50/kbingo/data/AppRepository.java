@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
@@ -16,7 +15,6 @@ import io.reactivex.Flowable;
 import static br.com.boa50.kbingo.Constant.QTDE_LETRAS;
 import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
 
-@Singleton
 public class AppRepository implements AppDataSource {
 
     @Inject
@@ -41,7 +39,7 @@ public class AppRepository implements AppDataSource {
         List<Pedra> pedras = new ArrayList<>();
 
         for (int i = 1; i <= QTDE_PEDRAS_LETRA*letras.size(); i++) {
-            String letra = letras.get((i-1)/ QTDE_PEDRAS_LETRA).getmNome();
+            String letra = letras.get((i-1)/ QTDE_PEDRAS_LETRA).getNome();
 
             pedras.add(new Pedra(
                     Integer.toString(i),

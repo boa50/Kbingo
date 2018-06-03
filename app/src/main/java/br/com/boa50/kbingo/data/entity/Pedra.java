@@ -1,34 +1,47 @@
 package br.com.boa50.kbingo.data.entity;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by boa50 on 3/11/18.
  */
 
+@Entity(foreignKeys = @ForeignKey(entity = Pedra.class,
+                                    parentColumns = "id",
+                                    childColumns = "letra_id"),
+        indices = @Index("letra_id"))
 public class Pedra implements Parcelable{
 
-    private String mId;
+    @PrimaryKey
+    @NonNull
+    private String id;
 
-    private String mLetra;
+    @ColumnInfo(name = "letra_id")
+    private String letraId;
 
-    private String mNumero;
+    private String numero;
 
-    private boolean mSorteada;
+    private boolean sorteada;
 
-    public Pedra(String mId, String mLetra, String mNumero) {
-        this.mId = mId;
-        this.mLetra = mLetra;
-        this.mNumero = mNumero;
-        this.mSorteada = false;
+    public Pedra(String id, String letraId, String numero) {
+        this.id = id;
+        this.letraId = letraId;
+        this.numero = numero;
+        this.sorteada = false;
     }
 
     protected Pedra(Parcel in) {
-        mId = in.readString();
-        mLetra = in.readString();
-        mNumero = in.readString();
-        mSorteada = in.readByte() != 0;
+        id = in.readString();
+        letraId = in.readString();
+        numero = in.readString();
+        sorteada = in.readByte() != 0;
     }
 
     public static final Creator<Pedra> CREATOR = new Creator<Pedra>() {
@@ -43,40 +56,40 @@ public class Pedra implements Parcelable{
         }
     };
 
-    public String getmId() {
-        return mId;
+    public String getId() {
+        return id;
     }
 
-    public void setmId(String mId) {
-        this.mId = mId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getmLetra() {
-        return mLetra;
+    public String getLetraId() {
+        return letraId;
     }
 
-    public void setmLetra(String mLetra) {
-        this.mLetra = mLetra;
+    public void setLetraId(String letraId) {
+        this.letraId = letraId;
     }
 
-    public String getmNumero() {
-        return mNumero;
+    public String getNumero() {
+        return numero;
     }
 
-    public void setmNumero(String mNumero) {
-        this.mNumero = mNumero;
+    public void setNumero(String numero) {
+        this.numero = numero;
     }
 
-    public boolean ismSorteada() {
-        return mSorteada;
+    public boolean isSorteada() {
+        return sorteada;
     }
 
-    public void setmSorteada(boolean mSorteada) {
-        this.mSorteada = mSorteada;
+    public void setSorteada(boolean sorteada) {
+        this.sorteada = sorteada;
     }
 
     public String getValorPedra(){
-        return mLetra + mNumero;
+        return letraId + numero;
     }
 
     @Override
@@ -86,9 +99,9 @@ public class Pedra implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(mId);
-        parcel.writeString(mLetra);
-        parcel.writeString(mNumero);
-        parcel.writeByte((byte) (mSorteada ? 1 : 0));
+        parcel.writeString(id);
+        parcel.writeString(letraId);
+        parcel.writeString(numero);
+        parcel.writeByte((byte) (sorteada ? 1 : 0));
     }
 }
