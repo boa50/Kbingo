@@ -15,29 +15,32 @@ public class Letra {
     @NonNull
     private String id;
 
+    @NonNull
     private String nome;
 
     private int posicao;
 
-    public Letra(String id, String nome, int posicao) {
+    public Letra(@NonNull String id, @NonNull String nome, int posicao) {
         this.id = id;
         this.nome = nome;
         this.posicao = posicao;
     }
 
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
+    @NonNull
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(@NonNull String nome) {
         this.nome = nome;
     }
 

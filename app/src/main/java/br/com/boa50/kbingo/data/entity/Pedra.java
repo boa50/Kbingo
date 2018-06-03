@@ -23,14 +23,16 @@ public class Pedra implements Parcelable{
     @NonNull
     private String id;
 
+    @NonNull
     @ColumnInfo(name = "letra_id")
     private String letraId;
 
+    @NonNull
     private String numero;
 
     private boolean sorteada;
 
-    public Pedra(String id, String letraId, String numero) {
+    public Pedra(@NonNull String id, @NonNull String letraId, @NonNull String numero) {
         this.id = id;
         this.letraId = letraId;
         this.numero = numero;
@@ -56,27 +58,30 @@ public class Pedra implements Parcelable{
         }
     };
 
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
+    @NonNull
     public String getLetraId() {
         return letraId;
     }
 
-    public void setLetraId(String letraId) {
+    public void setLetraId(@NonNull String letraId) {
         this.letraId = letraId;
     }
 
+    @NonNull
     public String getNumero() {
         return numero;
     }
 
-    public void setNumero(String numero) {
+    public void setNumero(@NonNull String numero) {
         this.numero = numero;
     }
 
