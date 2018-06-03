@@ -1,5 +1,6 @@
 package br.com.boa50.kbingo.realizasorteio;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 
 import java.util.ArrayList;
@@ -16,8 +17,6 @@ import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by boa50 on 3/11/18.
@@ -40,10 +39,10 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Inject
     RealizaSorteioPresenter(
-            AppDataSource appDataSource,
-            BaseSchedulerProvider schedulerProvider) {
-        mAppDataSource = checkNotNull(appDataSource, "App Repository cannot be null");
-        mScheduleProvider = checkNotNull(schedulerProvider, "Schedule Provider cannot null");
+            @NonNull AppDataSource appDataSource,
+            @NonNull BaseSchedulerProvider schedulerProvider) {
+        mAppDataSource = appDataSource;
+        mScheduleProvider = schedulerProvider;
 
         mCompositeDisposable = new CompositeDisposable();
     }

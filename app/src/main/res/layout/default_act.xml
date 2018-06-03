@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.com.boa50.kbingo.realizasorteio.RealizaSorteioActivity">
+    tools:context=".MainActivity">
 
     <FrameLayout
         android:id="@+id/conteudoFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 </android.support.constraint.ConstraintLayout>
