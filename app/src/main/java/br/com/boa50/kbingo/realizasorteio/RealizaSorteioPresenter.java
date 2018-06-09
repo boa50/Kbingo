@@ -2,6 +2,7 @@ package br.com.boa50.kbingo.realizasorteio;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -133,7 +134,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         Collections.shuffle(posicoes);
     }
 
-    @RestrictTo(RestrictTo.Scope.TESTS)
+    @VisibleForTesting
     List<Integer> getPosicoes() {
         return posicoes;
     }

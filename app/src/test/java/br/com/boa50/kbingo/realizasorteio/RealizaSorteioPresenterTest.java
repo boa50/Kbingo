@@ -6,11 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
-import br.com.boa50.kbingo.data.AppRepository;
+import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.util.schedulers.ImmediateScheduleProvider;
 import io.reactivex.Flowable;
@@ -24,6 +23,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 
 /**
@@ -35,86 +35,86 @@ public class RealizaSorteioPresenterTest {
     private int QUANTIDADE_PEDRAS_SORTEAVEIS;
 
     @Mock
-    private RealizaSorteioContract.View mRealizaSorteioView;
+    private RealizaSorteioContract.View realizaSorteioView;
 
     @Mock
-    private AppRepository mAppRepository;
+    private AppDataSource appDataSource;
 
-    private RealizaSorteioPresenter mRealizaSorteioPresenter;
+    private RealizaSorteioPresenter realizaSorteioPresenter;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        initMocks(this);
 
-        mRealizaSorteioPresenter = new RealizaSorteioPresenter(mAppRepository, new ImmediateScheduleProvider());
+        realizaSorteioPresenter = new RealizaSorteioPresenter(appDataSource, new ImmediateScheduleProvider());
 
         List<Pedra> PEDRAS = Lists.newArrayList(
                 new Pedra("1", "K", "01"),
                 new Pedra("2", "K", "02")
         );
 
-        when(mAppRepository.getPedras()).thenReturn(Flowable.just(PEDRAS));
+        when(appDataSource.getPedras()).thenReturn(Flowable.just(PEDRAS));
 
         QUANTIDADE_PEDRAS_SORTEAVEIS = PEDRAS.size();
 
-        mRealizaSorteioPresenter.subscribe(mRealizaSorteioView);
+        realizaSorteioPresenter.subscribe(realizaSorteioView);
     }
 
     @Test
     public void sortearPedra_apresentarPedra() {
-        mRealizaSorteioPresenter.sortearPedra();
+        realizaSorteioPresenter.sortearPedra();
 
-        assertThat(mRealizaSorteioPresenter.getPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS - 1));
-        verify(mRealizaSorteioView).apresentarPedra(any(Pedra.class));
+        assertThat(realizaSorteioPresenter.getPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS - 1));
+        verify(realizaSorteioView).apresentarPedra(any(Pedra.class));
     }
 
     @Test
     public void sortearPedra_atualizarPedraSorteada() {
         ArgumentCaptor<Pedra> pedra = ArgumentCaptor.forClass(Pedra.class);
 
-        mRealizaSorteioPresenter.sortearPedra();
+        realizaSorteioPresenter.sortearPedra();
 
-        verify(mRealizaSorteioView).apresentarPedra(pedra.capture());
+        verify(realizaSorteioView).apresentarPedra(pedra.capture());
 
         assertThat(pedra.getValue().isSorteada(), equalTo(true));
-        verify(mRealizaSorteioView).atualizarPedra(anyInt());
+        verify(realizaSorteioView).atualizarPedra(anyInt());
     }
 
     @Test
     public void sortearDuasPedras_apresentarPedrasDiferentes() {
         ArgumentCaptor<Pedra> pedra = ArgumentCaptor.forClass(Pedra.class);
 
-        mRealizaSorteioPresenter.sortearPedra();
-        verify(mRealizaSorteioView).apresentarPedra(pedra.capture());
+        realizaSorteioPresenter.sortearPedra();
+        verify(realizaSorteioView).apresentarPedra(pedra.capture());
         String pedra1 = pedra.getValue().getValorPedra();
 
-        mRealizaSorteioPresenter.sortearPedra();
-        verify(mRealizaSorteioView, times(2)).apresentarPedra(pedra.capture());
+        realizaSorteioPresenter.sortearPedra();
+        verify(realizaSorteioView, times(2)).apresentarPedra(pedra.capture());
         assertThat(pedra1, is(not(equalTo(pedra.getValue().getValorPedra()))));
     }
 
     @Test
     public void sortearTodasPedras_EncerrarSorteio() {
-        mRealizaSorteioPresenter.sortearPedra();
-        mRealizaSorteioPresenter.sortearPedra();
-        mRealizaSorteioPresenter.sortearPedra();
+        realizaSorteioPresenter.sortearPedra();
+        realizaSorteioPresenter.sortearPedra();
+        realizaSorteioPresenter.sortearPedra();
 
-        assertThat(mRealizaSorteioPresenter.getPosicoes().isEmpty(), equalTo(true));
-        verify(mRealizaSorteioView).apresentarFimSorteio();
+        assertThat(realizaSorteioPresenter.getPosicoes().isEmpty(), equalTo(true));
+        verify(realizaSorteioView).apresentarFimSorteio();
     }
 
     @Test
     public void resetarPedras_ReiniciarSorteio() {
         ArgumentCaptor<Pedra> pedra = ArgumentCaptor.forClass(Pedra.class);
 
-        mRealizaSorteioPresenter.sortearPedra();
-        verify(mRealizaSorteioView).apresentarPedra(pedra.capture());
+        realizaSorteioPresenter.sortearPedra();
+        verify(realizaSorteioView).apresentarPedra(pedra.capture());
 
-        mRealizaSorteioPresenter.resetarPedras();
+        realizaSorteioPresenter.resetarPedras();
 
-        assertThat(mRealizaSorteioPresenter.getPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS));
+        assertThat(realizaSorteioPresenter.getPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS));
 
         assertThat(pedra.getValue().isSorteada(), equalTo(false));
-        verify(mRealizaSorteioView).reiniciarSorteio();
+        verify(realizaSorteioView).reiniciarSorteio();
     }
 }

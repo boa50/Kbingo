@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.support.annotation.NonNull;
 
+import java.util.Locale;
+
 @Entity(primaryKeys = {"cartela_id", "pedra_id"},
         foreignKeys = {
         @ForeignKey(entity = Cartela.class,
@@ -24,9 +26,15 @@ public class CartelaPedra {
     @ColumnInfo(name = "pedra_id")
     private String pedraId;
 
-    public CartelaPedra(@NonNull String cartelaId, @NonNull String pedraId) {
+    private int linha;
+
+    private int coluna;
+
+    public CartelaPedra(@NonNull String cartelaId, @NonNull String pedraId, int linha, int coluna) {
         this.cartelaId = cartelaId;
         this.pedraId = pedraId;
+        this.linha = linha;
+        this.coluna = coluna;
     }
 
     @NonNull
@@ -45,5 +53,25 @@ public class CartelaPedra {
 
     public void setPedraId(@NonNull String pedraId) {
         this.pedraId = pedraId;
+    }
+
+    public int getLinha() {
+        return linha;
+    }
+
+    public void setLinha(int linha) {
+        this.linha = linha;
+    }
+
+    public int getColuna() {
+        return coluna;
+    }
+
+    public void setColuna(int coluna) {
+        this.coluna = coluna;
+    }
+
+    public String getCartelaIdFormatado() {
+        return String.format(Locale.ENGLISH, "%04d", Integer.parseInt(cartelaId));
     }
 }

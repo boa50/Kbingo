@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -11,7 +12,6 @@ import br.com.boa50.kbingo.data.entity.Cartela;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
-import br.com.boa50.kbingo.util.StringUtils;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -47,7 +47,7 @@ public class AppRepository implements AppDataSource {
             pedras.add(new Pedra(
                     Integer.toString(i),
                     letra,
-                    StringUtils.addZerosToNumberString(i)
+                    String.format(Locale.ENGLISH, "%02d", i)
             ));
         }
 
@@ -70,30 +70,30 @@ public class AppRepository implements AppDataSource {
     @Override
     public Single<List<CartelaPedra>> getPedrasByCartelaId(String id) {
         List<CartelaPedra> cartelaPedras = Lists.newArrayList(
-                new CartelaPedra("1","1"),
-                new CartelaPedra("1","2"),
-                new CartelaPedra("1","3"),
-                new CartelaPedra("1","4"),
-                new CartelaPedra("1","5"),
-                new CartelaPedra("1","16"),
-                new CartelaPedra("1","17"),
-                new CartelaPedra("1","18"),
-                new CartelaPedra("1","19"),
-                new CartelaPedra("1","20"),
-                new CartelaPedra("1","31"),
-                new CartelaPedra("1","32"),
-                new CartelaPedra("1","33"),
-                new CartelaPedra("1","34"),
-                new CartelaPedra("1","46"),
-                new CartelaPedra("1","47"),
-                new CartelaPedra("1","48"),
-                new CartelaPedra("1","49"),
-                new CartelaPedra("1","50"),
-                new CartelaPedra("1","61"),
-                new CartelaPedra("1","62"),
-                new CartelaPedra("1","63"),
-                new CartelaPedra("1","64"),
-                new CartelaPedra("1","65")
+                new CartelaPedra("1","1", 1, 0),
+                new CartelaPedra("1","2", 2, 0),
+                new CartelaPedra("1","3", 3, 0),
+                new CartelaPedra("1","4", 4, 0),
+                new CartelaPedra("1","5", 5, 0),
+                new CartelaPedra("1","16", 1, 1),
+                new CartelaPedra("1","17", 2, 1),
+                new CartelaPedra("1","18", 3, 1),
+                new CartelaPedra("1","19", 4, 1),
+                new CartelaPedra("1","20", 5, 1),
+                new CartelaPedra("1","31", 1, 2),
+                new CartelaPedra("1","32", 2, 2),
+                new CartelaPedra("1","33", 4, 2),
+                new CartelaPedra("1","34", 5, 2),
+                new CartelaPedra("1","46", 1, 3),
+                new CartelaPedra("1","47", 2, 3),
+                new CartelaPedra("1","48", 3, 3),
+                new CartelaPedra("1","49", 4, 3),
+                new CartelaPedra("1","50", 5, 3),
+                new CartelaPedra("1","61", 1, 4),
+                new CartelaPedra("1","62", 2, 4),
+                new CartelaPedra("1","63", 3, 4),
+                new CartelaPedra("1","64", 4, 4),
+                new CartelaPedra("1","65", 5, 4)
         );
         return Single.just(cartelaPedras);
     }
