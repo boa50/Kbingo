@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayout;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -23,6 +25,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
+
+import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
 
 public class VisualizaCartelasFragment extends DaggerFragment implements VisualizaCartelasContract.View {
 
@@ -76,9 +80,11 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             );
         }
 
-        for (int i = 0; i <= 4; i++) {
+        for (int i = 0; i <= letras.size() - 1; i++) {
             TextView textView = new TextView(mContext);
-            glCartela.addView(textView);
+            glCartela.addView(textView, new GridLayout.LayoutParams(
+                    GridLayout.spec(0, 1f),
+                    GridLayout.spec(i, 1f)));
 
             textView.setText(letras.get(i).getNome());
 
@@ -94,18 +100,21 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         for (CartelaPedra cartelaPedra : cartelaPedras) {
             TextView textView = new TextView(mContext);
             glCartela.addView(textView, new GridLayout.LayoutParams(
-                                        GridLayout.spec(cartelaPedra.getLinha()),
-                                        GridLayout.spec(cartelaPedra.getColuna())));
+                                        GridLayout.spec(cartelaPedra.getLinha(), 1f),
+                                        GridLayout.spec(cartelaPedra.getColuna(), 1f)));
 
-            textView.setText(cartelaPedra.getPedraId());
+            textView.setText(String.format(
+                    Locale.ENGLISH,
+                    FORMAT_PEDRA,
+                    Integer.parseInt(cartelaPedra.getPedraId())));
 
             estilizarCelulaCartela(textView, false);
         }
 
         TextView textView = new TextView(mContext);
         glCartela.addView(textView, new GridLayout.LayoutParams(
-                GridLayout.spec(3),
-                GridLayout.spec(2)));
+                GridLayout.spec(3, 1f),
+                GridLayout.spec(2, 1f)));
 
         textView.setText("*");
 
@@ -119,14 +128,16 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             textView.setTextColor(mContext.getResources().getColor(android.R.color.black));
         }
 
-        textView.setTextSize(50);
+        textView.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                mContext.getResources().getDimension(R.dimen.pedra_text));
 
-        textView.setPadding(40,20, 40, 20);
+        textView.setPadding(
+                mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_left_right),
+                mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_top_bottom),
+                mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_left_right),
+                mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_top_bottom));
         textView.setBackground(mContext.getResources().getDrawable(R.drawable.customborder));
-        GridLayout.LayoutParams params = (GridLayout.LayoutParams) textView.getLayoutParams();
-//            params.setGravity(Gravity.CENTER);
-        params.width = 200;
-        textView.setLayoutParams(params);
         textView.setGravity(Gravity.CENTER);
     }
 }
