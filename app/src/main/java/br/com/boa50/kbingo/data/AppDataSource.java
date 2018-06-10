@@ -18,6 +18,7 @@ public interface AppDataSource {
 
     Single<List<Cartela>> getCartelas();
     Single<Cartela> getCartelaById(String id);
+    Single<String> getCartelaUltimoId();
     Single<List<CartelaPedra>> getPedrasByCartelaId(String id);
 
     void initializeDatabase();

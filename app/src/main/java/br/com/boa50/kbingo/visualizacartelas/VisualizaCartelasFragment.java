@@ -10,11 +10,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -27,6 +30,7 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
 import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
+import static br.com.boa50.kbingo.util.StringUtils.removeZeros;
 
 public class VisualizaCartelasFragment extends DaggerFragment implements VisualizaCartelasContract.View {
 
@@ -49,9 +53,24 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.visualizacartelas_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        etNumeroCartela.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                etNumeroCartela.clearFocus();
+                InputMethodManager imm = (InputMethodManager)
+                        v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                Objects.requireNonNull(imm).hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                mPresenter.carregarCartela(removeZeros(etNumeroCartela.getText().toString()));
+            }
+            return false;
+        });
 
         return view;
     }
@@ -75,9 +94,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         if ("".equals(etNumeroCartela.getText().toString())) {
             mPresenter.carregarCartela("1");
         } else {
-            mPresenter.carregarCartela(
-                    Integer.toString(Integer.parseInt(etNumeroCartela.getText().toString()))
-            );
+            mPresenter.carregarCartela(removeZeros(etNumeroCartela.getText().toString()));
         }
 
         for (int i = 0; i <= letras.size() - 1; i++) {
@@ -96,6 +113,10 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     public void apresentarCartela(List<CartelaPedra> cartelaPedras) {
 
         etNumeroCartela.setText(cartelaPedras.get(0).getCartelaIdFormatado());
+
+        if (glCartela.getChildCount() > 5) {
+            glCartela.removeViews(5, 25);
+        }
 
         for (CartelaPedra cartelaPedra : cartelaPedras) {
             TextView textView = new TextView(mContext);

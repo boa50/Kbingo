@@ -148,12 +148,12 @@ public class RealizaSorteioEspressoTest {
 
             @Override
             public String getDescription() {
-                return "getting text from a TextView";
+                return "getting text from a Button";
             }
 
             @Override
             public void perform(UiController uiController, View view) {
-                Button bt = (Button)view;
+                Button bt = (Button) view;
                 stringHolder[0] = bt.getText().toString();
             }
         });

@@ -48,9 +48,7 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
                 .subscribeOn(mScheduleProvider.io())
                 .observeOn(mScheduleProvider.ui())
                 .subscribe(
-                        letras -> {
-                            mView.iniciarLayout(letras);
-                        }
+                        letras -> mView.iniciarLayout(letras)
                 );
 
         mCompositeDisposable.add(disposable);
@@ -64,7 +62,19 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
                 .observeOn(mScheduleProvider.ui())
                 .subscribe(
                         cartelaPedras -> {
-                            mView.apresentarCartela(cartelaPedras);
+                            if (cartelaPedras.size() > 0) {
+                                mView.apresentarCartela(cartelaPedras);
+                            } else {
+                                Disposable disposable2 = mAppDataSource
+                                        .getCartelaUltimoId()
+                                        .subscribeOn(mScheduleProvider.io())
+                                        .observeOn(mScheduleProvider.ui())
+                                        .subscribe(
+                                                this::carregarCartela
+                                        );
+
+                                mCompositeDisposable.add(disposable2);
+                            }
                         }
                 );
 

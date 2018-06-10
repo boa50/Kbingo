@@ -17,6 +17,9 @@ public interface CartelaDao {
     @Query("SELECT * FROM Cartela WHERE id = :id")
     Single<Cartela> loadCartela(String id);
 
+    @Query("SELECT MAX(id) FROM Cartela")
+    Single<String> loadCartelaMaxId();
+
     @Query("DELETE FROM Cartela")
     void deleteAll();
 

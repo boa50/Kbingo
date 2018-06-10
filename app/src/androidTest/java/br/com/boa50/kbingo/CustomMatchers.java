@@ -54,12 +54,25 @@ final class CustomMatchers {
 
             @Override
             public boolean matchesSafely(View view) {
-
                 if (!(view.getParent() instanceof ViewGroup)) {
                     return parentMatcher.matches(view.getParent());
                 }
                 ViewGroup group = (ViewGroup) view.getParent();
                 return parentMatcher.matches(view.getParent()) && group.getChildAt(index).equals(view);
+            }
+        };
+    }
+
+    static Matcher<View> isFocused() {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with focusable view: ");
+            }
+
+            @Override
+            protected boolean matchesSafely(View view) {
+                return view.isFocused();
             }
         };
     }

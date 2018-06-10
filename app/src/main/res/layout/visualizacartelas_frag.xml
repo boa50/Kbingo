@@ -27,6 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:maxLength="4"
+            android:imeOptions="actionDone"
             android:textSize="@dimen/numero_cartela_text"
             android:hint="@string/et_numero_cartela_hint" />
 

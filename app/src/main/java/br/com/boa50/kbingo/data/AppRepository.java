@@ -46,6 +46,11 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
+    public Single<String> getCartelaUltimoId() {
+        return db.cartelaDao().loadCartelaMaxId();
+    }
+
+    @Override
     public Single<List<CartelaPedra>> getPedrasByCartelaId(String id) {
         return db.cartelaPedraDao().loadCartelaPedras(id);
     }
