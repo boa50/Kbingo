@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 
 import java.util.Locale;
 
+import static br.com.boa50.kbingo.Constant.FORMAT_CARTELA;
+
 @Entity(primaryKeys = {"cartela_id", "pedra_id"},
         foreignKeys = {
         @ForeignKey(entity = Cartela.class,
@@ -72,6 +74,6 @@ public class CartelaPedra {
     }
 
     public String getCartelaIdFormatado() {
-        return String.format(Locale.ENGLISH, "%04d", Integer.parseInt(cartelaId));
+        return String.format(Locale.ENGLISH, FORMAT_CARTELA, Integer.parseInt(cartelaId));
     }
 }

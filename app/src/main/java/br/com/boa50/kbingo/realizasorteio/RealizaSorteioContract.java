@@ -8,10 +8,6 @@ import br.com.boa50.kbingo.BaseView;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 
-/**
- * Created by boa50 on 3/11/18.
- */
-
 public interface RealizaSorteioContract {
 
     interface View extends BaseView<Presenter> {
@@ -20,9 +16,7 @@ public interface RealizaSorteioContract {
 
         void apresentarFimSorteio();
 
-        void iniciarPedras(ArrayList<Pedra> pedras);
-
-        void iniciarLayout(List<Letra> letras);
+        void iniciarLayout(List<Letra> letras, ArrayList<Pedra> pedras);
 
         void atualizarPedra(int position);
 

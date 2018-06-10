@@ -10,9 +10,10 @@ import org.mockito.Mock;
 import java.util.List;
 
 import br.com.boa50.kbingo.data.AppDataSource;
+import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.util.schedulers.ImmediateScheduleProvider;
-import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -53,7 +54,12 @@ public class RealizaSorteioPresenterTest {
                 new Pedra("2", "K", "02")
         );
 
-        when(appDataSource.getPedras()).thenReturn(Flowable.just(PEDRAS));
+        List<Letra> LETRAS = Lists.newArrayList(
+                new Letra("1", "K", 0)
+        );
+
+        when(appDataSource.getPedras()).thenReturn(Single.just(PEDRAS));
+        when(appDataSource.getLetras()).thenReturn(Single.just(LETRAS));
 
         QUANTIDADE_PEDRAS_SORTEAVEIS = PEDRAS.size();
 

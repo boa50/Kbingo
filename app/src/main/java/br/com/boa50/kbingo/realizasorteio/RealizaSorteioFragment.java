@@ -172,15 +172,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         mUltimaPedraValor = btSortearPedra.getText().toString();
     }
 
-
     @Override
-    public void iniciarPedras(ArrayList<Pedra> pedras) {
-        mPedras = pedras;
-    }
-
-    @Override
-    public void iniciarLayout(List<Letra> letras) {
+    public void iniciarLayout(List<Letra> letras, ArrayList<Pedra> pedras) {
         mLetras = letras;
+        mPedras = pedras;
 
         if (mPageAdapter == null) {
             mPageAdapter = new PedrasSorteadasPageAdapter(

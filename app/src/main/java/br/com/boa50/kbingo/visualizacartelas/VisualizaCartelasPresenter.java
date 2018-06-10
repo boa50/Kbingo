@@ -33,7 +33,7 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
     @Override
     public void subscribe(BaseView view) {
         mView = (VisualizaCartelasContract.View) view;
-        mView.iniciarLayout(mAppDataSource.getLetras());
+        iniciarLayout();
     }
 
     @Override
@@ -42,10 +42,22 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
         mCompositeDisposable.clear();
     }
 
+    private void iniciarLayout() {
+        Disposable disposable = mAppDataSource
+                .getLetras()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui())
+                .subscribe(
+                        letras -> {
+                            mView.iniciarLayout(letras);
+                        }
+                );
+
+        mCompositeDisposable.add(disposable);
+    }
+
     @Override
     public void carregarCartela(String id) {
-        mCompositeDisposable.clear();
-
         Disposable disposable = mAppDataSource
                 .getPedrasByCartelaId(id)
                 .subscribeOn(mScheduleProvider.io())

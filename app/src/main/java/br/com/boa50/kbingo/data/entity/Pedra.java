@@ -9,10 +9,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-/**
- * Created by boa50 on 3/11/18.
- */
-
 @Entity(foreignKeys = @ForeignKey(entity = Pedra.class,
                                     parentColumns = "id",
                                     childColumns = "letra_id"),

@@ -1,7 +1,6 @@
 package br.com.boa50.kbingo.realizasorteio;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
@@ -15,13 +14,8 @@ import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
-import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-
-/**
- * Created by boa50 on 3/11/18.
- */
 
 @ActivityScoped
 public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter {
@@ -93,31 +87,38 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private void carregarPedras(){
         if (mPedras == null) {
-            mCompositeDisposable.clear();
             mPedras = new ArrayList<>();
 
             Disposable disposable = mAppDataSource
                     .getPedras()
-                    .flatMap(Flowable::fromIterable)
-                    .toList()
                     .subscribeOn(mScheduleProvider.io())
                     .observeOn(mScheduleProvider.ui())
                     .subscribe(
                             pedras -> {
                                 mPedras.addAll(pedras);
-                                mView.iniciarPedras(mPedras);
-                                preencherPosicoesSorteio();
+                                iniciarLayout();
                             },
                             throwable -> mPedras = null
                     );
 
             mCompositeDisposable.add(disposable);
         } else {
-            mView.iniciarPedras(mPedras);
-            preencherPosicoesSorteio();
+            iniciarLayout();
         }
+    }
 
-        mView.iniciarLayout(mAppDataSource.getLetras());
+    private void iniciarLayout() {
+        preencherPosicoesSorteio();
+
+        Disposable disposable = mAppDataSource
+                .getLetras()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui())
+                .subscribe(
+                        letras -> mView.iniciarLayout(letras, mPedras)
+                );
+
+        mCompositeDisposable.add(disposable);
     }
 
     private void preencherPosicoesSorteio() {

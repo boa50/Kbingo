@@ -1,8 +1,11 @@
 package br.com.boa50.kbingo;
 
+import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.rule.ActivityTestRule;
@@ -13,10 +16,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.hamcrest.Matcher;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.boa50.kbingo.data.AppDataSource;
+import br.com.boa50.kbingo.data.AppDatabase;
+import br.com.boa50.kbingo.data.AppRepository;
 import br.com.boa50.kbingo.realizasorteio.RealizaSorteioActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -36,10 +44,25 @@ import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class RealizaSorteioEspressoTest {
+    private AppDatabase db;
 
     @Rule
     public ActivityTestRule<RealizaSorteioActivity> mActivityRule =
             new ActivityTestRule<>(RealizaSorteioActivity.class);
+
+    @Before
+    public void setup() {
+        Context context = InstrumentationRegistry.getTargetContext();
+        db = Room.databaseBuilder(context.getApplicationContext(),
+                AppDatabase.class, "Test.db").build();
+        AppDataSource appDataSource = new AppRepository(db);
+        appDataSource.initializeDatabase();
+    }
+
+    @After
+    public void tearDown() {
+        db.close();
+    }
 
     @Test
     public void realizarNovoSorteio_aparecerPedraInicial() {
