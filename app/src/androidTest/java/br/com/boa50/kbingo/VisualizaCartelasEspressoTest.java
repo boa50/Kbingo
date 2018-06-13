@@ -2,6 +2,7 @@ package br.com.boa50.kbingo;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
@@ -73,6 +74,16 @@ public class VisualizaCartelasEspressoTest {
         onView(withId(R.id.et_numero_cartela)).perform(pressImeActionButton());
         onView(withId(R.id.et_numero_cartela)).check(matches(not(isFocused())));
         onView(indexChildOf(withId(R.id.gl_cartela),5)).check(matches(not(withText(text))));
+    }
+
+    @Test
+    public void mudarCartela_mudarOrientacao_manterInformacoes() {
+        onView(withId(R.id.et_numero_cartela)).perform(replaceText("0002"));
+        onView(withId(R.id.et_numero_cartela)).perform(pressImeActionButton());
+        String text = getTextViewText(indexChildOf(withId(R.id.gl_cartela),5));
+
+        mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        onView(indexChildOf(withId(R.id.gl_cartela),5)).check(matches(withText(text)));
     }
 
     private String getTextViewText(final Matcher<View> matcher) {
