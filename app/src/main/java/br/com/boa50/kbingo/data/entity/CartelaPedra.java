@@ -3,6 +3,7 @@ package br.com.boa50.kbingo.data.entity;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
 import android.support.annotation.NonNull;
 
 import java.util.Locale;
@@ -16,8 +17,9 @@ import static br.com.boa50.kbingo.Constant.FORMAT_CARTELA;
                 childColumns = "cartela_id"),
         @ForeignKey(entity = Pedra.class,
                 parentColumns = "id",
-                childColumns = "pedra_id")
-})
+                childColumns = "pedra_id")},
+        indices = {@Index(name = "cartela_pedra", value = {"cartela_id", "pedra_id"})}
+)
 public class CartelaPedra {
 
     @NonNull

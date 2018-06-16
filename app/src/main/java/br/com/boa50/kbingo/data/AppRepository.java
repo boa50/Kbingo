@@ -77,69 +77,22 @@ public class AppRepository implements AppDataSource {
         }
 
         Cartela[] cartelas = new Cartela[] {
-                new Cartela("1"),
-                new Cartela("2")
+                new Cartela("1")
         };
         CartelaPedra[] cartelaPedras = new CartelaPedra[] {
-                new CartelaPedra("1","1", 1, 0),
-                new CartelaPedra("1","2", 2, 0),
-                new CartelaPedra("1","3", 3, 0),
-                new CartelaPedra("1","4", 4, 0),
-                new CartelaPedra("1","5", 5, 0),
-                new CartelaPedra("1","16", 1, 1),
-                new CartelaPedra("1","17", 2, 1),
-                new CartelaPedra("1","18", 3, 1),
-                new CartelaPedra("1","19", 4, 1),
-                new CartelaPedra("1","20", 5, 1),
-                new CartelaPedra("1","31", 1, 2),
-                new CartelaPedra("1","32", 2, 2),
-                new CartelaPedra("1","33", 4, 2),
-                new CartelaPedra("1","34", 5, 2),
-                new CartelaPedra("1","46", 1, 3),
-                new CartelaPedra("1","47", 2, 3),
-                new CartelaPedra("1","48", 3, 3),
-                new CartelaPedra("1","49", 4, 3),
-                new CartelaPedra("1","50", 5, 3),
-                new CartelaPedra("1","61", 1, 4),
-                new CartelaPedra("1","62", 2, 4),
-                new CartelaPedra("1","63", 3, 4),
-                new CartelaPedra("1","64", 4, 4),
-                new CartelaPedra("1","65", 5, 4),
-                new CartelaPedra("2","6", 1, 0),
-                new CartelaPedra("2","7", 2, 0),
-                new CartelaPedra("2","8", 3, 0),
-                new CartelaPedra("2","9", 4, 0),
-                new CartelaPedra("2","10", 5, 0),
-                new CartelaPedra("2","21", 1, 1),
-                new CartelaPedra("2","22", 2, 1),
-                new CartelaPedra("2","23", 3, 1),
-                new CartelaPedra("2","24", 4, 1),
-                new CartelaPedra("2","25", 5, 1),
-                new CartelaPedra("2","36", 1, 2),
-                new CartelaPedra("2","37", 2, 2),
-                new CartelaPedra("2","38", 4, 2),
-                new CartelaPedra("2","39", 5, 2),
-                new CartelaPedra("2","51", 1, 3),
-                new CartelaPedra("2","52", 2, 3),
-                new CartelaPedra("2","53", 3, 3),
-                new CartelaPedra("2","54", 4, 3),
-                new CartelaPedra("2","55", 5, 3),
-                new CartelaPedra("2","66", 1, 4),
-                new CartelaPedra("2","67", 2, 4),
-                new CartelaPedra("2","68", 3, 4),
-                new CartelaPedra("2","69", 4, 4),
-                new CartelaPedra("2","70", 5, 4)
+                new CartelaPedra("1","13",1,0),new CartelaPedra("1","28",1,1),new CartelaPedra("1","43",1,2),new CartelaPedra("1","46",1,3),new CartelaPedra("1","72",1,4),new CartelaPedra("1","5",2,0),new CartelaPedra("1","16",2,1),new CartelaPedra("1","38",2,2),new CartelaPedra("1","57",2,3),new CartelaPedra("1","66",2,4),new CartelaPedra("1","3",3,0),new CartelaPedra("1","25",3,1),new CartelaPedra("1","53",3,3),new CartelaPedra("1","75",3,4),new CartelaPedra("1","9",4,0),new CartelaPedra("1","22",4,1),new CartelaPedra("1","40",4,2),new CartelaPedra("1","52",4,3),new CartelaPedra("1","74",4,4),new CartelaPedra("1","15",5,0),new CartelaPedra("1","19",5,1),new CartelaPedra("1","37",5,2),new CartelaPedra("1","48",5,3),new CartelaPedra("1","67",5,4)
         };
         Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                db.letraDao().deleteAll();
-                db.letraDao().insertAll(letras);
-                db.pedraDao().deleteAll();
-                db.pedraDao().insertAll(pedras);
-                db.cartelaDao().deleteAll();
-                db.cartelaDao().insertAll(cartelas);
                 db.cartelaPedraDao().deleteAll();
+                db.cartelaDao().deleteAll();
+                db.pedraDao().deleteAll();
+                db.letraDao().deleteAll();
+
+                db.letraDao().insertAll(letras);
+                db.pedraDao().insertAll(pedras);
+                db.cartelaDao().insertAll(cartelas);
                 db.cartelaPedraDao().insertAll(cartelaPedras);
             }
         });

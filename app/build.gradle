@@ -68,8 +68,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroidVersion}"
     implementation "android.arch.persistence.room:runtime:${roomVersion}"
     implementation "android.arch.persistence.room:rxjava2:${roomVersion}"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:support-v4:27.1.1'
     testImplementation "junit:junit:${junitVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.hamcrest:java-hamcrest:${hamcrestVersion}"

@@ -12,13 +12,13 @@ import dagger.Provides;
 @Module
 public abstract class DataModule {
     @Singleton
-    @Binds
-    abstract AppDataSource appDataSource(AppRepository appRepository);
-
-    @Singleton
     @Provides
     static AppDatabase providerAppDatabase(Context context) {
         return Room.databaseBuilder(context.getApplicationContext(),
                 AppDatabase.class, "Kbingo.db").build();
     }
+
+    @Singleton
+    @Binds
+    abstract AppDataSource appDataSource(AppRepository appRepository);
 }
