@@ -49,17 +49,14 @@ public final class PopularTabelas {
             j += 4;
         } while (j < arrayCartelasPedras.length);
 
-        Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                db.cartelaPedraDao().deleteAll();
-                db.pedraDao().deleteAll();
-                db.letraDao().deleteAll();
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            db.cartelaPedraDao().deleteAll();
+            db.pedraDao().deleteAll();
+            db.letraDao().deleteAll();
 
-                db.letraDao().insertAll(letras);
-                db.pedraDao().insertAll(pedras);
-                db.cartelaPedraDao().insertAll(listCartelasPedras);
-            }
+            db.letraDao().insertAll(letras);
+            db.pedraDao().insertAll(pedras);
+            db.cartelaPedraDao().insertAll(listCartelasPedras);
         });
     }
 }
