@@ -18,12 +18,9 @@ public class Letra {
     @NonNull
     private String nome;
 
-    private int posicao;
-
-    public Letra(@NonNull String id, @NonNull String nome, int posicao) {
+    public Letra(@NonNull String id, @NonNull String nome) {
         this.id = id;
         this.nome = nome;
-        this.posicao = posicao;
     }
 
     @NonNull
@@ -42,13 +39,5 @@ public class Letra {
 
     public void setNome(@NonNull String nome) {
         this.nome = nome;
-    }
-
-    public int getPosicao() {
-        return posicao;
-    }
-
-    public void setPosicao(int posicao) {
-        this.posicao = posicao;
     }
 }
