@@ -12,23 +12,21 @@ import android.support.annotation.NonNull;
 public class Letra {
 
     @PrimaryKey
-    @NonNull
-    private String id;
+    private int id;
 
     @NonNull
     private String nome;
 
-    public Letra(@NonNull String id, @NonNull String nome) {
+    public Letra(int id, @NonNull String nome) {
         this.id = id;
         this.nome = nome;
     }
 
-    @NonNull
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(@NonNull String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import br.com.boa50.kbingo.data.entity.Cartela;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
@@ -31,22 +30,12 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public Single<List<Cartela>> getCartelas() {
-        return db.cartelaDao().loadCartelas();
+    public Single<Integer> getCartelaUltimoId() {
+        return db.cartelaPedraDao().loadCartelaMaxId();
     }
 
     @Override
-    public Single<Cartela> getCartelaById(String id) {
-        return db.cartelaDao().loadCartela(id);
-    }
-
-    @Override
-    public Single<String> getCartelaUltimoId() {
-        return db.cartelaDao().loadCartelaMaxId();
-    }
-
-    @Override
-    public Single<List<CartelaPedra>> getPedrasByCartelaId(String id) {
+    public Single<List<CartelaPedra>> getPedrasByCartelaId(int id) {
         return db.cartelaPedraDao().loadCartelaPedras(id);
     }
 

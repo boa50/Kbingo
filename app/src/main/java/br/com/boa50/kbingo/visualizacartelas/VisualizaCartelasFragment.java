@@ -30,7 +30,6 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
 import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
-import static br.com.boa50.kbingo.util.StringUtils.removeZeros;
 
 public class VisualizaCartelasFragment extends DaggerFragment implements VisualizaCartelasContract.View {
 
@@ -67,7 +66,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                         v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 Objects.requireNonNull(imm).hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                mPresenter.carregarCartela(removeZeros(etNumeroCartela.getText().toString()));
+                mPresenter.carregarCartela(Integer.parseInt(etNumeroCartela.getText().toString()));
             }
             return false;
         });
@@ -92,9 +91,9 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     public void iniciarLayout(List<Letra> letras) {
 
         if ("".equals(etNumeroCartela.getText().toString())) {
-            mPresenter.carregarCartela("1");
+            mPresenter.carregarCartela(1);
         } else {
-            mPresenter.carregarCartela(removeZeros(etNumeroCartela.getText().toString()));
+            mPresenter.carregarCartela(Integer.parseInt(etNumeroCartela.getText().toString()));
         }
 
         for (int i = 0; i <= letras.size() - 1; i++) {
@@ -127,7 +126,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             textView.setText(String.format(
                     Locale.ENGLISH,
                     FORMAT_PEDRA,
-                    Integer.parseInt(cartelaPedra.getPedraId())));
+                    cartelaPedra.getPedraId()));
 
             estilizarCelulaCartela(textView, false);
         }

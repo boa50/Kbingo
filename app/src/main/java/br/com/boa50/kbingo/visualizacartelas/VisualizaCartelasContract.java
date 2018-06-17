@@ -15,6 +15,6 @@ public interface VisualizaCartelasContract {
     }
 
     interface Presenter extends BasePresenter {
-        void carregarCartela(String id);
+        void carregarCartela(int id);
     }
 }

@@ -16,19 +16,17 @@ import android.support.annotation.NonNull;
 public class Pedra implements Parcelable{
 
     @PrimaryKey
-    @NonNull
-    private String id;
+    private int id;
 
-    @NonNull
     @ColumnInfo(name = "letra_id")
-    private String letraId;
+    private int letraId;
 
     @NonNull
     private String numero;
 
     private boolean sorteada;
 
-    public Pedra(@NonNull String id, @NonNull String letraId, @NonNull String numero) {
+    public Pedra(int id, int letraId, @NonNull String numero) {
         this.id = id;
         this.letraId = letraId;
         this.numero = numero;
@@ -36,8 +34,8 @@ public class Pedra implements Parcelable{
     }
 
     protected Pedra(Parcel in) {
-        id = in.readString();
-        letraId = in.readString();
+        id = in.readInt();
+        letraId = in.readInt();
         numero = in.readString();
         sorteada = in.readByte() != 0;
     }
@@ -54,21 +52,19 @@ public class Pedra implements Parcelable{
         }
     };
 
-    @NonNull
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(@NonNull String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    @NonNull
-    public String getLetraId() {
+    public int getLetraId() {
         return letraId;
     }
 
-    public void setLetraId(@NonNull String letraId) {
+    public void setLetraId(int letraId) {
         this.letraId = letraId;
     }
 
@@ -100,8 +96,8 @@ public class Pedra implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(letraId);
+        parcel.writeInt(id);
+        parcel.writeInt(letraId);
         parcel.writeString(numero);
         parcel.writeByte((byte) (sorteada ? 1 : 0));
     }

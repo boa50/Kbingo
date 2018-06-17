@@ -68,7 +68,7 @@ public class VisualizaCartelasEspressoTest {
     @Test
     public void mudarCartela_mudarPedras() {
         onView(withId(R.id.et_numero_cartela)).perform(click());
-        onView(withId(R.id.et_numero_cartela)).perform(replaceText("0002"));
+        onView(withId(R.id.et_numero_cartela)).perform(replaceText("0003"));
         onView(withId(R.id.et_numero_cartela)).check(matches(isFocused()));
         String text = getTextViewText(indexChildOf(withId(R.id.gl_cartela),5));
         onView(withId(R.id.et_numero_cartela)).perform(pressImeActionButton());

@@ -55,7 +55,7 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
     }
 
     @Override
-    public void carregarCartela(String id) {
+    public void carregarCartela(int id) {
         Disposable disposable = mAppDataSource
                 .getPedrasByCartelaId(id)
                 .subscribeOn(mScheduleProvider.io())

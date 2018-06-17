@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.inject.Singleton;
 
-import br.com.boa50.kbingo.data.entity.Cartela;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
@@ -16,10 +15,8 @@ public interface AppDataSource {
 
     Single<List<Pedra>> getPedras();
 
-    Single<List<Cartela>> getCartelas();
-    Single<Cartela> getCartelaById(String id);
-    Single<String> getCartelaUltimoId();
-    Single<List<CartelaPedra>> getPedrasByCartelaId(String id);
+    Single<Integer> getCartelaUltimoId();
+    Single<List<CartelaPedra>> getPedrasByCartelaId(int id);
 
     void initializeDatabase();
 }

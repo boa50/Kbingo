@@ -50,12 +50,12 @@ public class RealizaSorteioPresenterTest {
         realizaSorteioPresenter = new RealizaSorteioPresenter(appDataSource, new ImmediateScheduleProvider());
 
         List<Pedra> PEDRAS = Lists.newArrayList(
-                new Pedra("1", "K", "01"),
-                new Pedra("2", "K", "02")
+                new Pedra(1, 1, "01"),
+                new Pedra(2, 1, "02")
         );
 
         List<Letra> LETRAS = Lists.newArrayList(
-                new Letra("1", "K", 0)
+                new Letra(1, "K")
         );
 
         when(appDataSource.getPedras()).thenReturn(Single.just(PEDRAS));

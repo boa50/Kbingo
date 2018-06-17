@@ -375,7 +375,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                         mPedrasMarginPx);
 
             textView.setLayoutParams(params);
-            textView.setId(Integer.parseInt(pedra.getId()));
+            textView.setId(pedra.getId());
             textView.setText(pedra.getNumero());
             textView.setGravity(Gravity.CENTER);
 
@@ -395,9 +395,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             }
         }
 
-        public void transitarTextViewPedra(String id) {
+        public void transitarTextViewPedra(int id) {
             TextView textView =
-                    Objects.requireNonNull(this.getView()).findViewById(Integer.parseInt(id));
+                    Objects.requireNonNull(this.getView()).findViewById(id);
 
             AnimatedVectorDrawableCompat drawableAnimated = AnimatedVectorDrawableCompat.create(
                     mContext,

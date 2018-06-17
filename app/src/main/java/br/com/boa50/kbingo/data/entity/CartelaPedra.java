@@ -4,7 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
-import android.support.annotation.NonNull;
 
 import java.util.Locale;
 
@@ -12,50 +11,43 @@ import static br.com.boa50.kbingo.Constant.FORMAT_CARTELA;
 
 @Entity(primaryKeys = {"cartela_id", "pedra_id"},
         foreignKeys = {
-        @ForeignKey(entity = Cartela.class,
-                parentColumns = "id",
-                childColumns = "cartela_id"),
         @ForeignKey(entity = Pedra.class,
                 parentColumns = "id",
                 childColumns = "pedra_id")},
-        indices = {@Index(name = "cartela_pedra", value = {"cartela_id", "pedra_id"})}
+        indices = {@Index(name = "cartela_pedra", value = {"pedra_id", "cartela_id"})}
 )
 public class CartelaPedra {
 
-    @NonNull
     @ColumnInfo(name = "cartela_id")
-    private String cartelaId;
+    private int cartelaId;
 
-    @NonNull
     @ColumnInfo(name = "pedra_id")
-    private String pedraId;
+    private int pedraId;
 
     private int linha;
 
     private int coluna;
 
-    public CartelaPedra(@NonNull String cartelaId, @NonNull String pedraId, int linha, int coluna) {
+    public CartelaPedra(int cartelaId, int pedraId, int linha, int coluna) {
         this.cartelaId = cartelaId;
         this.pedraId = pedraId;
         this.linha = linha;
         this.coluna = coluna;
     }
 
-    @NonNull
-    public String getCartelaId() {
+    public int getCartelaId() {
         return cartelaId;
     }
 
-    public void setCartelaId(@NonNull String cartelaId) {
+    public void setCartelaId(int cartelaId) {
         this.cartelaId = cartelaId;
     }
 
-    @NonNull
-    public String getPedraId() {
+    public int getPedraId() {
         return pedraId;
     }
 
-    public void setPedraId(@NonNull String pedraId) {
+    public void setPedraId(int pedraId) {
         this.pedraId = pedraId;
     }
 
@@ -76,6 +68,6 @@ public class CartelaPedra {
     }
 
     public String getCartelaIdFormatado() {
-        return String.format(Locale.ENGLISH, FORMAT_CARTELA, Integer.parseInt(cartelaId));
+        return String.format(Locale.ENGLISH, FORMAT_CARTELA, cartelaId);
     }
 }
