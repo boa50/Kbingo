@@ -9,7 +9,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-@Entity(foreignKeys = @ForeignKey(entity = Pedra.class,
+@Entity(foreignKeys = @ForeignKey(entity = Letra.class,
                                     parentColumns = "id",
                                     childColumns = "letra_id"),
         indices = @Index("letra_id"))
@@ -83,10 +83,6 @@ public class Pedra implements Parcelable{
 
     public void setSorteada(boolean sorteada) {
         this.sorteada = sorteada;
-    }
-
-    public String getValorPedra(){
-        return letraId + numero;
     }
 
     @Override

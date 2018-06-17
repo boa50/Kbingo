@@ -92,11 +92,11 @@ public class RealizaSorteioPresenterTest {
 
         realizaSorteioPresenter.sortearPedra();
         verify(realizaSorteioView).apresentarPedra(pedra.capture());
-        String pedra1 = pedra.getValue().getValorPedra();
+        String pedra1 = pedra.getValue().getNumero();
 
         realizaSorteioPresenter.sortearPedra();
         verify(realizaSorteioView, times(2)).apresentarPedra(pedra.capture());
-        assertThat(pedra1, is(not(equalTo(pedra.getValue().getValorPedra()))));
+        assertThat(pedra1, is(not(equalTo(pedra.getValue().getNumero()))));
     }
 
     @Test

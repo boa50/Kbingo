@@ -150,7 +150,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void apresentarPedra(Pedra pedra) {
-        apresentarPedra(pedra.getValorPedra());
+        apresentarPedra(mLetras.get(pedra.getLetraId() - 1).getNome() + pedra.getNumero());
     }
 
     private void apresentarPedra(String pedraValor) {
