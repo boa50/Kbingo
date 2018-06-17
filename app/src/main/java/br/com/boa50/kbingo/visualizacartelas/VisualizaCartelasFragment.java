@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Locale;
@@ -139,6 +140,22 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         textView.setText("*");
 
         estilizarCelulaCartela(textView, false);
+    }
+
+    @Override
+    public void apresentarMaximoIdCartela(int id) {
+        Toast toast = Toast.makeText(mContext,
+                mContext.getResources().getText(R.string.toast_cartela_maxima).toString() + " " + id,
+                Toast.LENGTH_SHORT);
+
+        ViewGroup group = (ViewGroup) toast.getView();
+        TextView messageTextView = (TextView) group.getChildAt(0);
+        messageTextView.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                mContext.getResources().getDimension(R.dimen.toast_text_size)
+        );
+
+        toast.show();
     }
 
     private void estilizarCelulaCartela(TextView textView, boolean header) {

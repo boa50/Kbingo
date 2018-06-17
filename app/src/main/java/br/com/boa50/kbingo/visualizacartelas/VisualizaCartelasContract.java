@@ -12,6 +12,7 @@ public interface VisualizaCartelasContract {
     interface View extends BaseView<Presenter> {
         void iniciarLayout(List<Letra> letras);
         void apresentarCartela(List<CartelaPedra> cartelaPedras);
+        void apresentarMaximoIdCartela(int id);
     }
 
     interface Presenter extends BasePresenter {

@@ -20,8 +20,8 @@ public class MainActivity extends DaggerAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAppDataSource.initializeDatabase();
-        Intent intent = new Intent(MainActivity.this, RealizaSorteioActivity.class);
-//        Intent intent = new Intent(MainActivity.this, VisualizaCartelasActivity.class);
+//        Intent intent = new Intent(MainActivity.this, RealizaSorteioActivity.class);
+        Intent intent = new Intent(MainActivity.this, VisualizaCartelasActivity.class);
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             setTheme(R.style.AppTheme);

@@ -70,7 +70,10 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
                                         .subscribeOn(mScheduleProvider.io())
                                         .observeOn(mScheduleProvider.ui())
                                         .subscribe(
-                                                this::carregarCartela
+                                                cartelaId ->{
+                                                    carregarCartela(cartelaId);
+                                                    mView.apresentarMaximoIdCartela(cartelaId);
+                                                }
                                         );
 
                                 mCompositeDisposable.add(disposable2);

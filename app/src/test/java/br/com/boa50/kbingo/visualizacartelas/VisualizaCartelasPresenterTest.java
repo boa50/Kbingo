@@ -19,6 +19,7 @@ import io.reactivex.Single;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -76,5 +77,6 @@ public class VisualizaCartelasPresenterTest {
 
         verify(visualizarCartelasView).apresentarCartela(cartelaPedras.capture());
         assertThat(cartelaPedras.getValue().get(0).getCartelaId(), equalTo(CARTELA_MAX_ID));
+        verify(visualizarCartelasView).apresentarMaximoIdCartela(CARTELA_MAX_ID);
     }
 }

@@ -8,4 +8,5 @@
 
     <!--Visualizar cartela-->
     <string name="et_numero_cartela_hint">Número da Cartela</string>
+    <string name="toast_cartela_maxima">O maior número de cartela cadastrado é</string>
 </resources>
