@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Kbingo</string>
+    <string name="realizar_sorteio_title">Realizar Sorteio</string>
+    <string name="visualizar_cartelas_title">Visualizar Cartela</string>
 
     <!--Realizar sorteio-->
     <string name="bt_sortear_pedra">Sortear\nPedra</string>

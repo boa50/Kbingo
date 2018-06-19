@@ -17,6 +17,7 @@ public class RealizaSorteioActivity extends DaggerAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.default_act);
+        setTitle(R.string.realizar_sorteio_title);
 
         if (getSupportFragmentManager().findFragmentById(R.id.conteudoFrame) == null) {
             ActivityUtils.addFragmentToActivity(
