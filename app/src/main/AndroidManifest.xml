@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".realizasorteio.RealizaSorteioActivity" />
         <activity android:name=".visualizacartelas.VisualizaCartelasActivity"></activity>
+        <activity android:name=".BaseActivity" />
     </application>
 
 </manifest>

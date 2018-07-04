@@ -4,11 +4,12 @@ import android.os.Bundle;
 
 import javax.inject.Inject;
 
+import br.com.boa50.kbingo.BaseActivity;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.util.ActivityUtils;
 import dagger.android.support.DaggerAppCompatActivity;
 
-public class VisualizaCartelasActivity extends DaggerAppCompatActivity {
+public class VisualizaCartelasActivity extends BaseActivity {
 
     @Inject
     VisualizaCartelasFragment mVisualizaCartelasFragment;
@@ -16,7 +17,6 @@ public class VisualizaCartelasActivity extends DaggerAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.default_act);
         setTitle(R.string.visualizar_cartelas_title);
 
         if (getSupportFragmentManager().findFragmentById(R.id.conteudoFrame) == null) {
