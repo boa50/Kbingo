@@ -10,7 +10,7 @@ public final class ActivityUtils {
     public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
                                              @NonNull Fragment fragment, int layoutId){
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(layoutId, fragment);
+        transaction.replace(layoutId, fragment);
         transaction.commit();
     }
 

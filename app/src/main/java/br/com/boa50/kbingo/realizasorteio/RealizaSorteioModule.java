@@ -6,10 +6,6 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
-/**
- * Created by boa50 on 21/03/18.
- */
-
 @Module
 public abstract class RealizaSorteioModule {
     @FragmentScoped

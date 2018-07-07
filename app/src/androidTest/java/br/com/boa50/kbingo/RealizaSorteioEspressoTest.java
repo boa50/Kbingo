@@ -8,9 +8,11 @@ import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -25,11 +27,12 @@ import org.junit.runner.RunWith;
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.AppDatabase;
 import br.com.boa50.kbingo.data.AppRepository;
-import br.com.boa50.kbingo.realizasorteio.RealizaSorteioActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
+import static android.support.test.espresso.contrib.NavigationViewActions.navigateTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
@@ -44,19 +47,28 @@ import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class RealizaSorteioEspressoTest {
-    private AppDatabase db;
+    private  AppDatabase db;
 
     @Rule
-    public ActivityTestRule<RealizaSorteioActivity> mActivityRule =
-            new ActivityTestRule<>(RealizaSorteioActivity.class);
+    public ActivityTestRule<BaseActivity> mActivityRule =
+            new ActivityTestRule<>(BaseActivity.class);
 
     @Before
+    //TODO fazer alterações para o @BeforeClass para agilizar os testes
     public void setup() {
         Context context = InstrumentationRegistry.getTargetContext();
         db = Room.databaseBuilder(context.getApplicationContext(),
                 AppDatabase.class, "Test.db").build();
         AppDataSource appDataSource = new AppRepository(db);
         appDataSource.initializeDatabase();
+
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(Gravity.LEFT)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.navigation_view))
+                .perform(navigateTo(R.id.item_realizar_sorteio));
+        onView(withId(R.id.drawer_layout))
+                .perform(DrawerActions.close());
     }
 
     @After

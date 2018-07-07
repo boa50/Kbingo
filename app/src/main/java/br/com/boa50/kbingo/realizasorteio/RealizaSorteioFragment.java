@@ -16,6 +16,7 @@ import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayout;
 import android.util.DisplayMetrics;
@@ -95,6 +96,16 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mUltimaPedraValor = "";
         }
 
+        FragmentManager manager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        for (Fragment fragment : manager.getFragments()) {
+            if (fragment.getTag() != null) {
+                transaction.remove(fragment);
+            }
+
+        }
+        transaction.commit();
+
         return view;
     }
 
@@ -129,8 +140,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 apresentarPedra(mUltimaPedraValor);
         }
 
-        mPresenter.setPedras(mPedras);
         mPresenter.subscribe(this);
+        mPresenter.setPedras(mPedras);
     }
 
     @OnClick(R.id.bt_sortear_pedra)
@@ -180,10 +191,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         if (mPageAdapter == null) {
             mPageAdapter = new PedrasSorteadasPageAdapter(
                     Objects.requireNonNull(getActivity()).getSupportFragmentManager());
-            vpPedrasSorteadas.setOffscreenPageLimit(4);
-            vpPedrasSorteadas.setAdapter(mPageAdapter);
-            tlPedrasSorteadas.setupWithViewPager(vpPedrasSorteadas);
         }
+        vpPedrasSorteadas.setAdapter(mPageAdapter);
+        vpPedrasSorteadas.setOffscreenPageLimit(4);
+        tlPedrasSorteadas.setupWithViewPager(vpPedrasSorteadas);
     }
 
     @Override

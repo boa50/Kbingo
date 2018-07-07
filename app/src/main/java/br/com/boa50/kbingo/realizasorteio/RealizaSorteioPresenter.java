@@ -87,14 +87,13 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private void carregarPedras(){
         if (mPedras == null) {
-            mPedras = new ArrayList<>();
-
             Disposable disposable = mAppDataSource
                     .getPedras()
                     .subscribeOn(mScheduleProvider.io())
                     .observeOn(mScheduleProvider.ui())
                     .subscribe(
                             pedras -> {
+                                mPedras = new ArrayList<>();
                                 mPedras.addAll(pedras);
                                 iniciarLayout();
                             },

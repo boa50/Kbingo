@@ -6,8 +6,10 @@ import android.content.pm.ActivityInfo;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,13 +23,14 @@ import org.junit.runner.RunWith;
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.AppDatabase;
 import br.com.boa50.kbingo.data.AppRepository;
-import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
+import static android.support.test.espresso.contrib.NavigationViewActions.navigateTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -41,16 +44,25 @@ public class VisualizaCartelasEspressoTest {
     private AppDatabase db;
 
     @Rule
-    public ActivityTestRule<VisualizaCartelasActivity> mActivityRule =
-            new ActivityTestRule<>(VisualizaCartelasActivity.class);
+    public ActivityTestRule<BaseActivity> mActivityRule =
+            new ActivityTestRule<>(BaseActivity.class);
 
     @Before
+    //TODO fazer alterações para o @BeforeClass para agilizar os testes
     public void setup() {
         Context context = InstrumentationRegistry.getTargetContext();
         db = Room.databaseBuilder(context.getApplicationContext(),
                 AppDatabase.class, "Test.db").build();
         AppDataSource appDataSource = new AppRepository(db);
         appDataSource.initializeDatabase();
+
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(Gravity.LEFT)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.navigation_view))
+                .perform(navigateTo(R.id.item_visualizar_cartelas));
+        onView(withId(R.id.drawer_layout))
+                .perform(DrawerActions.close());
     }
 
     @After
