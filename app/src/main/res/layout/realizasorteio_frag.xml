@@ -16,6 +16,7 @@
             android:id="@+id/tl_pedras_sorteadas"
             android:layout_width="match_parent"
             android:layout_height="@dimen/pedras_tab_height"
+            android:background="@color/colorPrimaryDark"
             style="@style/TabLetras" />
 
     </android.support.v4.view.ViewPager>

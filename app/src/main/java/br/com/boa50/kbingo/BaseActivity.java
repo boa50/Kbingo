@@ -4,7 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -21,6 +27,8 @@ public class BaseActivity extends DaggerAppCompatActivity {
     DrawerLayout mDrawerLayout;
     @BindView(R.id.navigation_view)
     NavigationView mNavigationView;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Inject
     RealizaSorteioFragment mRealizaSorteioFragment;
@@ -32,6 +40,11 @@ public class BaseActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.default_act);
         ButterKnife.bind(this);
+
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         setTitle(R.string.realizar_sorteio_title);
         modificarFragment(mRealizaSorteioFragment);
@@ -54,6 +67,16 @@ public class BaseActivity extends DaggerAppCompatActivity {
 
             return true;
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void modificarFragment(Fragment fragment){
