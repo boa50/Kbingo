@@ -6,7 +6,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.Gravity;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,7 +19,6 @@ import br.com.boa50.kbingo.data.AppRepository;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.contrib.NavigationViewActions.navigateTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -53,7 +51,6 @@ public class MenuEspressoTest {
         onView(withText("02"))
                 .check(matches(isDisplayed()));
         onView(withId(R.id.drawer_layout))
-                .check(matches(isClosed(Gravity.LEFT)))
                 .perform(DrawerActions.open());
         onView(withId(R.id.navigation_view))
                 .perform(navigateTo(R.id.item_visualizar_cartelas));

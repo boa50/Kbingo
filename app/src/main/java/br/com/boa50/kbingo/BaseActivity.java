@@ -35,6 +35,7 @@ public class BaseActivity extends DaggerAppCompatActivity {
 
         setTitle(R.string.realizar_sorteio_title);
         modificarFragment(mRealizaSorteioFragment);
+        mNavigationView.setCheckedItem(R.id.item_realizar_sorteio);
 
         mNavigationView.setNavigationItemSelectedListener(item -> {
             item.setChecked(true);
