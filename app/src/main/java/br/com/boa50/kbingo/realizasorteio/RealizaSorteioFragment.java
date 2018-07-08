@@ -102,7 +102,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             if (fragment.getTag() != null) {
                 transaction.remove(fragment);
             }
-
         }
         transaction.commit();
 
@@ -140,8 +139,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 apresentarPedra(mUltimaPedraValor);
         }
 
-        mPresenter.subscribe(this);
         mPresenter.setPedras(mPedras);
+        mPresenter.subscribe(this);
     }
 
     @OnClick(R.id.bt_sortear_pedra)

@@ -1,7 +1,6 @@
 package br.com.boa50.kbingo;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -23,7 +22,6 @@ import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 
 public class BaseActivity extends DaggerAppCompatActivity {
-    private static final String ARGS_MENU_ITEM_ID = "menuItemId";
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -37,8 +35,6 @@ public class BaseActivity extends DaggerAppCompatActivity {
     @Inject
     VisualizaCartelasFragment mVisualizaCartelasFragment;
 
-    private int mCheckedMenuItemId;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,13 +47,9 @@ public class BaseActivity extends DaggerAppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         if (savedInstanceState == null) {
-            mCheckedMenuItemId = R.id.item_realizar_sorteio;
-        } else {
-            mCheckedMenuItemId = savedInstanceState.getInt(ARGS_MENU_ITEM_ID);
+            modificarFragment(R.id.item_realizar_sorteio);
+            mNavigationView.setCheckedItem(R.id.item_realizar_sorteio);
         }
-
-        mNavigationView.setCheckedItem(mCheckedMenuItemId);
-        modificarFragment(mCheckedMenuItemId);
 
         mNavigationView.setNavigationItemSelectedListener(item -> {
             item.setChecked(true);
@@ -77,14 +69,7 @@ public class BaseActivity extends DaggerAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(ARGS_MENU_ITEM_ID, mCheckedMenuItemId);
-    }
-
     private void modificarFragment(int menuItemId) {
-        mCheckedMenuItemId = menuItemId;
         Fragment fragment;
 
         switch (menuItemId) {
