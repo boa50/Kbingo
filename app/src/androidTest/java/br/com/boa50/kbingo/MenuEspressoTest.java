@@ -2,10 +2,14 @@ package br.com.boa50.kbingo;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.espresso.contrib.DrawerMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.view.GravityCompat;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +22,9 @@ import br.com.boa50.kbingo.data.AppDatabase;
 import br.com.boa50.kbingo.data.AppRepository;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static android.support.test.espresso.contrib.NavigationViewActions.navigateTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -29,7 +35,7 @@ public class MenuEspressoTest {
     private AppDatabase db;
 
     @Rule
-    public ActivityTestRule<BaseActivity> mBaseActivity =
+    public ActivityTestRule<BaseActivity> mActivityRule =
             new ActivityTestRule<>(BaseActivity.class);
 
     @Before
@@ -66,6 +72,19 @@ public class MenuEspressoTest {
         onView(withId(R.id.vp_pedras_sorteadas))
                 .check(matches(isDisplayed()));
         onView(withText("02"))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void mudarFragment_rotacionarTela_manterFragment() {
+        onView(withId(R.id.drawer_layout))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.navigation_view))
+                .perform(navigateTo(R.id.item_visualizar_cartelas));
+
+        mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        onView(withId(R.id.et_numero_cartela))
                 .check(matches(isDisplayed()));
     }
 }
