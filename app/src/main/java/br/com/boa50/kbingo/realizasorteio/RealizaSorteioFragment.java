@@ -96,15 +96,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mUltimaPedraValor = "";
         }
 
-        FragmentManager manager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        for (Fragment fragment : manager.getFragments()) {
-            if (fragment.getTag() != null) {
-                transaction.remove(fragment);
-            }
-        }
-        transaction.commit();
-
         return view;
     }
 
@@ -116,10 +107,25 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        FragmentManager manager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        for (Fragment fragment : manager.getFragments()) {
+            if (fragment.getTag() != null) {
+                transaction.remove(fragment);
+            }
+        }
+        transaction.commit();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
         mPresenter.unsubscribe();
+        mPedras = null;
     }
 
     @Override
@@ -191,8 +197,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mPageAdapter = new PedrasSorteadasPageAdapter(
                     Objects.requireNonNull(getActivity()).getSupportFragmentManager());
         }
+
         vpPedrasSorteadas.setAdapter(mPageAdapter);
         vpPedrasSorteadas.setOffscreenPageLimit(4);
+        if ("".equals(mUltimaPedraValor)) vpPedrasSorteadas.setCurrentItem(0);
         tlPedrasSorteadas.setupWithViewPager(vpPedrasSorteadas);
     }
 
