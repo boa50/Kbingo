@@ -6,18 +6,13 @@ import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.view.GravityCompat;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,13 +28,13 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.contrib.NavigationViewActions.navigateTo;
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.boa50.kbingo.Constant.QTDE_LETRAS;
+import static br.com.boa50.kbingo.CustomGets.getButtonText;
 import static br.com.boa50.kbingo.CustomMatchers.indexChildOf;
 import static br.com.boa50.kbingo.CustomMatchers.withPedraBackground;
 import static br.com.boa50.kbingo.CustomMatchers.withTextColor;
@@ -150,26 +145,46 @@ public class RealizaSorteioEspressoTest {
                 .check(matches(withPedraBackground(drawable)));
     }
 
-    private String getButtonText(final Matcher<View> matcher) {
-        final String[] stringHolder = {null};
-        onView(matcher).perform(new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return isAssignableFrom(TextView.class);
-            }
+    @Test
+    public void trocarFragments_resetarInformacoes() {
+        onView(withId(R.id.bt_sortear_pedra))
+                .perform(click());
 
-            @Override
-            public String getDescription() {
-                return "getting text from a Button";
-            }
+        String text = getButtonText(withId(R.id.bt_sortear_pedra));
 
-            @Override
-            public void perform(UiController uiController, View view) {
-                Button bt = (Button) view;
-                stringHolder[0] = bt.getText().toString();
-            }
-        });
-        return stringHolder[0];
+        Drawable drawable = VectorDrawableCompat.create(
+                mActivityRule.getActivity().getResources(),
+                R.drawable.pedra,
+                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
+
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
+                .perform(click());
+
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(GravityCompat.START)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.navigation_view))
+                .perform(navigateTo(R.id.item_visualizar_cartelas));
+
+        try {
+            Thread.sleep(400);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(GravityCompat.START)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.navigation_view))
+                .perform(navigateTo(R.id.item_realizar_sorteio));
+
+        onView(withId(R.id.bt_sortear_pedra))
+                .check(matches(not(withText(text))));
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
+                .check(matches(not(isSelected())));
+        onView(withText(text.substring(1)))
+                .check(matches(not(withTextColor(R.color.pedraTextoEnabled))));
+        onView(withText(text.substring(1)))
+                .check(matches(not(withPedraBackground(drawable))));
     }
 
     //TODO mudança de orientação no fim do sorteio

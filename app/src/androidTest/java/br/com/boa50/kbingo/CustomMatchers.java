@@ -1,7 +1,5 @@
 package br.com.boa50.kbingo;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.v4.content.ContextCompat;
@@ -12,6 +10,8 @@ import android.widget.TextView;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+
+import static br.com.boa50.kbingo.CustomGets.getBitmap;
 
 final class CustomMatchers {
 
@@ -75,14 +75,5 @@ final class CustomMatchers {
                 return view.isFocused();
             }
         };
-    }
-
-    private static Bitmap getBitmap(Drawable drawable){
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
     }
 }
