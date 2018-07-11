@@ -16,6 +16,7 @@ import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayout;
 import android.util.DisplayMetrics;
@@ -36,8 +37,8 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
-import br.com.boa50.kbingo.data.Letra;
-import br.com.boa50.kbingo.data.Pedra;
+import br.com.boa50.kbingo.data.entity.Letra;
+import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.util.PedraUtils;
@@ -81,10 +82,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     @Inject
     public RealizaSorteioFragment() {}
 
-    public static RealizaSorteioFragment newInstance() {
-        return new RealizaSorteioFragment();
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -110,10 +107,25 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        FragmentManager manager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        for (Fragment fragment : manager.getFragments()) {
+            if (fragment.getTag() != null) {
+                transaction.remove(fragment);
+            }
+        }
+        transaction.commit();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
         mPresenter.unsubscribe();
+        mPedras = null;
     }
 
     @Override
@@ -154,7 +166,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void apresentarPedra(Pedra pedra) {
-        apresentarPedra(pedra.getValorPedra());
+        apresentarPedra(mLetras.get(pedra.getLetraId() - 1).getNome() + pedra.getNumero());
     }
 
     private void apresentarPedra(String pedraValor) {
@@ -176,23 +188,20 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         mUltimaPedraValor = btSortearPedra.getText().toString();
     }
 
-
     @Override
-    public void iniciarPedras(ArrayList<Pedra> pedras) {
-        mPedras = pedras;
-    }
-
-    @Override
-    public void iniciarLayout(List<Letra> letras) {
+    public void iniciarLayout(List<Letra> letras, ArrayList<Pedra> pedras) {
         mLetras = letras;
+        mPedras = pedras;
 
         if (mPageAdapter == null) {
             mPageAdapter = new PedrasSorteadasPageAdapter(
                     Objects.requireNonNull(getActivity()).getSupportFragmentManager());
-            vpPedrasSorteadas.setOffscreenPageLimit(4);
-            vpPedrasSorteadas.setAdapter(mPageAdapter);
-            tlPedrasSorteadas.setupWithViewPager(vpPedrasSorteadas);
         }
+
+        vpPedrasSorteadas.setAdapter(mPageAdapter);
+        vpPedrasSorteadas.setOffscreenPageLimit(4);
+        if ("".equals(mUltimaPedraValor)) vpPedrasSorteadas.setCurrentItem(0);
+        tlPedrasSorteadas.setupWithViewPager(vpPedrasSorteadas);
     }
 
     @Override
@@ -201,7 +210,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         PedrasSorteadasFragment fragment =
                 (PedrasSorteadasFragment) mPageAdapter.getFragment(position/QTDE_PEDRAS_LETRA);
-        fragment.transitarTextViewPedra(mPedras.get(position).getmId());
+        fragment.transitarTextViewPedra(mPedras.get(position).getId());
     }
 
     @Override
@@ -238,7 +247,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mLetras.get(position).getmNome();
+            return mLetras.get(position).getNome();
         }
 
         @NonNull
@@ -384,8 +393,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                         mPedrasMarginPx);
 
             textView.setLayoutParams(params);
-            textView.setId(Integer.parseInt(pedra.getmId()));
-            textView.setText(pedra.getmNumero());
+            textView.setId(pedra.getId());
+            textView.setText(pedra.getNumero());
             textView.setGravity(Gravity.CENTER);
 
             textView.setTextSize(
@@ -395,7 +404,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
             textView.setTextColor(resources.getColorStateList(R.color.pedra_pequena_text));
 
-            if (pedra.ismSorteada()) {
+            if (pedra.isSorteada()) {
                 textView.setBackground(mPedraEnabled);
                 textView.setEnabled(true);
             } else {
@@ -404,9 +413,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             }
         }
 
-        public void transitarTextViewPedra(String id) {
+        public void transitarTextViewPedra(int id) {
             TextView textView =
-                    Objects.requireNonNull(this.getView()).findViewById(Integer.parseInt(id));
+                    Objects.requireNonNull(this.getView()).findViewById(id);
 
             AnimatedVectorDrawableCompat drawableAnimated = AnimatedVectorDrawableCompat.create(
                     mContext,

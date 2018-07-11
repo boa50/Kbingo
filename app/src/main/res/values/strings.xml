@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">Kbingo</string>
+    <string name="realizar_sorteio_title">Realizar Sorteio</string>
+    <string name="visualizar_cartelas_title">Visualizar Cartela</string>
 
     <!--Realizar sorteio-->
     <string name="bt_sortear_pedra">Sortear\nPedra</string>
     <string name="bt_novo_sorteio">Realizar Novo Sorteio</string>
     <string name="sorteio_fim">Fim do\nSorteio</string>
+
+    <!--Visualizar cartela-->
+    <string name="et_numero_cartela_hint">Número da Cartela</string>
+    <string name="toast_cartela_maxima">O maior número de cartela cadastrado é</string>
 </resources>

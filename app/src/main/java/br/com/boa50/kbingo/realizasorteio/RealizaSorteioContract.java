@@ -5,12 +5,8 @@ import java.util.List;
 
 import br.com.boa50.kbingo.BasePresenter;
 import br.com.boa50.kbingo.BaseView;
-import br.com.boa50.kbingo.data.Letra;
-import br.com.boa50.kbingo.data.Pedra;
-
-/**
- * Created by boa50 on 3/11/18.
- */
+import br.com.boa50.kbingo.data.entity.Letra;
+import br.com.boa50.kbingo.data.entity.Pedra;
 
 public interface RealizaSorteioContract {
 
@@ -20,9 +16,7 @@ public interface RealizaSorteioContract {
 
         void apresentarFimSorteio();
 
-        void iniciarPedras(ArrayList<Pedra> pedras);
-
-        void iniciarLayout(List<Letra> letras);
+        void iniciarLayout(List<Letra> letras, ArrayList<Pedra> pedras);
 
         void atualizarPedra(int position);
 
