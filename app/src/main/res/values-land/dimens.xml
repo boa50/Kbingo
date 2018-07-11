@@ -3,4 +3,9 @@
     <!--Realizar sorteio-->
     <dimen name="pedra_pequena_margin">8dp</dimen>
     <dimen name="pedras_pager_width">700dp</dimen>
+
+    <!--Visualizar cartela-->
+    <dimen name="input_layout_width">300dp</dimen>
+    <dimen name="pedra_text">38sp</dimen>
+    <dimen name="pedra_padding_left_right">16dp</dimen>
 </resources>

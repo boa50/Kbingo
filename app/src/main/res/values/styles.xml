@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -58,4 +58,9 @@
     </style>
 
     <style name="TabLetras" parent="BaseTabLetras" />
+
+    <!--Visualizar cartelas-->
+    <style name="InputLayoutHint" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">@dimen/input_layout_hint_size</item>
+    </style>
 </resources>

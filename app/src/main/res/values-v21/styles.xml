@@ -5,6 +5,7 @@
     </style>
 
     <style name="TabLetras" parent="BaseTabLetras">
+        <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:elevation">@dimen/pedras_tab_elevation</item>
     </style>
 </resources>

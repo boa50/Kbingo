@@ -6,10 +6,6 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
-/**
- * Created by boa50 on 21/03/18.
- */
-
 @Module
 public abstract class RealizaSorteioModule {
     @FragmentScoped
@@ -17,5 +13,6 @@ public abstract class RealizaSorteioModule {
     abstract RealizaSorteioFragment realizaSorteioFragment();
 
     @ActivityScoped
-    @Binds abstract RealizaSorteioContract.Presenter realizaSorteioPresenter(RealizaSorteioPresenter presenter);
+    @Binds
+    abstract RealizaSorteioContract.Presenter realizaSorteioPresenter(RealizaSorteioPresenter presenter);
 }
