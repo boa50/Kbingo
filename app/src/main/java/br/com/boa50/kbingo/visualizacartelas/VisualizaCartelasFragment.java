@@ -33,6 +33,7 @@ import dagger.android.support.DaggerFragment;
 import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
 
 public class VisualizaCartelasFragment extends DaggerFragment implements VisualizaCartelasContract.View {
+    private static final String ARGS_CARTELA_ULTIMA = "ultimaCartela";
 
     @Inject
     VisualizaCartelasContract.Presenter mPresenter;
@@ -47,6 +48,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     EditText etNumeroCartela;
 
     private Unbinder unbinder;
+    private String mUltimaCartelaNumero;
 
     @Inject
     public VisualizaCartelasFragment() {}
@@ -59,6 +61,9 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.visualizacartelas_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        if (savedInstanceState == null) mUltimaCartelaNumero = "0001";
+        else mUltimaCartelaNumero = savedInstanceState.getString(ARGS_CARTELA_ULTIMA);
 
         etNumeroCartela.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -76,8 +81,15 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(ARGS_CARTELA_ULTIMA, etNumeroCartela.getText().toString());
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
+        etNumeroCartela.setOnEditorActionListener(null);
         unbinder.unbind();
         mPresenter.unsubscribe();
     }
@@ -90,12 +102,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     @Override
     public void iniciarLayout(List<Letra> letras) {
-
-        if ("".equals(etNumeroCartela.getText().toString())) {
-            mPresenter.carregarCartela(1);
-        } else {
-            mPresenter.carregarCartela(Integer.parseInt(etNumeroCartela.getText().toString()));
-        }
+        etNumeroCartela.setText(mUltimaCartelaNumero);
+        mPresenter.carregarCartela(Integer.parseInt(mUltimaCartelaNumero));
 
         for (int i = 0; i <= letras.size() - 1; i++) {
             TextView textView = new TextView(mContext);
@@ -111,7 +119,6 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     @Override
     public void apresentarCartela(List<CartelaPedra> cartelaPedras) {
-
         etNumeroCartela.setText(cartelaPedras.get(0).getCartelaIdFormatado());
 
         if (glCartela.getChildCount() > 5) {

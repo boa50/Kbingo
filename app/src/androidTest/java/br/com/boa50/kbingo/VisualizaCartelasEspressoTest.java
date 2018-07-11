@@ -7,6 +7,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.view.GravityCompat;
 import android.view.Gravity;
 
 import org.junit.After;
@@ -90,6 +91,34 @@ public class VisualizaCartelasEspressoTest {
         String text = getTextViewText(indexChildOf(withId(R.id.gl_cartela),5));
 
         mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        onView(withId(R.id.et_numero_cartela)).check(matches(withText("0002")));
+        onView(indexChildOf(withId(R.id.gl_cartela),5)).check(matches(withText(text)));
+    }
+
+    @Test
+    public void trocarFragments_resetarInformacoes() {
+        String text = getTextViewText(indexChildOf(withId(R.id.gl_cartela),5));
+        onView(withId(R.id.et_numero_cartela)).perform(replaceText("0002"));
+        onView(withId(R.id.et_numero_cartela)).perform(pressImeActionButton());
+
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(GravityCompat.START)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.navigation_view))
+                .perform(navigateTo(R.id.item_realizar_sorteio));
+
+        try {
+            Thread.sleep(400);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(GravityCompat.START)))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.navigation_view))
+                .perform(navigateTo(R.id.item_visualizar_cartelas));
+
+        onView(withId(R.id.et_numero_cartela)).check(matches(withText("0001")));
         onView(indexChildOf(withId(R.id.gl_cartela),5)).check(matches(withText(text)));
     }
 }

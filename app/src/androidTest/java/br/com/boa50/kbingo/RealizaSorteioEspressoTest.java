@@ -178,9 +178,10 @@ public class RealizaSorteioEspressoTest {
                 .perform(navigateTo(R.id.item_realizar_sorteio));
 
         onView(withId(R.id.bt_sortear_pedra))
-                .check(matches(not(withText(text))));
-        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
-                .check(matches(not(isSelected())));
+                .check(matches(withText(
+                        mActivityRule.getActivity().getResources().getText(R.string.bt_sortear_pedra).toString())));
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 0))
+                .check(matches(isSelected()));
         onView(withText(text.substring(1)))
                 .check(matches(not(withTextColor(R.color.pedraTextoEnabled))));
         onView(withText(text.substring(1)))
