@@ -9,6 +9,7 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -78,6 +79,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private ArrayList<Pedra> mPedras;
     private List<Letra> mLetras;
     private String mUltimaPedraValor;
+    private long mLastClickTime;
 
     @Inject
     public RealizaSorteioFragment() {}
@@ -88,6 +90,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.realizasorteio_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
+        mLastClickTime = 0;
 
         if (savedInstanceState != null) {
             mPedras = savedInstanceState.getParcelableArrayList(ARGS_PEDRAS);
@@ -151,7 +154,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @OnClick(R.id.bt_sortear_pedra)
     void sortearPedra() {
-        mPresenter.sortearPedra();
+        if (SystemClock.elapsedRealtime() - mLastClickTime > 1000) {
+            mPresenter.sortearPedra();
+            mLastClickTime = SystemClock.elapsedRealtime();
+        }
     }
 
     @OnClick(R.id.bt_novo_sorteio)
