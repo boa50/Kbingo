@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -83,7 +84,13 @@ public class RealizaSorteioEspressoTest {
                 R.drawable.pedra,
                 new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
 
-        onView(withId(R.id.bt_novo_sorteio))
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(mActivityRule.getActivity().getResources()
+                .getText(R.string.item_novo_sorteio).toString()))
+                .perform(click());
+
+        onView(withText(mActivityRule.getActivity().getResources()
+                .getText(R.string.dialog_novo_sorteio_positive).toString()))
                 .perform(click());
 
         onView(withText("01"))
@@ -147,7 +154,21 @@ public class RealizaSorteioEspressoTest {
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .perform(click());
 
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(mActivityRule.getActivity().getResources()
+                .getText(R.string.item_novo_sorteio).toString()))
+                .perform(click());
+
         mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+
+        onView(withText(mActivityRule.getActivity().getResources()
+                .getText(R.string.item_novo_sorteio).toString()))
+                .check(matches(isDisplayed()));
+
+        onView(withText(mActivityRule.getActivity().getResources()
+                .getText(R.string.dialog_novo_sorteio_negative).toString()))
+                .perform(click());
 
         onView(withId(R.id.bt_sortear_pedra))
                 .check(matches(withText(text)));

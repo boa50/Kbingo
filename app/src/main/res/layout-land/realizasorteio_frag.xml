@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         style="@style/PedraGrandeCard"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bt_novo_sorteio"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/vp_pedras_sorteadas"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -37,16 +37,5 @@
             android:text="@string/bt_sortear_pedra" />
 
     </android.support.v7.widget.CardView>
-
-    <Button
-        android:id="@+id/bt_novo_sorteio"
-        android:theme="@style/ButtonColored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/bt_novo_sorteio"
-        app:layout_constraintTop_toBottomOf="@+id/cv_sortear_pedra"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/vp_pedras_sorteadas"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
