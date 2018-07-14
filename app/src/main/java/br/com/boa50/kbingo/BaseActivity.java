@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.Objects;
@@ -57,6 +58,12 @@ public class BaseActivity extends DaggerAppCompatActivity {
             modificarFragment(item.getItemId());
             return true;
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.base_menu, menu);
+        return true;
     }
 
     @Override

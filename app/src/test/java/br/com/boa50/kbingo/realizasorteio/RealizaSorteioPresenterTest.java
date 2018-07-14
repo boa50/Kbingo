@@ -26,11 +26,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-
-/**
- * Created by boa50 on 3/11/18.
- */
-
 public class RealizaSorteioPresenterTest {
 
     private int QUANTIDADE_PEDRAS_SORTEAVEIS;
