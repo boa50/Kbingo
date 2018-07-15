@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".BaseActivity" />
+        <activity android:name=".conferecartelas.ConfereCartelasActivity" />
     </application>
 
 </manifest>

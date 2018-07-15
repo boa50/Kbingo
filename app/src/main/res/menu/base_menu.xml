@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/item_confere_cartelas"
+        android:title="@string/conferir_cartelas_title"
+        android:visible="false"
+        android:enabled="false"/>
     <item android:id="@+id/item_novo_sorteio"
         android:title="@string/item_novo_sorteio"
         android:visible="false"

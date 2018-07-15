@@ -2,6 +2,7 @@
     <string name="app_name">Kbingo</string>
     <string name="realizar_sorteio_title">Realizar Sorteio</string>
     <string name="visualizar_cartelas_title">Visualizar Cartela</string>
+    <string name="conferir_cartelas_title">Conferir Cartela</string>
     <string name="dialog_negative">Cancelar</string>
 
     <string name="dialog_sair_app_title">Deseja realmente sair do Kbingo?</string>
