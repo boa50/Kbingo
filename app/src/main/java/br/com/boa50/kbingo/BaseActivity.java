@@ -21,6 +21,7 @@ import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import dagger.android.support.DaggerAppCompatActivity;
 
 public class BaseActivity extends DaggerAppCompatActivity {
@@ -37,11 +38,13 @@ public class BaseActivity extends DaggerAppCompatActivity {
     @Inject
     VisualizaCartelasFragment mVisualizaCartelasFragment;
 
+    private Unbinder unbinder;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.default_act);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -59,6 +62,12 @@ public class BaseActivity extends DaggerAppCompatActivity {
             modificarFragment(item.getItemId());
             return true;
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     @Override

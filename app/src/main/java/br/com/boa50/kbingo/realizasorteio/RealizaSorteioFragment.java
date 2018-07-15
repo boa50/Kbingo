@@ -4,6 +4,7 @@ import android.animation.AnimatorInflater;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Animatable;
@@ -42,6 +43,7 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
+import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
@@ -112,6 +114,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
         menu.findItem(R.id.item_novo_sorteio).setVisible(true);
         menu.findItem(R.id.item_novo_sorteio).setEnabled(true);
+        menu.findItem(R.id.item_confere_cartelas).setVisible(true);
+        menu.findItem(R.id.item_confere_cartelas).setEnabled(true);
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -120,6 +124,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         switch (item.getItemId()) {
             case R.id.item_novo_sorteio:
                 abrirDialogResetarPedras();
+                return true;
+            case R.id.item_confere_cartelas:
+                Intent intent = new Intent(getActivity(), ConfereCartelasActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -146,7 +154,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(ARGS_PEDRAS, mPedras);
         outState.putString(ARGS_PEDRA_ULTIMA, mUltimaPedraValor);
-        outState.putBoolean(ARGS_DIALOG_NOVO_SORTEIO, mDialogNovoSorteio.isShowing());
+        outState.putBoolean(ARGS_DIALOG_NOVO_SORTEIO,
+                mDialogNovoSorteio != null && mDialogNovoSorteio.isShowing());
     }
 
     @Override
