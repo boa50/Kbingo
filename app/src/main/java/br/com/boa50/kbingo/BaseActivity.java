@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -74,6 +75,31 @@ public class BaseActivity extends DaggerAppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        boolean fragmentInicial = false;
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment.getId() == mRealizaSorteioFragment.getId()) fragmentInicial = true;
+        }
+
+        if (fragmentInicial) {
+            abrirDialogSairApp();
+        } else {
+            modificarFragment(R.id.item_realizar_sorteio);
+        }
+    }
+
+    private void abrirDialogSairApp() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(this));
+        builder.setTitle(R.string.dialog_sair_app_title)
+                .setPositiveButton(R.string.dialog_sair_app_positive,
+                        (dialog, which) -> this.finishAffinity())
+                .setNegativeButton(R.string.dialog_negative,
+                        (dialog, which) -> {})
+                .create()
+                .show();
     }
 
     private void modificarFragment(int menuItemId) {
