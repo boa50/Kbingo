@@ -132,7 +132,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             builder.setTitle(R.string.dialog_novo_sorteio_title)
                     .setPositiveButton(R.string.dialog_novo_sorteio_positive,
                             (dialog, which) -> resetarPedras())
-                    .setNegativeButton(R.string.dialog_novo_sorteio_negative,
+                    .setNegativeButton(R.string.dialog_negative,
                             (dialog, which) -> {});
 
             mDialogNovoSorteio = builder.create();

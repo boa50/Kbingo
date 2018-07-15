@@ -167,7 +167,7 @@ public class RealizaSorteioEspressoTest {
                 .check(matches(isDisplayed()));
 
         onView(withText(mActivityRule.getActivity().getResources()
-                .getText(R.string.dialog_novo_sorteio_negative).toString()))
+                .getText(R.string.dialog_negative).toString()))
                 .perform(click());
 
         onView(withId(R.id.bt_sortear_pedra))
