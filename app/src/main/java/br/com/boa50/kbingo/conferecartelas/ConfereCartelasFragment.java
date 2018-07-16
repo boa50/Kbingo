@@ -30,7 +30,7 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
             @NonNull LayoutInflater inflater,
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.conferecartelas_frag, container, false);
+        View view = inflater.inflate(R.layout.visualizacartelas_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         return view;
