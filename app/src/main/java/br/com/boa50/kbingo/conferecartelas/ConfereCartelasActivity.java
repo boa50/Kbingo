@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.util.ActivityUtils;
+import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -19,7 +20,7 @@ import dagger.android.support.DaggerAppCompatActivity;
 public class ConfereCartelasActivity extends DaggerAppCompatActivity {
 
     @Inject
-    ConfereCartelasFragment mConfereCartelasFragment;
+    VisualizaCartelasFragment mVisualizaCartelasFragment;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -36,9 +37,12 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        mVisualizaCartelasFragment.setmUltimaCartelaNumero("");
+        mVisualizaCartelasFragment.setmPedras(getIntent().getParcelableArrayListExtra("mPedras"));
+
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
-                mConfereCartelasFragment,
+                mVisualizaCartelasFragment,
                 R.id.conteudoFrame
         );
     }

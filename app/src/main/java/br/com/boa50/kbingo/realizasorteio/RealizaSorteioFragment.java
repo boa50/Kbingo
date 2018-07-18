@@ -127,6 +127,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 return true;
             case R.id.item_confere_cartelas:
                 Intent intent = new Intent(getActivity(), ConfereCartelasActivity.class);
+                intent.putExtra("mPedras", mPedras);
                 startActivity(intent);
                 return true;
             default:
