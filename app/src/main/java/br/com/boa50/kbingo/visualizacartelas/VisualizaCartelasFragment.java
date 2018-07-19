@@ -65,6 +65,12 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         View view = inflater.inflate(R.layout.visualizacartelas_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mUltimaCartelaNumero = bundle.getString("mUltimaCartelaNumero");
+            mPedras = bundle.getParcelableArrayList("mPedras");
+        }
+
         if (savedInstanceState == null && mUltimaCartelaNumero == null) {
             mUltimaCartelaNumero = "0001";
         } else if (savedInstanceState != null) {
@@ -199,13 +205,5 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
         if (sorteada)
             textView.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_green_light));
-    }
-
-    public void setmUltimaCartelaNumero(String mUltimaCartelaNumero) {
-        this.mUltimaCartelaNumero = mUltimaCartelaNumero;
-    }
-
-    public void setmPedras(ArrayList<Pedra> mPedras) {
-        this.mPedras = mPedras;
     }
 }

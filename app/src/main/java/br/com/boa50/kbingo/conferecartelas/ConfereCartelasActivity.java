@@ -37,8 +37,10 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        mVisualizaCartelasFragment.setmUltimaCartelaNumero("");
-        mVisualizaCartelasFragment.setmPedras(getIntent().getParcelableArrayListExtra("mPedras"));
+        Bundle bundle = new Bundle();
+        bundle.putString("mUltimaCartelaNumero", "");
+        bundle.putParcelableArrayList("mPedras", getIntent().getParcelableArrayListExtra("mPedras"));
+        mVisualizaCartelasFragment.setArguments(bundle);
 
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
