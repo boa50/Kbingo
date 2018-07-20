@@ -26,4 +26,9 @@
     <color name="headerBackground">@color/colorPrimaryDark</color>
     <color name="headerTexto">@color/textPrimary</color>
     <color name="headerTextoOpaco">#B3FFFFFF</color>
+
+    <!--Visualizar cartelas-->
+    <color name="headerCartelaTexto">#D50000</color>
+    <color name="pedraSorteadaCartela">#B2FF59</color>
+    <color name="cartelaBorder">#333333</color>
 </resources>
