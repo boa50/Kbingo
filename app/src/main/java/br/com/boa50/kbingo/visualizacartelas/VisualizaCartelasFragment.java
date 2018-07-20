@@ -152,7 +152,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                     cartelaPedra.getPedraId()));
 
             if (mPedras != null) {
-                estilizarCelulaCartela(textView, false, mPedras.get(cartelaPedra.getPedraId()-1).isSorteada());
+                estilizarCelulaCartela(textView, false,
+                        mPedras.get(cartelaPedra.getPedraId()-1).isSorteada());
             } else {
                 estilizarCelulaCartela(textView, false, false);
             }
@@ -186,9 +187,17 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     private void estilizarCelulaCartela(TextView textView, boolean header, boolean sorteada) {
         if (header) {
-            textView.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_light));
+            textView.setTextColor(mContext.getResources().getColor(R.color.headerCartelaTexto));
         } else {
-            textView.setTextColor(mContext.getResources().getColor(android.R.color.black));
+            textView.setTextColor(mContext.getResources().getColor(R.color.textoPadrao));
+
+            if (sorteada){
+                textView.setBackground(
+                        mContext.getResources().getDrawable(R.drawable.pedrasorteada_customborder));
+            } else {
+                textView.setBackground(
+                        mContext.getResources().getDrawable(R.drawable.customborder));
+            }
         }
 
         textView.setTextSize(
@@ -200,10 +209,6 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                 mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_top_bottom),
                 mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_left_right),
                 mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_top_bottom));
-        textView.setBackground(mContext.getResources().getDrawable(R.drawable.customborder));
         textView.setGravity(Gravity.CENTER);
-
-        if (sorteada)
-            textView.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_green_light));
     }
 }
