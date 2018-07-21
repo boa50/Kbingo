@@ -29,12 +29,12 @@ final class CustomMatchers {
         };
     }
 
-    static Matcher<View> withPedraBackground(Drawable drawable) {
+    static Matcher<View> withBackgroundDrawable(Drawable drawable) {
         return new BoundedMatcher<View, TextView>(TextView.class) {
 
             @Override
             public void describeTo(Description description) {
-                description.appendText("with pedra background drawable: " + drawable.toString());
+                description.appendText("with background drawable: " + drawable.toString());
             }
 
             @Override
