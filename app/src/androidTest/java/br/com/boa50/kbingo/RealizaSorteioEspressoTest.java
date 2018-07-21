@@ -1,34 +1,26 @@
 package br.com.boa50.kbingo;
 
-import android.arch.persistence.room.Room;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.view.GravityCompat;
 import android.view.ContextThemeWrapper;
-import android.view.Gravity;
 
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.AppDatabase;
-import br.com.boa50.kbingo.data.AppRepository;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
-import static android.support.test.espresso.contrib.NavigationViewActions.navigateTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -43,32 +35,24 @@ import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class RealizaSorteioEspressoTest {
-    private  AppDatabase db;
+    private static AppDatabase db;
 
     @Rule
     public ActivityTestRule<BaseActivity> mActivityRule =
             new ActivityTestRule<>(BaseActivity.class);
 
-    @Before
-    //TODO fazer alterações para o @BeforeClass para agilizar os testes
-    public void setup() {
-        Context context = InstrumentationRegistry.getTargetContext();
-        db = Room.databaseBuilder(context.getApplicationContext(),
-                AppDatabase.class, "Test.db").build();
-        AppDataSource appDataSource = new AppRepository(db);
-        appDataSource.initializeDatabase();
-
-        onView(withId(R.id.drawer_layout))
-                .check(matches(isClosed(Gravity.LEFT)))
-                .perform(DrawerActions.open());
-        onView(withId(R.id.navigation_view))
-                .perform(navigateTo(R.id.item_realizar_sorteio));
-        onView(withId(R.id.drawer_layout))
-                .perform(DrawerActions.close());
+    @BeforeClass
+    public static void setup() {
+        db = CustomProcedures.initializeDatabase(db);
     }
 
-    @After
-    public void tearDown() {
+    @Before
+    public void setupTest() {
+        CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
+    }
+
+    @AfterClass
+    public static void tearDown() {
         db.close();
     }
 
@@ -195,22 +179,8 @@ public class RealizaSorteioEspressoTest {
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .perform(click());
 
-        onView(withId(R.id.drawer_layout))
-                .check(matches(isClosed(GravityCompat.START)))
-                .perform(DrawerActions.open());
-        onView(withId(R.id.navigation_view))
-                .perform(navigateTo(R.id.item_visualizar_cartelas));
-
-        try {
-            Thread.sleep(400);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        onView(withId(R.id.drawer_layout))
-                .check(matches(isClosed(GravityCompat.START)))
-                .perform(DrawerActions.open());
-        onView(withId(R.id.navigation_view))
-                .perform(navigateTo(R.id.item_realizar_sorteio));
+        CustomProcedures.changeNavigation(R.id.item_visualizar_cartelas);
+        CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
 
         onView(withId(R.id.bt_sortear_pedra))
                 .check(matches(withText(
