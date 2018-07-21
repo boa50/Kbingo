@@ -29,7 +29,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.boa50.kbingo.Constant.QTDE_LETRAS;
 import static br.com.boa50.kbingo.CustomGets.getButtonText;
 import static br.com.boa50.kbingo.CustomMatchers.indexChildOf;
-import static br.com.boa50.kbingo.CustomMatchers.withPedraBackground;
+import static br.com.boa50.kbingo.CustomMatchers.withBackgroundDrawable;
 import static br.com.boa50.kbingo.CustomMatchers.withTextColor;
 import static org.hamcrest.Matchers.not;
 
@@ -82,7 +82,7 @@ public class RealizaSorteioEspressoTest {
         onView(withText(text))
                 .check(matches(withTextColor(R.color.textDisabled)));
         onView(withText(text))
-                .check(matches(not(withPedraBackground(drawable))));
+                .check(matches(not(withBackgroundDrawable(drawable))));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class RealizaSorteioEspressoTest {
         onView(withText(text))
                 .check(matches(withTextColor(R.color.pedraTextoEnabled)));
         onView(withText(text))
-                .check(matches(withPedraBackground(drawable)));
+                .check(matches(withBackgroundDrawable(drawable)));
 
     }
 
@@ -161,7 +161,7 @@ public class RealizaSorteioEspressoTest {
         onView(withText(text.substring(1)))
                 .check(matches(withTextColor(R.color.pedraTextoEnabled)));
         onView(withText(text.substring(1)))
-                .check(matches(withPedraBackground(drawable)));
+                .check(matches(withBackgroundDrawable(drawable)));
     }
 
     @Test
@@ -190,7 +190,7 @@ public class RealizaSorteioEspressoTest {
         onView(withText(text.substring(1)))
                 .check(matches(not(withTextColor(R.color.pedraTextoEnabled))));
         onView(withText(text.substring(1)))
-                .check(matches(not(withPedraBackground(drawable))));
+                .check(matches(not(withBackgroundDrawable(drawable))));
     }
 
     //TODO mudança de orientação no fim do sorteio

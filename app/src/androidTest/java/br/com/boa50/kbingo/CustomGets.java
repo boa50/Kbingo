@@ -16,8 +16,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFro
 
 final class CustomGets {
     static Bitmap getBitmap(Drawable drawable){
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap;
+
+        if (drawable.getIntrinsicWidth() > 0) {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                    drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        } else {
+            bitmap = Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888);
+        }
+
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
