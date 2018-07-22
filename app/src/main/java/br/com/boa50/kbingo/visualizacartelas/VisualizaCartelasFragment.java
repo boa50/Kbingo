@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -159,14 +160,15 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             }
         }
 
-        TextView textView = new TextView(mContext);
-        glCartela.addView(textView, new GridLayout.LayoutParams(
+        ImageView imageView = new ImageView(mContext);
+        glCartela.addView(imageView, new GridLayout.LayoutParams(
                 GridLayout.spec(3, 1f),
                 GridLayout.spec(2, 1f)));
 
-        textView.setText("*");
-
-        estilizarCelulaCartela(textView, false, false);
+        imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.lens_black));
+        imageView.setBackground(mContext.getResources().getDrawable(R.drawable.customborder));
+        int dotPadding = (int) mContext.getResources().getDimension(R.dimen.dot_padding);
+        imageView.setPadding(dotPadding, dotPadding, dotPadding, dotPadding);
     }
 
     @Override
