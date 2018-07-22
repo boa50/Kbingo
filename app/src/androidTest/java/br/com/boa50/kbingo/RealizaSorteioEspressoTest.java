@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import br.com.boa50.kbingo.data.AppDatabase;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -191,6 +192,22 @@ public class RealizaSorteioEspressoTest {
                 .check(matches(not(withTextColor(R.color.pedraTextoEnabled))));
         onView(withText(text.substring(1)))
                 .check(matches(not(withBackgroundDrawable(drawable))));
+    }
+
+    @Test
+    public void mudarTab_confereCartela_manterInformacoes() {
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
+                .perform(click());
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(mActivityRule.getActivity().getResources()
+                .getText(R.string.conferir_cartelas_title).toString()))
+                .perform(click());
+
+        pressBack();
+
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
+                .check(matches(isSelected()));
     }
 
     //TODO mudança de orientação no fim do sorteio
