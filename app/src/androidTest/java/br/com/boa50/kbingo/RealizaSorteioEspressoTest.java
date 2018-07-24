@@ -10,7 +10,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.ContextThemeWrapper;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,11 +44,6 @@ public class RealizaSorteioEspressoTest {
     @BeforeClass
     public static void setup() {
         db = CustomProcedures.initializeDatabase(db);
-    }
-
-    @Before
-    public void setupTest() {
-        CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
     }
 
     @AfterClass
@@ -199,9 +193,7 @@ public class RealizaSorteioEspressoTest {
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .perform(click());
 
-        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
-        onView(withText(mActivityRule.getActivity().getResources()
-                .getText(R.string.conferir_cartelas_title).toString()))
+        onView(withId(R.id.item_confere_cartelas))
                 .perform(click());
 
         pressBack();

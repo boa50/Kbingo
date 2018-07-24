@@ -115,11 +115,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
         menu.findItem(R.id.item_novo_sorteio).setVisible(true);
-        menu.findItem(R.id.item_novo_sorteio).setEnabled(true);
         menu.findItem(R.id.item_confere_cartelas).setVisible(true);
-        menu.findItem(R.id.item_confere_cartelas).setEnabled(true);
         super.onPrepareOptionsMenu(menu);
     }
 
