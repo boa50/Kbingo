@@ -13,9 +13,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -25,6 +27,7 @@ import javax.inject.Inject;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
+import br.com.boa50.kbingo.data.entity.Pedra;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -49,6 +52,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     private Unbinder unbinder;
     private String mUltimaCartelaNumero;
+    private ArrayList<Pedra> mPedras;
 
     @Inject
     public VisualizaCartelasFragment() {}
@@ -62,8 +66,17 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         View view = inflater.inflate(R.layout.visualizacartelas_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        if (savedInstanceState == null) mUltimaCartelaNumero = "0001";
-        else mUltimaCartelaNumero = savedInstanceState.getString(ARGS_CARTELA_ULTIMA);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mUltimaCartelaNumero = bundle.getString("mUltimaCartelaNumero");
+            mPedras = bundle.getParcelableArrayList("mPedras");
+        }
+
+        if (savedInstanceState == null && mUltimaCartelaNumero == null) {
+            mUltimaCartelaNumero = "0001";
+        } else if (savedInstanceState != null) {
+            mUltimaCartelaNumero = savedInstanceState.getString(ARGS_CARTELA_ULTIMA);
+        }
 
         etNumeroCartela.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -103,7 +116,10 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     @Override
     public void iniciarLayout(List<Letra> letras) {
         etNumeroCartela.setText(mUltimaCartelaNumero);
-        mPresenter.carregarCartela(Integer.parseInt(mUltimaCartelaNumero));
+
+        if (!"".equals(mUltimaCartelaNumero)) {
+            mPresenter.carregarCartela(Integer.parseInt(mUltimaCartelaNumero));
+        }
 
         for (int i = 0; i <= letras.size() - 1; i++) {
             TextView textView = new TextView(mContext);
@@ -113,7 +129,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
             textView.setText(letras.get(i).getNome());
 
-            estilizarCelulaCartela(textView, true);
+            estilizarCelulaCartela(textView, true, false);
         }
     }
 
@@ -136,17 +152,23 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                     FORMAT_PEDRA,
                     cartelaPedra.getPedraId()));
 
-            estilizarCelulaCartela(textView, false);
+            if (mPedras != null) {
+                estilizarCelulaCartela(textView, false,
+                        mPedras.get(cartelaPedra.getPedraId()-1).isSorteada());
+            } else {
+                estilizarCelulaCartela(textView, false, false);
+            }
         }
 
-        TextView textView = new TextView(mContext);
-        glCartela.addView(textView, new GridLayout.LayoutParams(
+        ImageView imageView = new ImageView(mContext);
+        glCartela.addView(imageView, new GridLayout.LayoutParams(
                 GridLayout.spec(3, 1f),
                 GridLayout.spec(2, 1f)));
 
-        textView.setText("*");
-
-        estilizarCelulaCartela(textView, false);
+        imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.lens_black));
+        imageView.setBackground(mContext.getResources().getDrawable(R.drawable.customborder));
+        int dotPadding = (int) mContext.getResources().getDimension(R.dimen.dot_padding);
+        imageView.setPadding(dotPadding, dotPadding, dotPadding, dotPadding);
     }
 
     @Override
@@ -165,11 +187,19 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         toast.show();
     }
 
-    private void estilizarCelulaCartela(TextView textView, boolean header) {
+    private void estilizarCelulaCartela(TextView textView, boolean header, boolean sorteada) {
         if (header) {
-            textView.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_light));
+            textView.setTextColor(mContext.getResources().getColor(R.color.headerCartelaTexto));
         } else {
-            textView.setTextColor(mContext.getResources().getColor(android.R.color.black));
+            textView.setTextColor(mContext.getResources().getColor(R.color.textoPadrao));
+
+            if (sorteada){
+                textView.setBackground(
+                        mContext.getResources().getDrawable(R.drawable.pedrasorteada_customborder));
+            } else {
+                textView.setBackground(
+                        mContext.getResources().getDrawable(R.drawable.customborder));
+            }
         }
 
         textView.setTextSize(
@@ -181,7 +211,6 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                 mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_top_bottom),
                 mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_left_right),
                 mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_top_bottom));
-        textView.setBackground(mContext.getResources().getDrawable(R.drawable.customborder));
         textView.setGravity(Gravity.CENTER);
     }
 }

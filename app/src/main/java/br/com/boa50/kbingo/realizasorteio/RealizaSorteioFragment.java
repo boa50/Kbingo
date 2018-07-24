@@ -4,6 +4,7 @@ import android.animation.AnimatorInflater;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Animatable;
@@ -42,6 +43,7 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
+import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
@@ -59,6 +61,7 @@ import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
     private static final String ARGS_PEDRAS = "pedras";
     private static final String ARGS_PEDRA_ULTIMA = "ultimaPedra";
+    private static final String ARGS_TAB_LETRAS_SELECIONADA = "tabLetrasSelecionada";
     private static final String ARGS_GRID_COLUNAS = "gridColunas";
     private static final String ARGS_LETRA_POSITION = "letraPosition";
     private static final String ARGS_DIALOG_NOVO_SORTEIO = "dialogNovoSorteio";
@@ -83,6 +86,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private String mUltimaPedraValor;
     private long mLastClickTime;
     private Dialog mDialogNovoSorteio;
+    private int mTabLetrasSelecionada;
 
     @Inject
     public RealizaSorteioFragment() {}
@@ -100,8 +104,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mPedras = savedInstanceState.getParcelableArrayList(ARGS_PEDRAS);
             mUltimaPedraValor = savedInstanceState.getString(ARGS_PEDRA_ULTIMA);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_NOVO_SORTEIO)) abrirDialogResetarPedras();
+            mTabLetrasSelecionada = savedInstanceState.getInt(ARGS_TAB_LETRAS_SELECIONADA);
         } else {
             mUltimaPedraValor = "";
+            mTabLetrasSelecionada = 0;
         }
 
         return view;
@@ -109,9 +115,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
         menu.findItem(R.id.item_novo_sorteio).setVisible(true);
-        menu.findItem(R.id.item_novo_sorteio).setEnabled(true);
+        menu.findItem(R.id.item_confere_cartelas).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -120,6 +125,11 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         switch (item.getItemId()) {
             case R.id.item_novo_sorteio:
                 abrirDialogResetarPedras();
+                return true;
+            case R.id.item_confere_cartelas:
+                Intent intent = new Intent(getActivity(), ConfereCartelasActivity.class);
+                intent.putExtra("mPedras", mPedras);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -146,12 +156,15 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(ARGS_PEDRAS, mPedras);
         outState.putString(ARGS_PEDRA_ULTIMA, mUltimaPedraValor);
-        outState.putBoolean(ARGS_DIALOG_NOVO_SORTEIO, mDialogNovoSorteio.isShowing());
+        outState.putBoolean(ARGS_DIALOG_NOVO_SORTEIO,
+                mDialogNovoSorteio != null && mDialogNovoSorteio.isShowing());
+        outState.putInt(ARGS_TAB_LETRAS_SELECIONADA, vpPedrasSorteadas.getCurrentItem());
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        mTabLetrasSelecionada = vpPedrasSorteadas.getCurrentItem();
 
         FragmentManager manager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -245,7 +258,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         vpPedrasSorteadas.setAdapter(mPageAdapter);
         vpPedrasSorteadas.setOffscreenPageLimit(4);
-        if ("".equals(mUltimaPedraValor)) vpPedrasSorteadas.setCurrentItem(0);
+        vpPedrasSorteadas.setCurrentItem(mTabLetrasSelecionada);
         tlPedrasSorteadas.setupWithViewPager(vpPedrasSorteadas);
     }
 
