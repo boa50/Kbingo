@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/item_novo_sorteio"
         android:title="@string/item_novo_sorteio"
-        android:visible="false"
-        android:enabled="false"/>
+        android:visible="false"/>
+    <item android:id="@+id/item_confere_cartelas"
+        android:title="@string/conferir_cartelas_title"
+        android:icon="@drawable/ic_cartela"
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
 </menu>
