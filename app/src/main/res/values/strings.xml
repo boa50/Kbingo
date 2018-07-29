@@ -4,6 +4,7 @@
     <string name="visualizar_cartelas_title">Visualizar Cartela</string>
     <string name="conferir_cartelas_title">Conferir Cartela</string>
     <string name="dialog_negative">Cancelar</string>
+    <string name="dialog_confirmative">OK</string>
 
     <string name="dialog_sair_app_title">Deseja realmente sair do Kbingo?</string>
     <string name="dialog_sair_app_positive">Sair</string>
@@ -14,6 +15,7 @@
     <string name="sorteio_fim">Fim do\nSorteio</string>
     <string name="dialog_novo_sorteio_title">Realizar novo sorteio?</string>
     <string name="dialog_novo_sorteio_positive">Novo Sorteio</string>
+    <string name="dialog_tipo_sorteio_title">Escolha o tipo de sorteio</string>
 
     <!--Visualizar cartela-->
     <string name="et_numero_cartela_hint">Número da Cartela</string>
