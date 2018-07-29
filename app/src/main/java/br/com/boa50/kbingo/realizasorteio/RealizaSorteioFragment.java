@@ -65,6 +65,13 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private static final String ARGS_GRID_COLUNAS = "gridColunas";
     private static final String ARGS_LETRA_POSITION = "letraPosition";
     private static final String ARGS_DIALOG_NOVO_SORTEIO = "dialogNovoSorteio";
+    private static final String ARGS_DIALOG_TIPO_SORTEIO = "dialogTipoSorteio";
+    private static final String ARGS_TIPO_SORTEIO = "tipoSorteio";
+
+    //TODO ver como modificar essas variáveis
+    private static final int TIPO_SORTEIO_CINCO_PEDRAS = 5;
+    private static final int TIPO_SORTEIO_DEZ_PEDRAS = 10;
+    private static final int TIPO_SORTEIO_CARTELA_CHEIA = 0;
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
@@ -86,7 +93,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private String mUltimaPedraValor;
     private long mLastClickTime;
     private Dialog mDialogNovoSorteio;
+    private Dialog mDialogTipoSorteio;
     private int mTabLetrasSelecionada;
+    private int mTipoSorteio;
 
     @Inject
     public RealizaSorteioFragment() {}
@@ -105,9 +114,13 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mUltimaPedraValor = savedInstanceState.getString(ARGS_PEDRA_ULTIMA);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_NOVO_SORTEIO)) abrirDialogResetarPedras();
             mTabLetrasSelecionada = savedInstanceState.getInt(ARGS_TAB_LETRAS_SELECIONADA);
+            mTipoSorteio = savedInstanceState.getInt(ARGS_TIPO_SORTEIO);
+            if (savedInstanceState.getBoolean(ARGS_DIALOG_TIPO_SORTEIO)) abrirDialogTipoSorteio();
         } else {
             mUltimaPedraValor = "";
             mTabLetrasSelecionada = 0;
+            mTipoSorteio = TIPO_SORTEIO_CARTELA_CHEIA;
+            abrirDialogTipoSorteio();
         }
 
         return view;
@@ -151,6 +164,21 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         mDialogNovoSorteio.show();
     }
 
+    private void abrirDialogTipoSorteio() {
+        if (mDialogTipoSorteio == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+            builder.setTitle(R.string.dialog_tipo_sorteio_title)
+                    .setPositiveButton(R.string.dialog_confirmative,
+                            (dialog, which) -> {})
+                    .setNegativeButton(R.string.dialog_negative,
+                            (dialog, which) -> {});
+
+            mDialogTipoSorteio = builder.create();
+        }
+
+        mDialogTipoSorteio.show();
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -158,7 +186,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         outState.putString(ARGS_PEDRA_ULTIMA, mUltimaPedraValor);
         outState.putBoolean(ARGS_DIALOG_NOVO_SORTEIO,
                 mDialogNovoSorteio != null && mDialogNovoSorteio.isShowing());
+        outState.putBoolean(ARGS_DIALOG_TIPO_SORTEIO,
+                mDialogTipoSorteio != null && mDialogTipoSorteio.isShowing());
         outState.putInt(ARGS_TAB_LETRAS_SELECIONADA, vpPedrasSorteadas.getCurrentItem());
+        outState.putInt(ARGS_TIPO_SORTEIO, mTipoSorteio);
     }
 
     @Override
