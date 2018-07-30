@@ -220,6 +220,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         );
 
         mPresenter.resetarPedras();
+        mUltimaPedraValor = "";
     }
 
     @Override

@@ -64,12 +64,10 @@ public class RealizaSorteioEspressoTest {
                 new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
 
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
-        onView(withText(mActivityRule.getActivity().getResources()
-                .getText(R.string.item_novo_sorteio).toString()))
+        onView(withText(R.string.item_novo_sorteio))
                 .perform(click());
 
-        onView(withText(mActivityRule.getActivity().getResources()
-                .getText(R.string.dialog_novo_sorteio_positive).toString()))
+        onView(withText(R.string.dialog_novo_sorteio_positive))
                 .perform(click());
 
         onView(withText("01"))
@@ -134,19 +132,15 @@ public class RealizaSorteioEspressoTest {
                 .perform(click());
 
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
-        onView(withText(mActivityRule.getActivity().getResources()
-                .getText(R.string.item_novo_sorteio).toString()))
+        onView(withText(R.string.item_novo_sorteio))
                 .perform(click());
 
         mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-
-        onView(withText(mActivityRule.getActivity().getResources()
-                .getText(R.string.item_novo_sorteio).toString()))
+        onView(withText(R.string.item_novo_sorteio))
                 .check(matches(isDisplayed()));
 
-        onView(withText(mActivityRule.getActivity().getResources()
-                .getText(R.string.dialog_negative).toString()))
+        onView(withText(R.string.dialog_negative))
                 .perform(click());
 
         onView(withId(R.id.bt_sortear_pedra))
@@ -178,8 +172,7 @@ public class RealizaSorteioEspressoTest {
         CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
 
         onView(withId(R.id.bt_sortear_pedra))
-                .check(matches(withText(
-                        mActivityRule.getActivity().getResources().getText(R.string.bt_sortear_pedra).toString())));
+                .check(matches(withText(R.string.bt_sortear_pedra)));
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 0))
                 .check(matches(isSelected()));
         onView(withText(text.substring(1)))
@@ -200,6 +193,27 @@ public class RealizaSorteioEspressoTest {
 
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .check(matches(isSelected()));
+    }
+
+    @Test
+    public void sortearPedra_NovoSorteio_ConferirCartela_NovoSorteioPedra() {
+        onView(withId(R.id.bt_sortear_pedra))
+                .perform(click());
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_novo_sorteio))
+                .perform(click());
+
+        onView(withText(R.string.dialog_novo_sorteio_positive))
+                .perform(click());
+
+        onView(withId(R.id.item_confere_cartelas))
+                .perform(click());
+
+        pressBack();
+
+        onView(withId(R.id.bt_sortear_pedra))
+                .check(matches(withText(R.string.bt_sortear_pedra)));
     }
 
     //TODO mudança de orientação no fim do sorteio
