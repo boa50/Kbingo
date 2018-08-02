@@ -48,12 +48,16 @@
         <item name="android:textSize">@dimen/pedra_grande_texto</item>
     </style>
 
+    <style name="TabLetrasTextAppearance" parent="Base.TextAppearance.AppCompat.Headline">
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="BaseTabLetras" parent="Widget.Design.TabLayout">
         <item name="tabGravity">fill</item>
-        <item name="tabTextColor">@color/headerTextoOpaco</item>
+        <item name="tabTextColor">@color/tabTextoOpcao</item>
         <item name="tabSelectedTextColor">@color/colorSecondary</item>
-        <item name="tabTextAppearance">@style/TextAppearance.AppCompat.Large</item>
-        <item name="tabBackground">@color/colorPrimaryDark</item>
+        <item name="tabTextAppearance">@style/TabLetrasTextAppearance</item>
+        <item name="tabBackground">@drawable/tab_layout_background</item>
         <item name="tabIndicatorColor">@color/colorSecondary</item>
         <item name="tabIndicatorHeight">@dimen/pedras_tab_indicator_height</item>
     </style>
