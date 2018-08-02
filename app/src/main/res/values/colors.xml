@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryTransparency">#353F51B5</color>
     <color name="colorPrimaryDark">#002984</color>
     <color name="colorPrimaryLight">#757de8</color>
     <color name="colorSecondary">#ffc107</color>
@@ -25,7 +26,7 @@
     <color name="pedraTextoEnabled">#D50000</color>
     <color name="headerBackground">@color/colorPrimaryDark</color>
     <color name="headerTexto">@color/textPrimary</color>
-    <color name="headerTextoOpaco">#B3FFFFFF</color>
+    <color name="tabTextoOpcao">#801B1B1B</color>
 
     <!--Visualizar cartelas-->
     <color name="headerCartelaTexto">#D50000</color>
