@@ -4,6 +4,7 @@ import android.animation.AnimatorInflater;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -69,9 +70,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private static final String ARGS_TIPO_SORTEIO = "tipoSorteio";
 
     //TODO ver como modificar essas variáveis
-    private static final int TIPO_SORTEIO_CINCO_PEDRAS = 5;
-    private static final int TIPO_SORTEIO_DEZ_PEDRAS = 10;
-    private static final int TIPO_SORTEIO_CARTELA_CHEIA = 0;
+    private static final int TIPO_SORTEIO_CINCO_PEDRAS = 0;
+    private static final int TIPO_SORTEIO_DEZ_PEDRAS = 1;
+    private static final int TIPO_SORTEIO_CARTELA_CHEIA = 2;
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
@@ -165,11 +166,17 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     private void abrirDialogTipoSorteio() {
+        final int[] sorteioSelecionado = {mTipoSorteio};
         if (mDialogTipoSorteio == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
             builder.setTitle(R.string.dialog_tipo_sorteio_title)
+                    .setSingleChoiceItems(R.array.tipos_sorteio, sorteioSelecionado[0],
+                            (dialog, which) -> sorteioSelecionado[0] = which)
                     .setPositiveButton(R.string.dialog_confirmative,
-                            (dialog, which) -> {})
+                            (dialog, which) -> {
+                        mTipoSorteio = sorteioSelecionado[0];
+                        getActivity().setTitle("teste");
+                    })
                     .setNegativeButton(R.string.dialog_negative,
                             (dialog, which) -> {});
 
