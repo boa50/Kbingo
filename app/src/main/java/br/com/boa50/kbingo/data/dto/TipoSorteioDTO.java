@@ -1,5 +1,7 @@
 package br.com.boa50.kbingo.data.dto;
 
+import java.util.ArrayList;
+
 public class TipoSorteioDTO {
     public static final int CINCO_PEDRAS = 0;
     public static final int DEZ_PEDRAS = 1;
@@ -28,11 +30,12 @@ public class TipoSorteioDTO {
     }
 
     public static String[] getTiposSorteioNome() {
-        return new String[] {
-                getTipoSorteio(CINCO_PEDRAS).nome,
-                getTipoSorteio(DEZ_PEDRAS).nome,
-                getTipoSorteio(CARTELA_CHEIA).nome
-        };
+        ArrayList<String> tiposSorteioNome = new ArrayList<>();
+        tiposSorteioNome.add(CINCO_PEDRAS, getTipoSorteio(CINCO_PEDRAS).nome);
+        tiposSorteioNome.add(DEZ_PEDRAS, getTipoSorteio(DEZ_PEDRAS).nome);
+        tiposSorteioNome.add(CARTELA_CHEIA, getTipoSorteio(CARTELA_CHEIA).nome);
+
+        return tiposSorteioNome.toArray(new String[tiposSorteioNome.size()]);
     }
 
     public String getNome() {

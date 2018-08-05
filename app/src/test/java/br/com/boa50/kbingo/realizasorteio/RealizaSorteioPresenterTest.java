@@ -65,7 +65,7 @@ public class RealizaSorteioPresenterTest {
     public void sortearPedra_apresentarPedra() {
         realizaSorteioPresenter.sortearPedra();
 
-        assertThat(realizaSorteioPresenter.getPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS - 1));
+        assertThat(realizaSorteioPresenter.getmPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS - 1));
         verify(realizaSorteioView).apresentarPedra(any(Pedra.class));
     }
 
@@ -100,7 +100,7 @@ public class RealizaSorteioPresenterTest {
         realizaSorteioPresenter.sortearPedra();
         realizaSorteioPresenter.sortearPedra();
 
-        assertThat(realizaSorteioPresenter.getPosicoes().isEmpty(), equalTo(true));
+        assertThat(realizaSorteioPresenter.getmPosicoes().isEmpty(), equalTo(true));
         verify(realizaSorteioView).apresentarFimSorteio();
     }
 
@@ -113,7 +113,7 @@ public class RealizaSorteioPresenterTest {
 
         realizaSorteioPresenter.resetarPedras();
 
-        assertThat(realizaSorteioPresenter.getPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS));
+        assertThat(realizaSorteioPresenter.getmPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS));
 
         assertThat(pedra.getValue().isSorteada(), equalTo(false));
         verify(realizaSorteioView).reiniciarSorteio();
