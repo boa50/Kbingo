@@ -45,6 +45,7 @@ import javax.inject.Inject;
 import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
+import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
@@ -68,11 +69,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private static final String ARGS_DIALOG_NOVO_SORTEIO = "dialogNovoSorteio";
     private static final String ARGS_DIALOG_TIPO_SORTEIO = "dialogTipoSorteio";
     private static final String ARGS_TIPO_SORTEIO = "tipoSorteio";
-
-    //TODO ver como modificar essas variáveis
-    private static final int TIPO_SORTEIO_CINCO_PEDRAS = 0;
-    private static final int TIPO_SORTEIO_DEZ_PEDRAS = 1;
-    private static final int TIPO_SORTEIO_CARTELA_CHEIA = 2;
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
@@ -120,7 +116,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         } else {
             mUltimaPedraValor = "";
             mTabLetrasSelecionada = 0;
-            mTipoSorteio = TIPO_SORTEIO_CARTELA_CHEIA;
+            mTipoSorteio = TipoSorteioDTO.CARTELA_CHEIA;
             abrirDialogTipoSorteio();
         }
 
@@ -170,20 +166,25 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         if (mDialogTipoSorteio == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
             builder.setTitle(R.string.dialog_tipo_sorteio_title)
-                    .setSingleChoiceItems(R.array.tipos_sorteio, sorteioSelecionado[0],
+                    .setSingleChoiceItems(TipoSorteioDTO.getTiposSorteioNome(), sorteioSelecionado[0],
                             (dialog, which) -> sorteioSelecionado[0] = which)
                     .setPositiveButton(R.string.dialog_confirmative,
                             (dialog, which) -> {
                         mTipoSorteio = sorteioSelecionado[0];
-                        getActivity().setTitle("teste");
+                        setTipoSorteioTitle();
                     })
                     .setNegativeButton(R.string.dialog_negative,
-                            (dialog, which) -> {});
+                            (dialog, which) -> setTipoSorteioTitle());
 
             mDialogTipoSorteio = builder.create();
         }
 
         mDialogTipoSorteio.show();
+    }
+
+    private void setTipoSorteioTitle() {
+        Objects.requireNonNull(getActivity()).setTitle(getActivity().getTitle() + " - " +
+                TipoSorteioDTO.getTipoSorteio(mTipoSorteio).getNome());
     }
 
     @Override

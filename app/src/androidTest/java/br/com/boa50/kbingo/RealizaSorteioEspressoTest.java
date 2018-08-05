@@ -10,6 +10,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.ContextThemeWrapper;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,6 +45,12 @@ public class RealizaSorteioEspressoTest {
     @BeforeClass
     public static void setup() {
         db = CustomProcedures.initializeDatabase(db);
+    }
+
+    @Before
+    public void setupTest() {
+        onView(withText(R.string.dialog_negative))
+                .perform(click());
     }
 
     @AfterClass

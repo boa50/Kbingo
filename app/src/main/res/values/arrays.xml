@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="tipos_sorteio">
-        <item>05 Pedras</item>
-        <item>10 Pedras</item>
-        <item>Cartela Cheia</item>
-    </string-array>
-</resources>
