@@ -49,8 +49,10 @@ public class RealizaSorteioEspressoTest {
 
     @Before
     public void setupTest() {
-        onView(withText(R.string.dialog_negative))
-                .perform(click());
+        try {
+            onView(withText(R.string.dialog_negative))
+                    .perform(click());
+        } catch (Exception e){}
     }
 
     @AfterClass

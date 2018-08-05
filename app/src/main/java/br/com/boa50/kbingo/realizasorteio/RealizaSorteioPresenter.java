@@ -30,7 +30,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private ArrayList<Pedra> mPedras;
 
-    private List<Integer> posicoes;
+    private List<Integer> mPosicoes;
 
     @Inject
     RealizaSorteioPresenter(
@@ -56,16 +56,16 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Override
     public void sortearPedra() {
-        if (posicoes.isEmpty()) {
+        if (mPosicoes.isEmpty()) {
             mView.apresentarFimSorteio();
         } else {
-            mView.apresentarPedra(mPedras.get(posicoes.get(0)));
+            mView.apresentarPedra(mPedras.get(mPosicoes.get(0)));
 
-            mPedras.get(posicoes.get(0)).setSorteada(true);
+            mPedras.get(mPosicoes.get(0)).setSorteada(true);
 
-            mView.atualizarPedra(posicoes.get(0));
+            mView.atualizarPedra(mPosicoes.get(0));
 
-            posicoes.remove(0);
+            mPosicoes.remove(0);
         }
     }
 
@@ -121,21 +121,21 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     }
 
     private void preencherPosicoesSorteio() {
-        if (posicoes == null)
-            posicoes = new ArrayList<>();
+        if (mPosicoes == null)
+            mPosicoes = new ArrayList<>();
         else
-            posicoes.clear();
+            mPosicoes.clear();
 
         for (int i = 0; i < mPedras.size(); i++) {
             if (!mPedras.get(i).isSorteada())
-                posicoes.add(i);
+                mPosicoes.add(i);
         }
 
-        Collections.shuffle(posicoes);
+        Collections.shuffle(mPosicoes);
     }
 
     @VisibleForTesting
-    List<Integer> getPosicoes() {
-        return posicoes;
+    List<Integer> getmPosicoes() {
+        return mPosicoes;
     }
 }
