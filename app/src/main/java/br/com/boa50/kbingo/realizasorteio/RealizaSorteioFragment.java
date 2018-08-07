@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Animatable;
@@ -12,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -42,7 +44,6 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.Constant;
-import br.com.boa50.kbingo.KbingoApplication;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
@@ -92,6 +93,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private Dialog mDialogTipoSorteio;
     private int mTabLetrasSelecionada;
     private int mTipoSorteio;
+    private SharedPreferences mSharedPref;
 
     @Inject
     public RealizaSorteioFragment() {}
@@ -104,6 +106,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         unbinder = ButterKnife.bind(this, view);
         mLastClickTime = 0;
         setHasOptionsMenu(true);
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         if (savedInstanceState != null) {
             mPedras = savedInstanceState.getParcelableArrayList(ARGS_PEDRAS);
@@ -116,14 +119,12 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mTabLetrasSelecionada = 0;
         }
 
-        final KbingoApplication app =
-                (KbingoApplication) Objects.requireNonNull(getActivity()).getApplicationContext();
-        if (app.getTipoSorteio() < 0) {
+        int valor = mSharedPref.getInt(getString(R.string.pref_tipo_sorteio), -1);
+        if (valor < 0) {
             mTipoSorteio = TipoSorteioDTO.CARTELA_CHEIA;
             abrirDialogTipoSorteio();
         } else {
-            mTipoSorteio = app.getTipoSorteio();
-            setTipoSorteioTitle();
+            setTipoSorteio(valor);
         }
 
         return view;
@@ -175,20 +176,25 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                     .setSingleChoiceItems(TipoSorteioDTO.getTiposSorteioNome(), sorteioSelecionado[0],
                             (dialog, which) -> sorteioSelecionado[0] = which)
                     .setPositiveButton(R.string.dialog_confirmative,
-                            (dialog, which) -> {
-                        mTipoSorteio = sorteioSelecionado[0];
-                        setTipoSorteioTitle();
-                    })
+                            (dialog, which) -> setTipoSorteio(sorteioSelecionado[0]))
                     .setNegativeButton(R.string.dialog_negative,
-                            (dialog, which) -> setTipoSorteioTitle());
+                            (dialog, which) -> setTipoSorteio(-1));
 
             mDialogTipoSorteio = builder.create();
         }
 
+        mDialogTipoSorteio.setCanceledOnTouchOutside(false);
         mDialogTipoSorteio.show();
     }
 
-    private void setTipoSorteioTitle() {
+    private void setTipoSorteio(int tipoSorteio) {
+        if (tipoSorteio >= 0)  {
+            mTipoSorteio = tipoSorteio;
+            mSharedPref.edit()
+                    .putInt(getString(R.string.pref_tipo_sorteio), mTipoSorteio)
+                    .apply();
+        }
+
         Objects.requireNonNull(getActivity()).setTitle(getActivity().getTitle() + " - " +
                 TipoSorteioDTO.getTipoSorteio(mTipoSorteio).getNome());
     }
@@ -203,10 +209,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         outState.putBoolean(ARGS_DIALOG_TIPO_SORTEIO,
                 mDialogTipoSorteio != null && mDialogTipoSorteio.isShowing());
         outState.putInt(ARGS_TAB_LETRAS_SELECIONADA, vpPedrasSorteadas.getCurrentItem());
-
-        final KbingoApplication app =
-                (KbingoApplication) Objects.requireNonNull(getActivity()).getApplicationContext();
-        app.setTipoSorteio(mTipoSorteio);
     }
 
     @Override
