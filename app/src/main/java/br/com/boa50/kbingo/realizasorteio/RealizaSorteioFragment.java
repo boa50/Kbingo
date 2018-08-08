@@ -133,6 +133,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.item_novo_sorteio).setVisible(true);
+        menu.findItem(R.id.item_alterar_tipo_sorteio).setVisible(true);
         menu.findItem(R.id.item_confere_cartelas).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
@@ -142,6 +143,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         switch (item.getItemId()) {
             case R.id.item_novo_sorteio:
                 abrirDialogResetarPedras();
+                return true;
+            case R.id.item_alterar_tipo_sorteio:
+                abrirDialogTipoSorteio();
                 return true;
             case R.id.item_confere_cartelas:
                 Intent intent = new Intent(getActivity(), ConfereCartelasActivity.class);
@@ -195,7 +199,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                     .apply();
         }
 
-        Objects.requireNonNull(getActivity()).setTitle(getActivity().getTitle() + " - " +
+        Objects.requireNonNull(getActivity())
+                .setTitle(getString(R.string.realizar_sorteio_title) + " - " +
                 TipoSorteioDTO.getTipoSorteio(mTipoSorteio).getNome());
     }
 

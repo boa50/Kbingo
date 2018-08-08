@@ -15,6 +15,7 @@
     <!--Realizar sorteio-->
     <string name="bt_sortear_pedra">Sortear\nPedra</string>
     <string name="item_novo_sorteio">Novo Sorteio</string>
+    <string name="item_alterar_tipo_sorteio">Alterar Tipo de Sorteio</string>
     <string name="sorteio_fim">Fim do\nSorteio</string>
     <string name="dialog_novo_sorteio_title">Realizar novo sorteio?</string>
     <string name="dialog_novo_sorteio_positive">Novo Sorteio</string>
