@@ -66,7 +66,7 @@ public class ConfereCartelasEspressoTest {
     @Before
     public void setupTest() {
         Intent intent = new Intent();
-        intent.putExtra("mPedras", pedrasMock);
+        intent.putExtra(Constant.EXTRA_PEDRAS, pedrasMock);
         mActivityRule.launchActivity(intent);
     }
 
@@ -79,6 +79,12 @@ public class ConfereCartelasEspressoTest {
     public void pedraSorteada_aparecerFundoVerde() {
         onView(withId(R.id.et_numero_cartela)).perform(replaceText("0001"));
         onView(withId(R.id.et_numero_cartela)).perform(pressImeActionButton());
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         onView(withText("14"))
                 .check(matches(withBackgroundDrawable(

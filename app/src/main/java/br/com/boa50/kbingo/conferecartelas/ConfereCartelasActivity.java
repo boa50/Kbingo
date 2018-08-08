@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasFragment;
@@ -38,8 +39,9 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         Bundle bundle = new Bundle();
-        bundle.putString("mUltimaCartelaNumero", "");
-        bundle.putParcelableArrayList("mPedras", getIntent().getParcelableArrayListExtra("mPedras"));
+        bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
+        bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS,
+                getIntent().getParcelableArrayListExtra(Constant.EXTRA_PEDRAS));
         mVisualizaCartelasFragment.setArguments(bundle);
 
         ActivityUtils.addFragmentToActivity(

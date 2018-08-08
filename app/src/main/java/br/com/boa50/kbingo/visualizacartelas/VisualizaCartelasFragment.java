@@ -24,6 +24,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
@@ -68,8 +69,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mUltimaCartelaNumero = bundle.getString("mUltimaCartelaNumero");
-            mPedras = bundle.getParcelableArrayList("mPedras");
+            mUltimaCartelaNumero = bundle.getString(Constant.EXTRA_ULTIMA_CARTELA);
+            mPedras = bundle.getParcelableArrayList(Constant.EXTRA_PEDRAS);
         }
 
         if (savedInstanceState == null && mUltimaCartelaNumero == null) {
