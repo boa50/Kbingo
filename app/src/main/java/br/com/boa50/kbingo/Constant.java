@@ -8,4 +8,7 @@ public class Constant {
 
     public static final String FORMAT_CARTELA = "%04d";
     public static final String FORMAT_PEDRA = "%02d";
+
+    public static final String EXTRA_PEDRAS = "extraPedras";
+    public static final String EXTRA_ULTIMA_CARTELA = "extraUltimaCartela";
 }
