@@ -59,11 +59,12 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
 import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
+import static br.com.boa50.kbingo.util.StateUtils.readStateFromBundle;
+import static br.com.boa50.kbingo.util.StateUtils.writeStateToBundle;
 
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
     private static final String ARGS_PEDRAS = "pedras";
-    private static final String ARGS_PEDRA_ULTIMA = "ultimaPedra";
     private static final String ARGS_TAB_LETRAS_SELECIONADA = "tabLetrasSelecionada";
     private static final String ARGS_GRID_COLUNAS = "gridColunas";
     private static final String ARGS_LETRA_POSITION = "letraPosition";
@@ -87,7 +88,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     PedrasSorteadasPageAdapter mPageAdapter;
     private ArrayList<Pedra> mPedras;
     private List<Letra> mLetras;
-    private String mUltimaPedraValor;
     private long mLastClickTime;
     private Dialog mDialogNovoSorteio;
     private Dialog mDialogTipoSorteio;
@@ -110,12 +110,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         if (savedInstanceState != null) {
             mPedras = savedInstanceState.getParcelableArrayList(ARGS_PEDRAS);
-            mUltimaPedraValor = savedInstanceState.getString(ARGS_PEDRA_ULTIMA);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_NOVO_SORTEIO)) abrirDialogResetarPedras();
             mTabLetrasSelecionada = savedInstanceState.getInt(ARGS_TAB_LETRAS_SELECIONADA);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_TIPO_SORTEIO)) abrirDialogTipoSorteio();
         } else {
-            mUltimaPedraValor = "";
             mTabLetrasSelecionada = 0;
         }
 
@@ -162,7 +160,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
             builder.setTitle(R.string.dialog_novo_sorteio_title)
                     .setPositiveButton(R.string.dialog_novo_sorteio_positive,
-                            (dialog, which) -> resetarPedras())
+                            (dialog, which) -> mPresenter.resetarPedras())
                     .setNegativeButton(R.string.dialog_negative,
                             (dialog, which) -> {});
 
@@ -207,12 +205,12 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(ARGS_PEDRAS, mPedras);
-        outState.putString(ARGS_PEDRA_ULTIMA, mUltimaPedraValor);
         outState.putBoolean(ARGS_DIALOG_NOVO_SORTEIO,
                 mDialogNovoSorteio != null && mDialogNovoSorteio.isShowing());
         outState.putBoolean(ARGS_DIALOG_TIPO_SORTEIO,
                 mDialogTipoSorteio != null && mDialogTipoSorteio.isShowing());
         outState.putInt(ARGS_TAB_LETRAS_SELECIONADA, vpPedrasSorteadas.getCurrentItem());
+        writeStateToBundle(outState, mPresenter.getState());
     }
 
     @Override
@@ -239,8 +237,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mGridColunas = Constant.QTDE_PEDRAS_LINHA_PORTRAIT;
@@ -248,15 +246,12 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mGridColunas = Constant.QTDE_PEDRAS_LINHA_LANDSCAPE;
         }
 
-        if (!mUltimaPedraValor.isEmpty()) {
-            if (mUltimaPedraValor == getResources().getText(R.string.sorteio_fim))
-                apresentarFimSorteio();
-            else
-                apresentarPedra(mUltimaPedraValor);
-        }
-
         mPresenter.setPedras(mPedras);
-        mPresenter.subscribe(this);
+        if (savedInstanceState != null) {
+            mPresenter.subscribe(this, readStateFromBundle(savedInstanceState));
+        } else {
+            mPresenter.subscribe(this);
+        }
     }
 
     @OnClick(R.id.bt_sortear_pedra)
@@ -265,16 +260,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mPresenter.sortearPedra();
             mLastClickTime = SystemClock.elapsedRealtime();
         }
-    }
-
-    void resetarPedras() {
-        btSortearPedra.setTextSize(
-                TypedValue.COMPLEX_UNIT_PX,
-                getResources().getDimension(R.dimen.pedra_grande_texto)
-        );
-
-        mPresenter.resetarPedras();
-        mUltimaPedraValor = "";
     }
 
     @Override
@@ -288,7 +273,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 getResources().getDimension(R.dimen.pedra_grande_texto_sorteada)
         );
         btSortearPedra.setText(pedraValor);
-        mUltimaPedraValor = pedraValor;
     }
 
     @Override
@@ -298,7 +282,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 getResources().getDimension(R.dimen.pedra_grande_texto)
         );
         btSortearPedra.setText(getResources().getText(R.string.sorteio_fim));
-        mUltimaPedraValor = btSortearPedra.getText().toString();
     }
 
     @Override
@@ -328,6 +311,10 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void reiniciarSorteio() {
+        btSortearPedra.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimension(R.dimen.pedra_grande_texto)
+        );
         btSortearPedra.setText(getResources().getText(R.string.bt_sortear_pedra));
 
         for (int i = 0; i < mPageAdapter.getCount(); i++) {

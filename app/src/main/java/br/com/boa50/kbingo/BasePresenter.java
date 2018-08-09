@@ -1,9 +1,8 @@
 package br.com.boa50.kbingo;
 
-public interface BasePresenter {
+import android.support.annotation.NonNull;
 
-    void subscribe(BaseView view);
-
+public interface BasePresenter<V extends BaseView> {
+    void subscribe(@NonNull V view);
     void unsubscribe();
-
 }

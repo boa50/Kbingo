@@ -9,13 +9,13 @@ import br.com.boa50.kbingo.data.entity.Letra;
 
 public interface VisualizaCartelasContract {
 
-    interface View extends BaseView<Presenter> {
+    interface View extends BaseView {
         void iniciarLayout(List<Letra> letras);
         void apresentarCartela(List<CartelaPedra> cartelaPedras);
         void apresentarMaximoIdCartela(int id);
     }
 
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter<View> {
         void carregarCartela(int id);
     }
 }
