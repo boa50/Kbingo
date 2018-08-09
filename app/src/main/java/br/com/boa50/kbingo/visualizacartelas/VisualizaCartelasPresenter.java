@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import javax.inject.Inject;
 
-import br.com.boa50.kbingo.BaseView;
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -31,8 +30,8 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
     }
 
     @Override
-    public void subscribe(BaseView view) {
-        mView = (VisualizaCartelasContract.View) view;
+    public void subscribe(VisualizaCartelasContract.View view) {
+        mView = view;
         iniciarLayout();
     }
 

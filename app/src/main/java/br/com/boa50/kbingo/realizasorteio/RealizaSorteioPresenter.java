@@ -1,6 +1,7 @@
 package br.com.boa50.kbingo.realizasorteio;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
@@ -9,7 +10,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import br.com.boa50.kbingo.BaseView;
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
@@ -29,6 +29,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     private CompositeDisposable mCompositeDisposable;
 
     private ArrayList<Pedra> mPedras;
+    private Pedra mUltimaPedraSorteada;
 
     private List<Integer> mPosicoes;
 
@@ -43,9 +44,27 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     }
 
     @Override
-    public void subscribe(BaseView view) {
-        mView = (RealizaSorteioContract.View) view;
+    public void subscribe(@NonNull RealizaSorteioContract.View view) {
+        subscribe(view, null);
+    }
+
+    @Override
+    public void subscribe(@NonNull RealizaSorteioContract.View view, @Nullable RealizaSorteioContract.State state) {
+        mView = view;
+
+        if (state != null) {
+            mUltimaPedraSorteada = state.getUltimaPedraSorteada();
+        } else {
+            mUltimaPedraSorteada = null;
+        }
+
         carregarPedras();
+    }
+
+    @NonNull
+    @Override
+    public RealizaSorteioContract.State getState() {
+        return new RealizaSorteioState(mUltimaPedraSorteada);
     }
 
     @Override
@@ -56,17 +75,17 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Override
     public void sortearPedra() {
-        if (mPosicoes.isEmpty()) {
-            mView.apresentarFimSorteio();
-        } else {
-            mView.apresentarPedra(mPedras.get(mPosicoes.get(0)));
+            mUltimaPedraSorteada = mPedras.get(mPosicoes.get(0));
+            mUltimaPedraSorteada.setSorteada(true);
 
-            mPedras.get(mPosicoes.get(0)).setSorteada(true);
-
+            apresentarUltimaPedraSorteada();
             mView.atualizarPedra(mPosicoes.get(0));
-
             mPosicoes.remove(0);
-        }
+    }
+
+    private void apresentarUltimaPedraSorteada() {
+        if (mPosicoes.isEmpty())  mView.apresentarFimSorteio();
+        else if (mUltimaPedraSorteada != null) mView.apresentarPedra(mUltimaPedraSorteada);
     }
 
     @Override
@@ -76,6 +95,8 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         }
 
         preencherPosicoesSorteio();
+
+        mUltimaPedraSorteada = null;
 
         mView.reiniciarSorteio();
     }
@@ -114,7 +135,10 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                 .subscribeOn(mScheduleProvider.io())
                 .observeOn(mScheduleProvider.ui())
                 .subscribe(
-                        letras -> mView.iniciarLayout(letras, mPedras)
+                        letras -> {
+                            mView.iniciarLayout(letras, mPedras);
+                            apresentarUltimaPedraSorteada();
+                        }
                 );
 
         mCompositeDisposable.add(disposable);
