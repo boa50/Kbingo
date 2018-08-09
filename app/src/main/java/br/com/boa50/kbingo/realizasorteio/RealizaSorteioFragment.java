@@ -192,12 +192,11 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     private void setTipoSorteio(int tipoSorteio) {
-        if (tipoSorteio >= 0)  {
-            mTipoSorteio = tipoSorteio;
-            mSharedPref.edit()
-                    .putInt(getString(R.string.pref_tipo_sorteio), mTipoSorteio)
-                    .apply();
-        }
+        if (tipoSorteio >= 0)  mTipoSorteio = tipoSorteio;
+
+        mSharedPref.edit()
+                .putInt(getString(R.string.pref_tipo_sorteio), mTipoSorteio)
+                .apply();
 
         Objects.requireNonNull(getActivity())
                 .setTitle(getString(R.string.realizar_sorteio_title) + " - " +
