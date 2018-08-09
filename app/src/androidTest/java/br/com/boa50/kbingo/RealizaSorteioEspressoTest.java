@@ -252,6 +252,33 @@ public class RealizaSorteioEspressoTest {
                                 TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome())));
     }
 
+    @Test
+    public void alterarTipoSorteio_ModificarTitulo() {
+        String textoTipoAlterado =
+                TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS).getNome();
+
+        onView(withText(mActivityRule.getActivity().getTitle().toString()))
+                .check(matches(withText(
+                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title)
+                                + " - " +
+                                TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome())));
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_alterar_tipo_sorteio))
+                .perform(click());
+
+        onView(withText(textoTipoAlterado))
+                .perform(click());
+
+        onView(withText(R.string.dialog_confirmative))
+                .perform(click());
+
+        onView(withText(mActivityRule.getActivity().getTitle().toString()))
+                .check(matches(withText(
+                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title)
+                                + " - " + textoTipoAlterado)));
+    }
+
     //TODO mudança de orientação no fim do sorteio
     //TODO pausar e restartar a aplicação
 }
