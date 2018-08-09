@@ -17,9 +17,9 @@ import static android.support.test.espresso.contrib.NavigationViewActions.naviga
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 final class CustomProcedures {
-    static AppDatabase initializeDatabase(AppDatabase db) {
+    static AppDatabase initializeDatabase() {
         Context context = InstrumentationRegistry.getTargetContext();
-        db = Room.databaseBuilder(context.getApplicationContext(),
+        AppDatabase db = Room.databaseBuilder(context.getApplicationContext(),
                 AppDatabase.class, "Test.db").build();
         AppDataSource appDataSource = new AppRepository(db);
         appDataSource.initializeDatabase();
