@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.boa50.kbingo.data.AppDatabase;
+import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -223,6 +224,32 @@ public class RealizaSorteioEspressoTest {
 
         onView(withId(R.id.bt_sortear_pedra))
                 .check(matches(withText(R.string.bt_sortear_pedra)));
+    }
+
+    @Test
+    public void cancelarAlterarTipoSorteio_ManterTipoAnterior() {
+        onView(withText(mActivityRule.getActivity().getTitle().toString()))
+                .check(matches(withText(
+                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title) + " - " +
+                        TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome())));
+
+        CustomProcedures.changeNavigation(R.id.item_visualizar_cartelas);
+        CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
+
+        onView(withText(mActivityRule.getActivity().getTitle().toString()))
+                .check(matches(withText(
+                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title) + " - " +
+                                TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome())));
+
+        onView(withId(R.id.item_confere_cartelas))
+                .perform(click());
+
+        pressBack();
+
+        onView(withText(mActivityRule.getActivity().getTitle().toString()))
+                .check(matches(withText(
+                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title) + " - " +
+                                TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome())));
     }
 
     //TODO mudança de orientação no fim do sorteio
