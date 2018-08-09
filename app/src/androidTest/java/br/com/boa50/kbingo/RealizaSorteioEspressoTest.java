@@ -45,7 +45,7 @@ public class RealizaSorteioEspressoTest {
 
     @BeforeClass
     public static void setup() {
-        db = CustomProcedures.initializeDatabase(db);
+        db = CustomProcedures.initializeDatabase();
     }
 
     @Before
@@ -228,18 +228,19 @@ public class RealizaSorteioEspressoTest {
 
     @Test
     public void cancelarAlterarTipoSorteio_ManterTipoAnterior() {
+        setTipoSorteioDefault();
+        String tituloTipoSorteio =
+                mActivityRule.getActivity().getString(R.string.realizar_sorteio_title) + " - " +
+                        TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome();
+
         onView(withText(mActivityRule.getActivity().getTitle().toString()))
-                .check(matches(withText(
-                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title) + " - " +
-                        TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome())));
+                .check(matches(withText(tituloTipoSorteio)));
 
         CustomProcedures.changeNavigation(R.id.item_visualizar_cartelas);
         CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
 
         onView(withText(mActivityRule.getActivity().getTitle().toString()))
-                .check(matches(withText(
-                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title) + " - " +
-                                TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome())));
+                .check(matches(withText(tituloTipoSorteio)));
 
         onView(withId(R.id.item_confere_cartelas))
                 .perform(click());
@@ -247,13 +248,12 @@ public class RealizaSorteioEspressoTest {
         pressBack();
 
         onView(withText(mActivityRule.getActivity().getTitle().toString()))
-                .check(matches(withText(
-                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title) + " - " +
-                                TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome())));
+                .check(matches(withText(tituloTipoSorteio)));
     }
 
     @Test
     public void alterarTipoSorteio_ModificarTitulo() {
+        setTipoSorteioDefault();
         String textoTipoAlterado =
                 TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS).getNome();
 
@@ -266,10 +266,8 @@ public class RealizaSorteioEspressoTest {
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_alterar_tipo_sorteio))
                 .perform(click());
-
         onView(withText(textoTipoAlterado))
                 .perform(click());
-
         onView(withText(R.string.dialog_confirmative))
                 .perform(click());
 
@@ -277,6 +275,19 @@ public class RealizaSorteioEspressoTest {
                 .check(matches(withText(
                         mActivityRule.getActivity().getString(R.string.realizar_sorteio_title)
                                 + " - " + textoTipoAlterado)));
+    }
+
+    private void setTipoSorteioDefault() {
+        String textoTipoSorteioDefault =
+                TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome();
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_alterar_tipo_sorteio))
+                .perform(click());
+        onView(withText(textoTipoSorteioDefault))
+                .perform(click());
+        onView(withText(R.string.dialog_confirmative))
+                .perform(click());
     }
 
     //TODO mudança de orientação no fim do sorteio

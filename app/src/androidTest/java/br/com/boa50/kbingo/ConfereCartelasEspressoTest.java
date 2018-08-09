@@ -40,7 +40,7 @@ public class ConfereCartelasEspressoTest {
 
     @BeforeClass
     public static void setup() {
-        db = CustomProcedures.initializeDatabase(db);
+        db = CustomProcedures.initializeDatabase();
         Letra[] letras = new Letra[] {
                 new Letra(1, "K"),
                 new Letra(2, "I"),

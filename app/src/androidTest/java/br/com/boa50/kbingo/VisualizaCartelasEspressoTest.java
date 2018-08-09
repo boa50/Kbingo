@@ -36,7 +36,7 @@ public class VisualizaCartelasEspressoTest {
 
     @BeforeClass
     public static void setup() {
-        db = CustomProcedures.initializeDatabase(db);
+        db = CustomProcedures.initializeDatabase();
     }
 
     @Before
