@@ -14,7 +14,7 @@ public interface RealizaSorteioContract {
     interface View extends BaseView {
         void apresentarPedra(Pedra pedra);
         void apresentarFimSorteio();
-        void iniciarLayout(List<Letra> letras, ArrayList<Pedra> pedras);
+        void iniciarLayout(List<Letra> letras);
         void atualizarPedra(int position);
         void reiniciarSorteio();
     }
@@ -27,5 +27,6 @@ public interface RealizaSorteioContract {
 
     interface State extends BaseState {
         Pedra getUltimaPedraSorteada();
+        ArrayList<Pedra> getPedras();
     }
 }

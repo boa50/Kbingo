@@ -53,8 +53,10 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         mView = view;
 
         if (state != null) {
+            mPedras = state.getPedras();
             mUltimaPedraSorteada = state.getUltimaPedraSorteada();
         } else {
+            mPedras = null;
             mUltimaPedraSorteada = null;
         }
 
@@ -64,7 +66,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     @NonNull
     @Override
     public RealizaSorteioContract.State getState() {
-        return new RealizaSorteioState(mUltimaPedraSorteada);
+        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada);
     }
 
     @Override
@@ -75,12 +77,16 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Override
     public void sortearPedra() {
+        if (mPosicoes.isEmpty()) {
+            mView.apresentarFimSorteio();
+        } else {
             mUltimaPedraSorteada = mPedras.get(mPosicoes.get(0));
             mUltimaPedraSorteada.setSorteada(true);
+            mView.apresentarPedra(mUltimaPedraSorteada);
 
-            apresentarUltimaPedraSorteada();
             mView.atualizarPedra(mPosicoes.get(0));
             mPosicoes.remove(0);
+        }
     }
 
     private void apresentarUltimaPedraSorteada() {
@@ -136,7 +142,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                 .observeOn(mScheduleProvider.ui())
                 .subscribe(
                         letras -> {
-                            mView.iniciarLayout(letras, mPedras);
+                            mView.iniciarLayout(letras);
                             apresentarUltimaPedraSorteada();
                         }
                 );

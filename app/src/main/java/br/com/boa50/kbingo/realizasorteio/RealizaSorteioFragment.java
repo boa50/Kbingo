@@ -64,7 +64,6 @@ import static br.com.boa50.kbingo.util.StateUtils.writeStateToBundle;
 
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
-    private static final String ARGS_PEDRAS = "pedras";
     private static final String ARGS_TAB_LETRAS_SELECIONADA = "tabLetrasSelecionada";
     private static final String ARGS_GRID_COLUNAS = "gridColunas";
     private static final String ARGS_LETRA_POSITION = "letraPosition";
@@ -86,7 +85,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private Unbinder unbinder;
     private int mGridColunas;
     PedrasSorteadasPageAdapter mPageAdapter;
-    private ArrayList<Pedra> mPedras;
     private List<Letra> mLetras;
     private long mLastClickTime;
     private Dialog mDialogNovoSorteio;
@@ -109,7 +107,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         if (savedInstanceState != null) {
-            mPedras = savedInstanceState.getParcelableArrayList(ARGS_PEDRAS);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_NOVO_SORTEIO)) abrirDialogResetarPedras();
             mTabLetrasSelecionada = savedInstanceState.getInt(ARGS_TAB_LETRAS_SELECIONADA);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_TIPO_SORTEIO)) abrirDialogTipoSorteio();
@@ -147,7 +144,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 return true;
             case R.id.item_confere_cartelas:
                 Intent intent = new Intent(getActivity(), ConfereCartelasActivity.class);
-                intent.putExtra(Constant.EXTRA_PEDRAS, mPedras);
+                intent.putExtra(Constant.EXTRA_PEDRAS, mPresenter.getState().getPedras());
                 startActivity(intent);
                 return true;
             default:
@@ -204,7 +201,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(ARGS_PEDRAS, mPedras);
         outState.putBoolean(ARGS_DIALOG_NOVO_SORTEIO,
                 mDialogNovoSorteio != null && mDialogNovoSorteio.isShowing());
         outState.putBoolean(ARGS_DIALOG_TIPO_SORTEIO,
@@ -233,7 +229,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         super.onDestroyView();
         unbinder.unbind();
         mPresenter.unsubscribe();
-        mPedras = null;
+//        mPedras = null;
     }
 
     @Override
@@ -246,7 +242,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mGridColunas = Constant.QTDE_PEDRAS_LINHA_LANDSCAPE;
         }
 
-        mPresenter.setPedras(mPedras);
         if (savedInstanceState != null) {
             mPresenter.subscribe(this, readStateFromBundle(savedInstanceState));
         } else {
@@ -285,9 +280,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     @Override
-    public void iniciarLayout(List<Letra> letras, ArrayList<Pedra> pedras) {
+    public void iniciarLayout(List<Letra> letras) {
         mLetras = letras;
-        mPedras = pedras;
 
         if (mPageAdapter == null) {
             mPageAdapter = new PedrasSorteadasPageAdapter(
@@ -306,7 +300,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         PedrasSorteadasFragment fragment =
                 (PedrasSorteadasFragment) mPageAdapter.getFragment(position/QTDE_PEDRAS_LETRA);
-        fragment.transitarTextViewPedra(mPedras.get(position).getId());
+        fragment.transitarTextViewPedra(mPresenter.getState().getPedras().get(position).getId());
     }
 
     @Override
@@ -337,7 +331,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         @Override
         public Fragment getItem(int position) {
-            return PedrasSorteadasFragment.newInstance(mGridColunas, position, mPedras);
+            return PedrasSorteadasFragment.newInstance(mGridColunas, position, mPresenter.getState().getPedras());
         }
 
         @Override
@@ -370,6 +364,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     public static class PedrasSorteadasFragment extends Fragment {
+        private static final String ARGS_PEDRAS = "pedras";
 
         @BindView(R.id.gl_pedras_sorteadas)
         GridLayout glPedrasSorteadas;
