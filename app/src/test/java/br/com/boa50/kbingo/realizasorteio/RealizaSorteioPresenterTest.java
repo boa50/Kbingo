@@ -118,4 +118,11 @@ public class RealizaSorteioPresenterTest {
         assertThat(pedra.getValue().isSorteada(), equalTo(false));
         verify(realizaSorteioView).reiniciarSorteio();
     }
+
+    @Test
+    public void alterarTipoSorteio_ApresentarTipoSorteio() {
+        realizaSorteioPresenter.alterarTipoSorteio(anyInt());
+
+        verify(realizaSorteioView).apresentarTipoSorteio(true);
+    }
 }
