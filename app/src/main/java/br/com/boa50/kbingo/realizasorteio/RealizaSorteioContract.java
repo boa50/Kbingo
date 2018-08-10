@@ -17,16 +17,18 @@ public interface RealizaSorteioContract {
         void iniciarLayout(List<Letra> letras);
         void atualizarPedra(int position);
         void reiniciarSorteio();
+        void apresentarTipoSorteio(boolean tipoAlterado);
     }
 
     interface Presenter extends BaseStatefulPresenter<View, State> {
         void sortearPedra();
         void resetarPedras();
-        void setPedras(ArrayList<Pedra> pedras);
+        void alterarTipoSorteio(int tipoSorteio);
     }
 
     interface State extends BaseState {
-        Pedra getUltimaPedraSorteada();
         ArrayList<Pedra> getPedras();
+        Pedra getUltimaPedraSorteada();
+        int getTipoSorteio();
     }
 }
