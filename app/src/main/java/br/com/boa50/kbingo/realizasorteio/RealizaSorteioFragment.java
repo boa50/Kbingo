@@ -90,7 +90,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private Dialog mDialogNovoSorteio;
     private Dialog mDialogTipoSorteio;
     private int mTabLetrasSelecionada;
-    private int mTipoSorteio;
     private SharedPreferences mSharedPref;
 
     @Inject
@@ -114,13 +113,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mTabLetrasSelecionada = 0;
         }
 
-        int valor = mSharedPref.getInt(getString(R.string.pref_tipo_sorteio), -1);
-        if (valor < 0) {
-            mTipoSorteio = TipoSorteioDTO.CARTELA_CHEIA;
-            abrirDialogTipoSorteio();
-        } else {
-            setTipoSorteio(valor);
-        }
+        if (mSharedPref.getInt(getString(R.string.pref_tipo_sorteio), -1) < 0)  abrirDialogTipoSorteio();
+        else apresentarTipoSorteio(false);
 
         return view;
     }
@@ -168,16 +162,16 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     private void abrirDialogTipoSorteio() {
-        final int[] sorteioSelecionado = {mTipoSorteio};
+        final int[] sorteioSelecionado = {mPresenter.getState().getTipoSorteio()};
         if (mDialogTipoSorteio == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
             builder.setTitle(R.string.dialog_tipo_sorteio_title)
                     .setSingleChoiceItems(TipoSorteioDTO.getTiposSorteioNome(), sorteioSelecionado[0],
                             (dialog, which) -> sorteioSelecionado[0] = which)
                     .setPositiveButton(R.string.dialog_confirmative,
-                            (dialog, which) -> setTipoSorteio(sorteioSelecionado[0]))
+                            (dialog, which) -> mPresenter.alterarTipoSorteio(sorteioSelecionado[0]))
                     .setNegativeButton(R.string.dialog_negative,
-                            (dialog, which) -> setTipoSorteio(-1));
+                            (dialog, which) -> apresentarTipoSorteio(false));
 
             mDialogTipoSorteio = builder.create();
         }
@@ -186,16 +180,17 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         mDialogTipoSorteio.show();
     }
 
-    private void setTipoSorteio(int tipoSorteio) {
-        if (tipoSorteio >= 0)  mTipoSorteio = tipoSorteio;
-
-        mSharedPref.edit()
-                .putInt(getString(R.string.pref_tipo_sorteio), mTipoSorteio)
-                .apply();
+    @Override
+    public void apresentarTipoSorteio(boolean tipoAlterado) {
+        if (tipoAlterado) {
+            mSharedPref.edit()
+                    .putInt(getString(R.string.pref_tipo_sorteio), mPresenter.getState().getTipoSorteio())
+                    .apply();
+        }
 
         Objects.requireNonNull(getActivity())
                 .setTitle(getString(R.string.realizar_sorteio_title) + " - " +
-                TipoSorteioDTO.getTipoSorteio(mTipoSorteio).getNome());
+                TipoSorteioDTO.getTipoSorteio(mPresenter.getState().getTipoSorteio()).getNome());
     }
 
     @Override
@@ -229,7 +224,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         super.onDestroyView();
         unbinder.unbind();
         mPresenter.unsubscribe();
-//        mPedras = null;
     }
 
     @Override

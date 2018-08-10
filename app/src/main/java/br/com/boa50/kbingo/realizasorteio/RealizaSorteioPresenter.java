@@ -11,6 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.data.AppDataSource;
+import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
@@ -21,15 +22,13 @@ import io.reactivex.disposables.Disposable;
 public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter {
 
     private RealizaSorteioContract.View mView;
-
     private final AppDataSource mAppDataSource;
-
     private final BaseSchedulerProvider mScheduleProvider;
-
     private CompositeDisposable mCompositeDisposable;
 
     private ArrayList<Pedra> mPedras;
     private Pedra mUltimaPedraSorteada;
+    private int mTipoSorteio;
 
     private List<Integer> mPosicoes;
 
@@ -39,7 +38,6 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             @NonNull BaseSchedulerProvider schedulerProvider) {
         mAppDataSource = appDataSource;
         mScheduleProvider = schedulerProvider;
-
         mCompositeDisposable = new CompositeDisposable();
     }
 
@@ -55,9 +53,11 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         if (state != null) {
             mPedras = state.getPedras();
             mUltimaPedraSorteada = state.getUltimaPedraSorteada();
+            mTipoSorteio = state.getTipoSorteio();
         } else {
             mPedras = null;
             mUltimaPedraSorteada = null;
+            mTipoSorteio = TipoSorteioDTO.CARTELA_CHEIA;
         }
 
         carregarPedras();
@@ -66,7 +66,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     @NonNull
     @Override
     public RealizaSorteioContract.State getState() {
-        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada);
+        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada, mTipoSorteio);
     }
 
     @Override
@@ -108,8 +108,10 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     }
 
     @Override
-    public void setPedras(ArrayList<Pedra> mPedras) {
-        this.mPedras = mPedras;
+    public void alterarTipoSorteio(int tipoSorteio) {
+        mTipoSorteio = tipoSorteio;
+
+        mView.apresentarTipoSorteio(true);
     }
 
     private void carregarPedras(){

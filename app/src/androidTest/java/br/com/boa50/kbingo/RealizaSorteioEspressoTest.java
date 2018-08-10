@@ -53,7 +53,7 @@ public class RealizaSorteioEspressoTest {
         try {
             onView(withText(R.string.dialog_negative))
                     .perform(click());
-        } catch (Exception e){}
+        } catch (Exception ignored){}
     }
 
     @AfterClass
