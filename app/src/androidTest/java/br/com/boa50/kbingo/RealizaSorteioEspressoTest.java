@@ -277,6 +277,74 @@ public class RealizaSorteioEspressoTest {
                                 + " - " + textoTipoAlterado)));
     }
 
+    @Test
+    public void sortearPedra_AlterarTipoSorteio_RealizarNovoSorteio() {
+        onView(withId(R.id.bt_sortear_pedra))
+                .perform(click());
+
+        String text = getButtonText(withId(R.id.bt_sortear_pedra));
+
+        Drawable drawable = VectorDrawableCompat.create(
+                mActivityRule.getActivity().getResources(),
+                R.drawable.pedra,
+                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_alterar_tipo_sorteio))
+                .perform(click());
+        onView(withText(TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS).getNome()))
+                .perform(click());
+        onView(withText(R.string.dialog_confirmative))
+                .perform(click());
+
+        onView(withText(R.string.dialog_novo_sorteio_tipo_sorteio_message))
+                .check(matches(isDisplayed()));
+        onView(withText(R.string.dialog_novo_sorteio_positive))
+                .perform(click());
+
+        onView(withText(text.substring(1)))
+                .check(matches(not(withTextColor(R.color.pedraTextoEnabled))));
+        onView(withText(text.substring(1)))
+                .check(matches(not(withBackgroundDrawable(drawable))));
+    }
+
+    @Test
+    public void sortearPedra_AlterarTipoSorteio_CancelarNovoSorteio() {
+        onView(withId(R.id.bt_sortear_pedra))
+                .perform(click());
+
+        String text = getButtonText(withId(R.id.bt_sortear_pedra));
+
+        Drawable drawable = VectorDrawableCompat.create(
+                mActivityRule.getActivity().getResources(),
+                R.drawable.pedra,
+                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_alterar_tipo_sorteio))
+                .perform(click());
+        onView(withText(TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS).getNome()))
+                .perform(click());
+        onView(withText(R.string.dialog_confirmative))
+                .perform(click());
+
+        onView(withText(R.string.dialog_novo_sorteio_tipo_sorteio_message))
+                .check(matches(isDisplayed()));
+        onView(withText(R.string.dialog_negative))
+                .perform(click());
+
+        onView(withText(mActivityRule.getActivity().getTitle().toString()))
+                .check(matches(withText(
+                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title)
+                                + " - " +
+                                TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome())));
+
+        onView(withText(text.substring(1)))
+                .check(matches(withTextColor(R.color.pedraTextoEnabled)));
+        onView(withText(text.substring(1)))
+                .check(matches(withBackgroundDrawable(drawable)));
+    }
+
     private void setTipoSorteioDefault() {
         String textoTipoSorteioDefault =
                 TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome();

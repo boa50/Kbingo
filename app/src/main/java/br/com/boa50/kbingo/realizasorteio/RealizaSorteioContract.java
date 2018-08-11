@@ -24,6 +24,7 @@ public interface RealizaSorteioContract {
         void sortearPedra();
         void resetarPedras();
         void alterarTipoSorteio(int tipoSorteio);
+        boolean hasPedraSorteada();
     }
 
     interface State extends BaseState {

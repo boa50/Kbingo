@@ -14,6 +14,7 @@ import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
+import br.com.boa50.kbingo.util.PedraUtils;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -112,6 +113,11 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         mTipoSorteio = tipoSorteio;
 
         mView.apresentarTipoSorteio(true);
+    }
+
+    @Override
+    public boolean hasPedraSorteada() {
+        return mPedras != null && PedraUtils.hasPedraSorteda(mPedras);
     }
 
     private void carregarPedras(){

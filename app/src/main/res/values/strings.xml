@@ -19,6 +19,7 @@
     <string name="sorteio_fim">Fim do\nSorteio</string>
     <string name="dialog_novo_sorteio_title">Realizar novo sorteio?</string>
     <string name="dialog_novo_sorteio_positive">Novo Sorteio</string>
+    <string name="dialog_novo_sorteio_tipo_sorteio_message">Para alterar o tipo de sorteio um novo sorteio deve ser iniciado.</string>
     <string name="dialog_tipo_sorteio_title">Escolha o tipo de sorteio</string>
 
     <!--Visualizar cartela-->
