@@ -128,12 +128,33 @@ public class RealizaSorteioEspressoTest {
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_novo_sorteio))
                 .perform(click());
-
         mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-        onView(withText(R.string.item_novo_sorteio))
+        onView(withText(R.string.dialog_novo_sorteio_title))
                 .check(matches(isDisplayed()));
+        onView(withText(R.string.dialog_negative))
+                .perform(click());
 
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_alterar_tipo_sorteio))
+                .perform(click());
+        mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        onView(withText(R.string.dialog_tipo_sorteio_title))
+                .check(matches(isDisplayed()));
+        onView(withText(R.string.dialog_negative))
+                .perform(click());
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_alterar_tipo_sorteio))
+                .perform(click());
+        onView(withText(R.string.dialog_tipo_sorteio_title))
+                .check(matches(isDisplayed()));
+        onView(withText(TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS).getNome()))
+                .perform(click());
+        onView(withText(R.string.dialog_confirmative))
+                .perform(click());
+        mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        onView(withText(R.string.dialog_novo_sorteio_tipo_sorteio_message))
+                .check(matches(isDisplayed()));
         onView(withText(R.string.dialog_negative))
                 .perform(click());
 

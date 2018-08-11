@@ -69,6 +69,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private static final String ARGS_LETRA_POSITION = "letraPosition";
     private static final String ARGS_DIALOG_NOVO_SORTEIO = "dialogNovoSorteio";
     private static final String ARGS_DIALOG_TIPO_SORTEIO = "dialogTipoSorteio";
+    private static final String ARGS_TIPO_SORTEIO_ALTERADO = "tipoSorteioAlterado";
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
@@ -91,6 +92,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private Dialog mDialogTipoSorteio;
     private int mTabLetrasSelecionada;
     private SharedPreferences mSharedPref;
+    private int mTipoSorteioAlterado;
 
     @Inject
     public RealizaSorteioFragment() {}
@@ -104,6 +106,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         mLastClickTime = 0;
         setHasOptionsMenu(true);
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mTipoSorteioAlterado = -1;
 
         return view;
     }
@@ -143,14 +146,16 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setTitle(R.string.dialog_novo_sorteio_title)
                 .setNegativeButton(R.string.dialog_negative,
-                        (dialog, which) -> {});
+                        (dialog, which) -> mTipoSorteioAlterado = -1);
 
         if (tipoSorteioAlterado >= 0) {
+            mTipoSorteioAlterado = tipoSorteioAlterado;
             builder.setMessage(R.string.dialog_novo_sorteio_tipo_sorteio_message)
                     .setPositiveButton(R.string.dialog_novo_sorteio_positive,
                             (dialog, which) -> {
                         mPresenter.resetarPedras();
                         mPresenter.alterarTipoSorteio(tipoSorteioAlterado);
+                        mTipoSorteioAlterado = -1;
                     });
         } else {
             builder.setPositiveButton(R.string.dialog_novo_sorteio_positive,
@@ -158,6 +163,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         }
 
         mDialogNovoSorteio = builder.create();
+        mDialogNovoSorteio.setCanceledOnTouchOutside(false);
         mDialogNovoSorteio.show();
     }
 
@@ -206,6 +212,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 mDialogNovoSorteio != null && mDialogNovoSorteio.isShowing());
         outState.putBoolean(ARGS_DIALOG_TIPO_SORTEIO,
                 mDialogTipoSorteio != null && mDialogTipoSorteio.isShowing());
+        outState.putInt(ARGS_TIPO_SORTEIO_ALTERADO, mTipoSorteioAlterado);
         outState.putInt(ARGS_TAB_LETRAS_SELECIONADA, vpPedrasSorteadas.getCurrentItem());
         writeStateToBundle(outState, mPresenter.getState());
     }
@@ -244,12 +251,15 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         if (savedInstanceState != null) {
             mPresenter.subscribe(this, readStateFromBundle(savedInstanceState));
-            if (savedInstanceState.getBoolean(ARGS_DIALOG_NOVO_SORTEIO)) abrirDialogNovoSorteio();
+            if (savedInstanceState.getBoolean(ARGS_DIALOG_NOVO_SORTEIO)) {
+                abrirDialogNovoSorteio(savedInstanceState.getInt(ARGS_TIPO_SORTEIO_ALTERADO));
+            }
             mTabLetrasSelecionada = savedInstanceState.getInt(ARGS_TAB_LETRAS_SELECIONADA);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_TIPO_SORTEIO)) abrirDialogTipoSorteio();
         } else {
             mPresenter.subscribe(this);
             mTabLetrasSelecionada = 0;
+            mTipoSorteioAlterado = -1;
         }
 
         if (mSharedPref.getInt(getString(R.string.pref_tipo_sorteio), -1) < 0)  abrirDialogTipoSorteio();
