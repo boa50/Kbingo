@@ -66,26 +66,15 @@ public class RealizaSorteioEspressoTest {
         onView(withId(R.id.bt_sortear_pedra))
                 .perform(click());
 
-        String text = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
-
-        Drawable drawable = VectorDrawableCompat.create(
-                mActivityRule.getActivity().getResources(),
-                R.drawable.pedra,
-                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
+        String textoUltimaPedraSorteada = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
 
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_novo_sorteio))
                 .perform(click());
-
         onView(withText(R.string.dialog_novo_sorteio_positive))
                 .perform(click());
 
-        onView(withText("01"))
-                .check(matches(isDisplayed()));
-        onView(withText(text))
-                .check(matches(withTextColor(R.color.textDisabled)));
-        onView(withText(text))
-                .check(matches(not(withBackgroundDrawable(drawable))));
+        verificarLayoutPadrao(textoUltimaPedraSorteada);
     }
 
     @Test
@@ -133,11 +122,6 @@ public class RealizaSorteioEspressoTest {
 
         String text = getButtonText(withId(R.id.bt_sortear_pedra));
 
-        Drawable drawable = VectorDrawableCompat.create(
-                mActivityRule.getActivity().getResources(),
-                R.drawable.pedra,
-                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
-
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .perform(click());
 
@@ -157,10 +141,7 @@ public class RealizaSorteioEspressoTest {
                 .check(matches(withText(text)));
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .check(matches(isSelected()));
-        onView(withText(text.substring(1)))
-                .check(matches(withTextColor(R.color.pedraTextoEnabled)));
-        onView(withText(text.substring(1)))
-                .check(matches(withBackgroundDrawable(drawable)));
+        verificarUltimaPedraSorteada(text.substring(1), true);
     }
 
     @Test
@@ -168,12 +149,7 @@ public class RealizaSorteioEspressoTest {
         onView(withId(R.id.bt_sortear_pedra))
                 .perform(click());
 
-        String text = getButtonText(withId(R.id.bt_sortear_pedra));
-
-        Drawable drawable = VectorDrawableCompat.create(
-                mActivityRule.getActivity().getResources(),
-                R.drawable.pedra,
-                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
+        String textoUltimaPedraSorteada = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
 
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .perform(click());
@@ -181,14 +157,7 @@ public class RealizaSorteioEspressoTest {
         CustomProcedures.changeNavigation(R.id.item_visualizar_cartelas);
         CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
 
-        onView(withId(R.id.bt_sortear_pedra))
-                .check(matches(withText(R.string.bt_sortear_pedra)));
-        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 0))
-                .check(matches(isSelected()));
-        onView(withText(text.substring(1)))
-                .check(matches(not(withTextColor(R.color.pedraTextoEnabled))));
-        onView(withText(text.substring(1)))
-                .check(matches(not(withBackgroundDrawable(drawable))));
+        verificarLayoutPadrao(textoUltimaPedraSorteada);
     }
 
     @Test
@@ -229,26 +198,21 @@ public class RealizaSorteioEspressoTest {
     @Test
     public void cancelarAlterarTipoSorteio_ManterTipoAnterior() {
         setTipoSorteioDefault();
-        String tituloTipoSorteio =
-                mActivityRule.getActivity().getString(R.string.realizar_sorteio_title) + " - " +
-                        TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome();
+        int tipoSorteio = TipoSorteioDTO.CARTELA_CHEIA;
 
-        onView(withText(mActivityRule.getActivity().getTitle().toString()))
-                .check(matches(withText(tituloTipoSorteio)));
+        verificarTituloTipoSorteio(tipoSorteio);
 
         CustomProcedures.changeNavigation(R.id.item_visualizar_cartelas);
         CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
 
-        onView(withText(mActivityRule.getActivity().getTitle().toString()))
-                .check(matches(withText(tituloTipoSorteio)));
+        verificarTituloTipoSorteio(tipoSorteio);
 
         onView(withId(R.id.item_confere_cartelas))
                 .perform(click());
 
         pressBack();
 
-        onView(withText(mActivityRule.getActivity().getTitle().toString()))
-                .check(matches(withText(tituloTipoSorteio)));
+        verificarTituloTipoSorteio(tipoSorteio);
     }
 
     @Test
@@ -257,11 +221,7 @@ public class RealizaSorteioEspressoTest {
         String textoTipoAlterado =
                 TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS).getNome();
 
-        onView(withText(mActivityRule.getActivity().getTitle().toString()))
-                .check(matches(withText(
-                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title)
-                                + " - " +
-                                TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome())));
+        verificarTituloTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA);
 
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_alterar_tipo_sorteio))
@@ -271,10 +231,7 @@ public class RealizaSorteioEspressoTest {
         onView(withText(R.string.dialog_confirmative))
                 .perform(click());
 
-        onView(withText(mActivityRule.getActivity().getTitle().toString()))
-                .check(matches(withText(
-                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title)
-                                + " - " + textoTipoAlterado)));
+        verificarTituloTipoSorteio(textoTipoAlterado);
     }
 
     @Test
@@ -282,12 +239,7 @@ public class RealizaSorteioEspressoTest {
         onView(withId(R.id.bt_sortear_pedra))
                 .perform(click());
 
-        String text = getButtonText(withId(R.id.bt_sortear_pedra));
-
-        Drawable drawable = VectorDrawableCompat.create(
-                mActivityRule.getActivity().getResources(),
-                R.drawable.pedra,
-                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
+        String textoUltimaPedraSorteada = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
 
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_alterar_tipo_sorteio))
@@ -302,10 +254,7 @@ public class RealizaSorteioEspressoTest {
         onView(withText(R.string.dialog_novo_sorteio_positive))
                 .perform(click());
 
-        onView(withText(text.substring(1)))
-                .check(matches(not(withTextColor(R.color.pedraTextoEnabled))));
-        onView(withText(text.substring(1)))
-                .check(matches(not(withBackgroundDrawable(drawable))));
+        verificarLayoutPadrao(textoUltimaPedraSorteada);
     }
 
     @Test
@@ -313,12 +262,7 @@ public class RealizaSorteioEspressoTest {
         onView(withId(R.id.bt_sortear_pedra))
                 .perform(click());
 
-        String text = getButtonText(withId(R.id.bt_sortear_pedra));
-
-        Drawable drawable = VectorDrawableCompat.create(
-                mActivityRule.getActivity().getResources(),
-                R.drawable.pedra,
-                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
+        String textoUltimaPedraSorteada = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
 
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_alterar_tipo_sorteio))
@@ -333,16 +277,42 @@ public class RealizaSorteioEspressoTest {
         onView(withText(R.string.dialog_negative))
                 .perform(click());
 
-        onView(withText(mActivityRule.getActivity().getTitle().toString()))
-                .check(matches(withText(
-                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title)
-                                + " - " +
-                                TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome())));
+        verificarTituloTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA);
 
-        onView(withText(text.substring(1)))
-                .check(matches(withTextColor(R.color.pedraTextoEnabled)));
-        onView(withText(text.substring(1)))
-                .check(matches(withBackgroundDrawable(drawable)));
+        verificarUltimaPedraSorteada(textoUltimaPedraSorteada, true);
+    }
+
+    private void verificarLayoutPadrao(String textoUltimaPedraSorteada) {
+        verificarLayoutPadrao();
+        verificarUltimaPedraSorteada(textoUltimaPedraSorteada, false);
+    }
+
+    private void verificarLayoutPadrao() {
+        onView(withId(R.id.bt_sortear_pedra))
+                .check(matches(withText(R.string.bt_sortear_pedra)));
+        onView(withText("01"))
+                .check(matches(isDisplayed()));
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 0))
+                .check(matches(isSelected()));
+    }
+
+    private void verificarUltimaPedraSorteada(String textoUltimaPedraSorteada, boolean enabled) {
+        Drawable drawable = VectorDrawableCompat.create(
+                mActivityRule.getActivity().getResources(),
+                R.drawable.pedra,
+                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
+
+        if (enabled) {
+            onView(withText(textoUltimaPedraSorteada))
+                    .check(matches(withTextColor(R.color.pedraTextoEnabled)));
+            onView(withText(textoUltimaPedraSorteada))
+                    .check(matches(withBackgroundDrawable(drawable)));
+        } else {
+            onView(withText(textoUltimaPedraSorteada))
+                    .check(matches(withTextColor(R.color.textDisabled)));
+            onView(withText(textoUltimaPedraSorteada))
+                    .check(matches(not(withBackgroundDrawable(drawable))));
+        }
     }
 
     private void setTipoSorteioDefault() {
@@ -356,6 +326,17 @@ public class RealizaSorteioEspressoTest {
                 .perform(click());
         onView(withText(R.string.dialog_confirmative))
                 .perform(click());
+    }
+
+    private void verificarTituloTipoSorteio(int tipoSorteio) {
+        verificarTituloTipoSorteio(TipoSorteioDTO.getTipoSorteio(tipoSorteio).getNome());
+    }
+
+    private void verificarTituloTipoSorteio(String tipoSorteioNome) {
+        onView(withText(mActivityRule.getActivity().getTitle().toString()))
+                .check(matches(withText(
+                        mActivityRule.getActivity().getString(R.string.realizar_sorteio_title)
+                                + " - " + tipoSorteioNome)));
     }
 
     //TODO mudança de orientação no fim do sorteio
