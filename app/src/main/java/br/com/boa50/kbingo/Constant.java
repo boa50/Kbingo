@@ -11,5 +11,5 @@ public class Constant {
 
     public static final String EXTRA_PEDRAS = "extraPedras";
     public static final String EXTRA_ULTIMA_CARTELA = "extraUltimaCartela";
-    public static final String EXTRA_CARTELAS = "extraCartelas";
+    public static final String EXTRA_CARTELAS_GANHADORAS = "extraCartelasGanhadoras";
 }

@@ -1,7 +1,9 @@
 package br.com.boa50.kbingo.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import br.com.boa50.kbingo.data.dto.CartelaDTO;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 
@@ -11,5 +13,13 @@ public final class CartelaUtils {
             if (cartelaPedra.getPedraId() == pedra.getId()) return true;
         }
         return false;
+    }
+
+    public static Integer[] getCartelasGanhadoras(List<CartelaDTO> cartelas) {
+        List<Integer> cartelasGanhadoras = new ArrayList<>();
+        for (CartelaDTO cartela : cartelas) {
+            if (cartela.isGanhadora()) cartelasGanhadoras.add(cartela.getCartelaId());
+        }
+        return cartelasGanhadoras.toArray(new Integer[cartelasGanhadoras.size()]);
     }
 }

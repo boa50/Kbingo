@@ -182,11 +182,13 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private void atualizarCartelasSorteadas() {
         for (CartelaDTO cartela : mCartelas) {
-            if (cartela.getQtdPedrasSorteadas() <
-                    TipoSorteioDTO.getTipoSorteio(mTipoSorteio).getQuantidadePedras() &&
+            int qtdePedrasSorteio = TipoSorteioDTO.getTipoSorteio(mTipoSorteio).getQuantidadePedras();
+            if (cartela.getQtdPedrasSorteadas() < qtdePedrasSorteio &&
                     CartelaUtils.hasCartelaPedra(cartela.getCartelaPedras(), mUltimaPedraSorteada)) {
 
                 cartela.setQtdPedrasSorteadas(cartela.getQtdPedrasSorteadas() + 1);
+
+                if (cartela.getQtdPedrasSorteadas() >= qtdePedrasSorteio) cartela.setGanhadora(true);
             }
         }
     }
