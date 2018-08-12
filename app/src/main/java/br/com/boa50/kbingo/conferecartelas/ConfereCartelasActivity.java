@@ -2,6 +2,7 @@ package br.com.boa50.kbingo.conferecartelas;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -24,6 +25,8 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
 
     @Inject
     VisualizaCartelasFragment mVisualizaCartelasFragment;
+    @Inject
+    ConfereCartelasFragment mConfereCartelasFragment;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -45,16 +48,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         mPedras = getIntent().getParcelableArrayListExtra(Constant.EXTRA_PEDRAS);
         mCartelasGanhadoras = getIntent().getIntArrayExtra(Constant.EXTRA_CARTELAS_GANHADORAS);
 
-        Bundle bundle = new Bundle();
-        bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
-        bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS, mPedras);
-        mVisualizaCartelasFragment.setArguments(bundle);
-
-        ActivityUtils.addFragmentToActivity(
-                getSupportFragmentManager(),
-                mVisualizaCartelasFragment,
-                R.id.conteudoFrame
-        );
+        direcionarFragment();
     }
 
     @Override
@@ -71,5 +65,27 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void direcionarFragment() {
+        Bundle bundle = new Bundle();
+        Fragment fragment;
+
+        if (mCartelasGanhadoras != null && mCartelasGanhadoras.length > 0) {
+            fragment = mConfereCartelasFragment;
+            bundle.putIntArray(Constant.EXTRA_CARTELAS_GANHADORAS, mCartelasGanhadoras);
+        } else {
+            fragment = mVisualizaCartelasFragment;
+            bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
+            bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS, mPedras);
+        }
+
+        fragment.setArguments(bundle);
+
+        ActivityUtils.addFragmentToActivity(
+                getSupportFragmentManager(),
+                fragment,
+                R.id.conteudoFrame
+        );
     }
 }
