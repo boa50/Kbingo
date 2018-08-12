@@ -5,12 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
+import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasFragment;
 import butterknife.BindView;
@@ -27,6 +29,8 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
     Toolbar mToolbar;
 
     private Unbinder unbinder;
+    private ArrayList<Pedra> mPedras;
+    private int[] mCartelasGanhadoras;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,11 +42,12 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        mPedras = getIntent().getParcelableArrayListExtra(Constant.EXTRA_PEDRAS);
+        mCartelasGanhadoras = getIntent().getIntArrayExtra(Constant.EXTRA_CARTELAS_GANHADORAS);
+
         Bundle bundle = new Bundle();
         bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
-        bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS,
-                getIntent().getParcelableArrayListExtra(Constant.EXTRA_PEDRAS));
-//        getIntent().getParcelableArrayListExtra(Constant.EXTRA_CARTELAS);
+        bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS, mPedras);
         mVisualizaCartelasFragment.setArguments(bundle);
 
         ActivityUtils.addFragmentToActivity(

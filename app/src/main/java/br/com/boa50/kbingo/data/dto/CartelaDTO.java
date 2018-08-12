@@ -11,16 +11,19 @@ public class CartelaDTO implements Parcelable{
     private int cartelaId;
     private List<CartelaPedra> cartelaPedras;
     private int qtdPedrasSorteadas;
+    private boolean ganhadora;
 
     public CartelaDTO(int cartelaId, List<CartelaPedra> cartelaPedras) {
         this.cartelaId = cartelaId;
         this.cartelaPedras = cartelaPedras;
         this.qtdPedrasSorteadas = 0;
+        this.ganhadora = false;
     }
 
     protected CartelaDTO(Parcel in) {
         cartelaId = in.readInt();
         qtdPedrasSorteadas = in.readInt();
+        ganhadora = in.readByte() != 0;
     }
 
     public static final Creator<CartelaDTO> CREATOR = new Creator<CartelaDTO>() {
@@ -59,14 +62,23 @@ public class CartelaDTO implements Parcelable{
         this.qtdPedrasSorteadas = qtdPedrasSorteadas;
     }
 
+    public boolean isGanhadora() {
+        return ganhadora;
+    }
+
+    public void setGanhadora(boolean ganhadora) {
+        this.ganhadora = ganhadora;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(cartelaId);
-        dest.writeInt(qtdPedrasSorteadas);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(cartelaId);
+        parcel.writeInt(qtdPedrasSorteadas);
+        parcel.writeByte((byte) (ganhadora ? 1 : 0));
     }
 }
