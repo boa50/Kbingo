@@ -42,6 +42,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
         bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS,
                 getIntent().getParcelableArrayListExtra(Constant.EXTRA_PEDRAS));
+//        getIntent().getParcelableArrayListExtra(Constant.EXTRA_CARTELAS);
         mVisualizaCartelasFragment.setArguments(bundle);
 
         ActivityUtils.addFragmentToActivity(
