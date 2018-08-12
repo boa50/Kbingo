@@ -11,9 +11,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.data.AppDataSource;
+import br.com.boa50.kbingo.data.dto.CartelaDTO;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
+import br.com.boa50.kbingo.util.CartelaUtils;
 import br.com.boa50.kbingo.util.PedraUtils;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -32,6 +34,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     private int mTipoSorteio;
 
     private List<Integer> mPosicoes;
+    private ArrayList<CartelaDTO> mCartelas;
 
     @Inject
     RealizaSorteioPresenter(
@@ -55,19 +58,22 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             mPedras = state.getPedras();
             mUltimaPedraSorteada = state.getUltimaPedraSorteada();
             mTipoSorteio = state.getTipoSorteio();
+            mCartelas = state.getCartelas();
         } else {
             mPedras = null;
             mUltimaPedraSorteada = null;
             mTipoSorteio = TipoSorteioDTO.CARTELA_CHEIA;
+            mCartelas = null;
         }
 
         carregarPedras();
+        carregarCartelas();
     }
 
     @NonNull
     @Override
     public RealizaSorteioContract.State getState() {
-        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada, mTipoSorteio);
+        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada, mTipoSorteio, mCartelas);
     }
 
     @Override
@@ -85,6 +91,8 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             mUltimaPedraSorteada.setSorteada(true);
             mView.apresentarPedra(mUltimaPedraSorteada);
 
+            atualizarCartelasSorteadas();
+
             mView.atualizarPedra(mPosicoes.get(0));
             mPosicoes.remove(0);
         }
@@ -100,9 +108,11 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         for (Pedra pedra : mPedras) {
             pedra.setSorteada(false);
         }
+        for (CartelaDTO cartela : mCartelas) {
+            cartela.setQtdPedrasSorteadas(0);
+        }
 
         preencherPosicoesSorteio();
-
         mUltimaPedraSorteada = null;
 
         mView.reiniciarSorteio();
@@ -138,6 +148,46 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             mCompositeDisposable.add(disposable);
         } else {
             iniciarLayout();
+        }
+    }
+
+    private void carregarCartelas() {
+        Disposable disposable = mAppDataSource
+                .getCartelaUltimoId()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui())
+                .subscribe(
+                        this::carregarCartelas
+                );
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    private void carregarCartelas(int maxId) {
+        mCartelas = new ArrayList<>();
+        for (int i = 1; i <= maxId; i++) {
+            int cartelaId = i;
+            Disposable disposable = mAppDataSource
+                    .getPedrasByCartelaId(cartelaId)
+                    .subscribeOn(mScheduleProvider.io())
+                    .observeOn(mScheduleProvider.ui())
+                    .subscribe(
+                            cartelaPedras -> mCartelas.add(
+                                    new CartelaDTO(cartelaId, cartelaPedras))
+                    );
+
+            mCompositeDisposable.add(disposable);
+        }
+    }
+
+    private void atualizarCartelasSorteadas() {
+        for (CartelaDTO cartela : mCartelas) {
+            if (cartela.getQtdPedrasSorteadas() <
+                    TipoSorteioDTO.getTipoSorteio(mTipoSorteio).getQuantidadePedras() &&
+                    CartelaUtils.hasCartelaPedra(cartela.getCartelaPedras(), mUltimaPedraSorteada)) {
+
+                cartela.setQtdPedrasSorteadas(cartela.getQtdPedrasSorteadas() + 1);
+            }
         }
     }
 

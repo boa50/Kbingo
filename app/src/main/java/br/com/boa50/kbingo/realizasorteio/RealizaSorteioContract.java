@@ -6,6 +6,7 @@ import java.util.List;
 import br.com.boa50.kbingo.BaseState;
 import br.com.boa50.kbingo.BaseStatefulPresenter;
 import br.com.boa50.kbingo.BaseView;
+import br.com.boa50.kbingo.data.dto.CartelaDTO;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 
@@ -31,5 +32,6 @@ public interface RealizaSorteioContract {
         ArrayList<Pedra> getPedras();
         Pedra getUltimaPedraSorteada();
         int getTipoSorteio();
+        ArrayList<CartelaDTO> getCartelas();
     }
 }
