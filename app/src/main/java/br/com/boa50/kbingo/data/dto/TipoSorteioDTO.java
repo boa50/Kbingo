@@ -7,7 +7,6 @@ public class TipoSorteioDTO {
     public static final int DEZ_PEDRAS = 1;
     public static final int CARTELA_CHEIA = 2;
 
-
     private String nome;
     private int quantidadePedras;
 
