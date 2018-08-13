@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -36,7 +35,7 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     ListView lvCartelasGanhadoras;
 
     private Unbinder unbinder;
-    private ArrayList<Integer> mCartelasGanhadoras;
+    private ArrayList<String> mCartelasGanhadoras;
 
     @Inject
     public ConfereCartelasFragment() {}
@@ -60,20 +59,14 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mCartelasGanhadoras = bundle.getIntegerArrayList(Constant.EXTRA_CARTELAS_GANHADORAS);
-        }
+            mCartelasGanhadoras = bundle.getStringArrayList(Constant.EXTRA_CARTELAS_GANHADORAS);
 
-        ArrayList<String> cart = new ArrayList<>();
-        ArrayAdapter adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, cart);
-        lvCartelasGanhadoras.setAdapter(adapter);
-
-        for (int i = 0; i < Objects.requireNonNull(mCartelasGanhadoras).size(); i ++){
-            cart.add(String.format(
-                    Locale.ENGLISH,
-                    Constant.FORMAT_CARTELA,
-                    mCartelasGanhadoras.get(i)));
+            ArrayAdapter adapter = new ArrayAdapter<>(
+                    Objects.requireNonNull(getContext()),
+                    android.R.layout.simple_list_item_1,
+                    mCartelasGanhadoras);
+            lvCartelasGanhadoras.setAdapter(adapter);
         }
-        adapter.notifyDataSetChanged();
     }
 
     @Override
