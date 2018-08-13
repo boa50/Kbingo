@@ -33,7 +33,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
 
     private Unbinder unbinder;
     private ArrayList<Pedra> mPedras;
-    private int[] mCartelasGanhadoras;
+    private ArrayList<Integer> mCartelasGanhadoras;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         mPedras = getIntent().getParcelableArrayListExtra(Constant.EXTRA_PEDRAS);
-        mCartelasGanhadoras = getIntent().getIntArrayExtra(Constant.EXTRA_CARTELAS_GANHADORAS);
+        mCartelasGanhadoras = getIntent().getIntegerArrayListExtra(Constant.EXTRA_CARTELAS_GANHADORAS);
 
         direcionarFragment();
     }
@@ -71,9 +71,9 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         Bundle bundle = new Bundle();
         Fragment fragment;
 
-        if (mCartelasGanhadoras != null && mCartelasGanhadoras.length > 0) {
+        if (mCartelasGanhadoras != null && mCartelasGanhadoras.size() > 0) {
             fragment = mConfereCartelasFragment;
-            bundle.putIntArray(Constant.EXTRA_CARTELAS_GANHADORAS, mCartelasGanhadoras);
+            bundle.putIntegerArrayList(Constant.EXTRA_CARTELAS_GANHADORAS, mCartelasGanhadoras);
         } else {
             fragment = mVisualizaCartelasFragment;
             bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");

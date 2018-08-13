@@ -15,11 +15,11 @@ public final class CartelaUtils {
         return false;
     }
 
-    public static Integer[] getCartelasGanhadoras(List<CartelaDTO> cartelas) {
-        List<Integer> cartelasGanhadoras = new ArrayList<>();
+    public static ArrayList<Integer> getCartelasGanhadoras(List<CartelaDTO> cartelas) {
+        ArrayList<Integer> cartelasGanhadoras = new ArrayList<>();
         for (CartelaDTO cartela : cartelas) {
             if (cartela.isGanhadora()) cartelasGanhadoras.add(cartela.getCartelaId());
         }
-        return cartelasGanhadoras.toArray(new Integer[cartelasGanhadoras.size()]);
+        return cartelasGanhadoras;
     }
 }
