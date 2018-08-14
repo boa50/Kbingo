@@ -70,6 +70,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
     private void direcionarFragment() {
         Bundle bundle = new Bundle();
         Fragment fragment;
+        bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS, mPedras);
 
         if (mCartelasGanhadoras != null && mCartelasGanhadoras.size() > 0) {
             fragment = mConfereCartelasFragment;
@@ -77,7 +78,6 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         } else {
             fragment = mVisualizaCartelasFragment;
             bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
-            bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS, mPedras);
         }
 
         fragment.setArguments(bundle);
