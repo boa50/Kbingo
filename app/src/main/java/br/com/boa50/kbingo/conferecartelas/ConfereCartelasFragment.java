@@ -18,6 +18,8 @@ import javax.inject.Inject;
 import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.di.ActivityScoped;
+import br.com.boa50.kbingo.util.ActivityUtils;
+import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -30,6 +32,8 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     Context mContext;
     @Inject
     ConfereCartelasContract.Presenter mPresenter;
+    @Inject
+    VisualizaCartelasFragment mVisualizaCartelasFragment;
 
     @BindView(R.id.lv_cartelas_ganhadoras)
     ListView lvCartelasGanhadoras;
@@ -66,6 +70,20 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
                     android.R.layout.simple_list_item_1,
                     mCartelasGanhadoras);
             lvCartelasGanhadoras.setAdapter(adapter);
+
+            lvCartelasGanhadoras.setOnItemClickListener((parent, view, position, id) -> {
+                Bundle bundle1 = new Bundle();
+                bundle1.putString(Constant.EXTRA_ULTIMA_CARTELA, mCartelasGanhadoras.get(position));
+                bundle1.putParcelableArrayList(Constant.EXTRA_PEDRAS,
+                        getArguments().getParcelableArrayList(Constant.EXTRA_PEDRAS));
+                mVisualizaCartelasFragment.setArguments(bundle1);
+
+                ActivityUtils.addFragmentToActivity(
+                        Objects.requireNonNull(getActivity()).getSupportFragmentManager(),
+                        mVisualizaCartelasFragment,
+                        R.id.conteudoFrame
+                );
+            });
         }
     }
 
