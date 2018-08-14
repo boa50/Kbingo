@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.google.common.collect.Lists;
+
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -23,6 +25,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
@@ -33,6 +36,8 @@ import static br.com.boa50.kbingo.CustomMatchers.withBackgroundDrawable;
 public class ConfereCartelasEspressoTest {
     private static AppDatabase db;
     private static ArrayList<Pedra> pedrasMock;
+    private static ArrayList<String> cartelasGanhadorasMock;
+
 
     @Rule
     public ActivityTestRule<ConfereCartelasActivity> mActivityRule =
@@ -61,12 +66,19 @@ public class ConfereCartelasEspressoTest {
         }
 
         pedrasMock.get(14 - 1).setSorteada(true);
+
+        cartelasGanhadorasMock = Lists.newArrayList(
+                "0001",
+                "0002",
+                "0005"
+        );
     }
 
     @Before
     public void setupTest() {
         Intent intent = new Intent();
         intent.putExtra(Constant.EXTRA_PEDRAS, pedrasMock);
+        intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS, cartelasGanhadorasMock);
         mActivityRule.launchActivity(intent);
     }
 
@@ -95,5 +107,13 @@ public class ConfereCartelasEspressoTest {
                 .check(matches(withBackgroundDrawable(
                         mActivityRule.getActivity().getResources()
                                 .getDrawable(R.drawable.customborder))));
+    }
+
+    @Test
+    public void receberCartelaGanhadora_apresentarTodasGanhadoras() {
+        for (int i = 0; i < cartelasGanhadorasMock.size(); i++) {
+            onView(withText(cartelasGanhadorasMock.get(i)))
+                    .check(matches(isDisplayed()));
+        }
     }
 }
