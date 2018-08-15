@@ -22,6 +22,7 @@ import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -89,14 +90,13 @@ public class ConfereCartelasEspressoTest {
 
     @Test
     public void pedraSorteada_aparecerFundoVerde() {
-        onView(withId(R.id.et_numero_cartela)).perform(replaceText("0001"));
-        onView(withId(R.id.et_numero_cartela)).perform(pressImeActionButton());
+        onView(withText(cartelasGanhadorasMock.get(0)))
+                .perform(click());
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        onView(withId(R.id.et_numero_cartela))
+                .perform(replaceText("0001"));
+        onView(withId(R.id.et_numero_cartela))
+                .perform(pressImeActionButton());
 
         onView(withText("14"))
                 .check(matches(withBackgroundDrawable(
@@ -115,5 +115,15 @@ public class ConfereCartelasEspressoTest {
             onView(withText(cartelasGanhadorasMock.get(i)))
                     .check(matches(isDisplayed()));
         }
+    }
+
+    @Test
+    public void apertarCartelaGanhadora_apresentarCartelaCorreta() {
+        int i = 1;
+        onView(withText(cartelasGanhadorasMock.get(i)))
+                .perform(click());
+
+        onView(withId(R.id.et_numero_cartela))
+                .check(matches(withText(cartelasGanhadorasMock.get(i))));
     }
 }
