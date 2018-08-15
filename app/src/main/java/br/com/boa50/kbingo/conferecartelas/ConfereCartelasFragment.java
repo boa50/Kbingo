@@ -40,6 +40,7 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
 
     private Unbinder unbinder;
     private ArrayList<String> mCartelasGanhadoras;
+    private String title;
 
     @Inject
     public ConfereCartelasFragment() {}
@@ -57,6 +58,11 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         mPresenter.subscribe(this);
@@ -64,6 +70,10 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
         Bundle bundle = getArguments();
         if (bundle != null) {
             mCartelasGanhadoras = bundle.getStringArrayList(Constant.EXTRA_CARTELAS_GANHADORAS);
+
+            Objects.requireNonNull(getActivity())
+                    .setTitle(getString(R.string.cartelas_ganhadoras_title) + " - " +
+                    mCartelasGanhadoras.size() + " Cartelas");
 
             ArrayAdapter adapter = new ArrayAdapter<>(
                     Objects.requireNonNull(getContext()),
@@ -83,7 +93,8 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
                 ActivityUtils.addFragmentToActivity(
                         Objects.requireNonNull(getActivity()).getSupportFragmentManager(),
                         mVisualizaCartelasFragment,
-                        R.id.conteudoFrame
+                        R.id.conteudoFrame,
+                        true
                 );
             });
         }
