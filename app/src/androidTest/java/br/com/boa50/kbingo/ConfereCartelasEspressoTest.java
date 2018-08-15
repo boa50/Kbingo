@@ -22,6 +22,7 @@ import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -131,5 +132,21 @@ public class ConfereCartelasEspressoTest {
 
         onView(withId(R.id.et_numero_cartela))
                 .check(matches(withText(cartelasGanhadorasMock.get(i))));
+    }
+
+    @Test
+    public void apertarCartelaGanhadora_voltarTelaCartelas() {
+        onView(withText(cartelasGanhadorasMock.get(0)))
+                .perform(click());
+
+        pressBack();
+
+        onView(withText(mActivityRule.getActivity().getTitle().toString()))
+                .check(matches(withText(
+                        mActivityRule.getActivity().getString(R.string.cartelas_ganhadoras_title) +
+                                " - " + cartelasGanhadorasMock.size() + " Cartelas"
+                )));
+        onView(withText(cartelasGanhadorasMock.get(cartelasGanhadorasMock.size() - 1)))
+                .check(matches(isDisplayed()));
     }
 }

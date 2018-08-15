@@ -4,13 +4,26 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 public final class ActivityUtils {
     public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
                                              @NonNull Fragment fragment, int layoutId){
-        fragmentManager.beginTransaction()
-                .replace(layoutId, fragment)
-                .commit();
+
+        addFragmentToActivity(fragmentManager, fragment, layoutId, false);
+    }
+
+    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
+                                             @NonNull Fragment fragment,
+                                             int layoutId,
+                                             boolean backStack){
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction()
+                .replace(layoutId, fragment);
+
+        if (backStack) transaction.addToBackStack("");
+
+        transaction.commit();
     }
 
     //TODO: trocar por um modelo usando WindowInsets
