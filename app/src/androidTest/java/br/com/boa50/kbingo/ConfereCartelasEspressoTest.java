@@ -115,6 +115,12 @@ public class ConfereCartelasEspressoTest {
             onView(withText(cartelasGanhadorasMock.get(i)))
                     .check(matches(isDisplayed()));
         }
+
+        onView(withText(mActivityRule.getActivity().getTitle().toString()))
+                .check(matches(withText(
+                        mActivityRule.getActivity().getString(R.string.cartelas_ganhadoras_title) +
+                                " - " + cartelasGanhadorasMock.size() + " Cartelas"
+                )));
     }
 
     @Test

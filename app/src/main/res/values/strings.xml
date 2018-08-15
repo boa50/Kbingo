@@ -3,6 +3,7 @@
     <string name="realizar_sorteio_title">Realizar Sorteio</string>
     <string name="visualizar_cartelas_title">Visualizar Cartela</string>
     <string name="conferir_cartelas_title">Conferir Cartela</string>
+    <string name="cartelas_ganhadoras_title">Cartelas Ganhadoras</string>
     <string name="dialog_negative">Cancelar</string>
     <string name="dialog_confirmative">OK</string>
 
