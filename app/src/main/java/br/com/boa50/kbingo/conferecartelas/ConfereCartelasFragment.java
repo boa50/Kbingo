@@ -78,6 +78,8 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
                         getArguments().getParcelableArrayList(Constant.EXTRA_PEDRAS));
                 mVisualizaCartelasFragment.setArguments(bundle1);
 
+                Objects.requireNonNull(getActivity()).setTitle(R.string.conferir_cartelas_title);
+
                 ActivityUtils.addFragmentToActivity(
                         Objects.requireNonNull(getActivity()).getSupportFragmentManager(),
                         mVisualizaCartelasFragment,
