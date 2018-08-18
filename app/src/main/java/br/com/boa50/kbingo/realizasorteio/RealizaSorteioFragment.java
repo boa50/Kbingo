@@ -197,7 +197,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @Override
     public void apresentarTipoSorteio(boolean tipoAlterado) {
-        if (tipoAlterado) {
+        if (tipoAlterado || (mSharedPref.getInt(getString(R.string.pref_tipo_sorteio), -1) < 0)) {
             mSharedPref.edit()
                     .putInt(getString(R.string.pref_tipo_sorteio), mPresenter.getState().getTipoSorteio())
                     .apply();
