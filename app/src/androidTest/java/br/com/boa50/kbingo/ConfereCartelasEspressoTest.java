@@ -91,7 +91,7 @@ public class ConfereCartelasEspressoTest {
 
     @Test
     public void pedraSorteada_aparecerFundoVerde() {
-        onView(withText(cartelasGanhadorasMock.get(0)))
+        onView(withText(R.string.list_item_confere_outra_cartela))
                 .perform(click());
 
         onView(withId(R.id.et_numero_cartela))
@@ -112,6 +112,9 @@ public class ConfereCartelasEspressoTest {
 
     @Test
     public void receberCartelaGanhadora_apresentarTodasGanhadoras() {
+        onView(withText(R.string.list_item_confere_outra_cartela))
+                .check(matches(isDisplayed()));
+
         for (int i = 0; i < cartelasGanhadorasMock.size(); i++) {
             onView(withText(cartelasGanhadorasMock.get(i)))
                     .check(matches(isDisplayed()));

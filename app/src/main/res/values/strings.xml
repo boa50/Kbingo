@@ -25,6 +25,7 @@
 
     <!--Conferir cartela-->
     <string name="toast_sem_cartela_ganhadora">Ainda não há nenhuma cartela ganhadora</string>
+    <string name="list_item_confere_outra_cartela">Conferir outra cartela</string>
 
     <!--Visualizar cartela-->
     <string name="et_numero_cartela_hint">Número da Cartela</string>
