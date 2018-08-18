@@ -43,6 +43,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         mAppDataSource = appDataSource;
         mScheduleProvider = schedulerProvider;
         mCompositeDisposable = new CompositeDisposable();
+        mTipoSorteio = TipoSorteioDTO.CARTELA_CHEIA;
     }
 
     @Override
