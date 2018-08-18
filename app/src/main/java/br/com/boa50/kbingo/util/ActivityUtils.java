@@ -49,20 +49,14 @@ public final class ActivityUtils {
             view = new View(activity);
         }
         hideSoftKeyboard(imm, view);
-
-//        view.clearFocus();
-//        Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public static void hideSoftKeyboardFrom(Context context, View view) {
-//        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-//        view.clearFocus();
-//        Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
         hideSoftKeyboard((InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE), view);
     }
 
-    private static void hideSoftKeyboard(InputMethodManager imm, View v) {
-        v.clearFocus();
-        Objects.requireNonNull(imm).hideSoftInputFromWindow(v.getWindowToken(), 0);
+    private static void hideSoftKeyboard(InputMethodManager imm, View view) {
+        view.clearFocus();
+        Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
