@@ -313,7 +313,6 @@ public class RealizaSorteioEspressoTest {
     }
 
     @Test
-    //Esse sorteio só funciona se tirar o delay entre clicks do realizar sorteio
     public void sortearPedras_verificarCartelasGanhadoras_retornar_checarNovamente() {
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_alterar_tipo_sorteio))
@@ -328,6 +327,11 @@ public class RealizaSorteioEspressoTest {
         for (int i = 0; i < 7; i++) {
             onView(withId(R.id.bt_sortear_pedra))
                     .perform(click());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         onView(withId(R.id.item_confere_cartelas))
