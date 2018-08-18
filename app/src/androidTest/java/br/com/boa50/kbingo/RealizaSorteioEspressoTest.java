@@ -182,7 +182,12 @@ public class RealizaSorteioEspressoTest {
     }
 
     @Test
-    public void mudarTab_confereCartela_manterInformacoes() {
+    public void sortearPedra_confereCartela_manterInformacoes() {
+        onView(withId(R.id.bt_sortear_pedra))
+                .perform(click());
+
+        String text = getButtonText(withId(R.id.bt_sortear_pedra));
+
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .perform(click());
 
@@ -191,8 +196,11 @@ public class RealizaSorteioEspressoTest {
 
         pressBack();
 
+        onView(withId(R.id.bt_sortear_pedra))
+                .check(matches(withText(text)));
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .check(matches(isSelected()));
+        verificarUltimaPedraSorteada(text.substring(1), true);
     }
 
     @Test
