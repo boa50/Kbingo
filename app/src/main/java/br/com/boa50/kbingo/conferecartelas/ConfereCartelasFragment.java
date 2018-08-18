@@ -40,7 +40,6 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
 
     private Unbinder unbinder;
     private ArrayList<String> mCartelasGanhadoras;
-    private String title;
 
     @Inject
     public ConfereCartelasFragment() {}

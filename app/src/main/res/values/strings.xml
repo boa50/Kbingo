@@ -23,6 +23,9 @@
     <string name="dialog_novo_sorteio_tipo_sorteio_message">Para alterar o tipo de sorteio um novo sorteio deve ser iniciado.</string>
     <string name="dialog_tipo_sorteio_title">Escolha o tipo de sorteio</string>
 
+    <!--Conferir cartela-->
+    <string name="toast_sem_cartela_ganhadora">Ainda não há nenhuma cartela ganhadora</string>
+
     <!--Visualizar cartela-->
     <string name="et_numero_cartela_hint">Número da Cartela</string>
     <string name="toast_cartela_maxima">O maior número de cartela cadastrado é</string>
