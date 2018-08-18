@@ -94,12 +94,12 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private int mTabLetrasSelecionada;
     private SharedPreferences mSharedPref;
     private int mTipoSorteioAlterado;
+    private RealizaSorteioContract.State mState;
 
     @Inject
     public RealizaSorteioFragment() {}
 
     @Override
-    @SuppressWarnings("unchecked")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.realizasorteio_frag, container, false);
@@ -107,7 +107,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         mLastClickTime = 0;
         setHasOptionsMenu(true);
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mTipoSorteioAlterado = -1;
+        mState = null;
 
         return view;
     }
@@ -224,6 +224,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     public void onPause() {
         super.onPause();
         mTabLetrasSelecionada = vpPedrasSorteadas.getCurrentItem();
+        mState = mPresenter.getState();
 
         FragmentManager manager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -233,6 +234,19 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             }
         }
         transaction.commit();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mGridColunas = Constant.QTDE_PEDRAS_LINHA_PORTRAIT;
+        } else {
+            mGridColunas = Constant.QTDE_PEDRAS_LINHA_LANDSCAPE;
+        }
+
+        mPresenter.subscribe(this, mState);
     }
 
     @Override
@@ -246,21 +260,14 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mGridColunas = Constant.QTDE_PEDRAS_LINHA_PORTRAIT;
-        } else {
-            mGridColunas = Constant.QTDE_PEDRAS_LINHA_LANDSCAPE;
-        }
-
         if (savedInstanceState != null) {
-            mPresenter.subscribe(this, readStateFromBundle(savedInstanceState));
+            mState = readStateFromBundle(savedInstanceState);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_NOVO_SORTEIO)) {
                 abrirDialogNovoSorteio(savedInstanceState.getInt(ARGS_TIPO_SORTEIO_ALTERADO));
             }
             mTabLetrasSelecionada = savedInstanceState.getInt(ARGS_TAB_LETRAS_SELECIONADA);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_TIPO_SORTEIO)) abrirDialogTipoSorteio();
         } else {
-            mPresenter.subscribe(this);
             mTabLetrasSelecionada = 0;
             mTipoSorteioAlterado = -1;
         }
@@ -303,10 +310,8 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     public void iniciarLayout(List<Letra> letras) {
         mLetras = letras;
 
-        if (mPageAdapter == null) {
-            mPageAdapter = new PedrasSorteadasPageAdapter(
-                    Objects.requireNonNull(getActivity()).getSupportFragmentManager());
-        }
+        mPageAdapter = new PedrasSorteadasPageAdapter(
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager());
 
         vpPedrasSorteadas.setAdapter(mPageAdapter);
         vpPedrasSorteadas.setOffscreenPageLimit(4);
