@@ -74,6 +74,7 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         mPresenter.subscribe(this);
+        ActivityUtils.hideSoftKeyboardFrom(mContext, Objects.requireNonNull(getView()));
 
         Bundle bundle = getArguments();
         if (bundle != null) {
