@@ -153,15 +153,17 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     }
 
     private void carregarCartelas() {
-        Disposable disposable = mAppDataSource
-                .getCartelaUltimoId()
-                .subscribeOn(mScheduleProvider.io())
-                .observeOn(mScheduleProvider.ui())
-                .subscribe(
-                        this::carregarCartelas
-                );
+        if (mCartelas == null) {
+            Disposable disposable = mAppDataSource
+                    .getCartelaUltimoId()
+                    .subscribeOn(mScheduleProvider.io())
+                    .observeOn(mScheduleProvider.ui())
+                    .subscribe(
+                            this::carregarCartelas
+                    );
 
-        mCompositeDisposable.add(disposable);
+            mCompositeDisposable.add(disposable);
+        }
     }
 
     private void carregarCartelas(int maxId) {

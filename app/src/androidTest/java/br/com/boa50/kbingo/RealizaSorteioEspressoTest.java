@@ -2,6 +2,7 @@ package br.com.boa50.kbingo;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
+import android.os.SystemClock;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
@@ -309,6 +310,37 @@ public class RealizaSorteioEspressoTest {
         verificarTituloTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA);
 
         verificarUltimaPedraSorteada(textoUltimaPedraSorteada, true);
+    }
+
+    @Test
+    //Esse sorteio só funciona se tirar o delay entre clicks do realizar sorteio
+    public void sortearPedras_verificarCartelasGanhadoras_retornar_checarNovamente() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_alterar_tipo_sorteio))
+                .perform(click());
+        onView(withText(R.string.dialog_tipo_sorteio_title))
+                .check(matches(isDisplayed()));
+        onView(withText(TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS).getNome()))
+                .perform(click());
+        onView(withText(R.string.dialog_confirmative))
+                .perform(click());
+
+        for (int i = 0; i < 7; i++) {
+            onView(withId(R.id.bt_sortear_pedra))
+                    .perform(click());
+        }
+
+        onView(withId(R.id.item_confere_cartelas))
+                .perform(click());
+        onView(withText(R.string.list_item_confere_outra_cartela))
+                .check(matches(isDisplayed()));
+
+        pressBack();
+
+        onView(withId(R.id.item_confere_cartelas))
+                .perform(click());
+        onView(withText(R.string.list_item_confere_outra_cartela))
+                .check(matches(isDisplayed()));
     }
 
     private void verificarLayoutPadrao(String textoUltimaPedraSorteada) {
