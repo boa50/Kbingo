@@ -111,6 +111,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         }
         for (CartelaDTO cartela : mCartelas) {
             cartela.setQtdPedrasSorteadas(0);
+            cartela.setGanhadora(false);
         }
 
         preencherPosicoesSorteio();
