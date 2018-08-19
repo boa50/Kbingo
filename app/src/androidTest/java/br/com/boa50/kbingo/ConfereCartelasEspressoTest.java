@@ -26,6 +26,7 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -33,6 +34,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
 import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
 import static br.com.boa50.kbingo.CustomMatchers.withBackgroundDrawable;
+import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class ConfereCartelasEspressoTest {
@@ -151,5 +153,16 @@ public class ConfereCartelasEspressoTest {
                 )));
         onView(withText(cartelasGanhadorasMock.get(cartelasGanhadorasMock.size() - 1)))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void verificarMenuDisponivel() {
+        onView(withId(R.id.item_busca))
+                .check(matches(isDisplayed()));
+
+        onView(withText(R.string.list_item_confere_outra_cartela))
+                .perform(click());
+        onView(withId(R.id.item_busca))
+                .check(doesNotExist());
     }
 }

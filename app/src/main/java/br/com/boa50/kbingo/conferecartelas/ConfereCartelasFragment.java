@@ -12,9 +12,14 @@ import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,6 +32,7 @@ import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.ActivityUtils;
+import br.com.boa50.kbingo.util.ArrayUtils;
 import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +53,8 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     RecyclerView rvCartelasGanhadoras;
 
     private Unbinder unbinder;
+    private ArrayList<String> mCartelasGanhadorasBackup;
+    private ArrayList<String> mCartelasGanhadoras;
 
     @Inject
     public ConfereCartelasFragment() {}
@@ -59,12 +67,34 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.conferecartelas_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
         rvCartelasGanhadoras.setHasFixedSize(true);
         rvCartelasGanhadoras.setLayoutManager(new LinearLayoutManager(mContext));
         rvCartelasGanhadoras.addItemDecoration(new DividerItemDecoration(
                 rvCartelasGanhadoras.getContext(), DividerItemDecoration.VERTICAL));
 
         return view;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem busca = menu.findItem(R.id.item_busca);
+        busca.setVisible(true);
+        SearchView searchView = (SearchView) busca.getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                gerenciarFiltro(newText);
+                return true;
+            }
+        });
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -82,28 +112,33 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            ArrayList<String> cartelasGanhadoras =
-                    bundle.getStringArrayList(Constant.EXTRA_CARTELAS_GANHADORAS);
+            mCartelasGanhadorasBackup = bundle.getStringArrayList(Constant.EXTRA_CARTELAS_GANHADORAS);
 
-            assert cartelasGanhadoras != null;
-            if (!cartelasGanhadoras.get(0).equalsIgnoreCase(
+            assert mCartelasGanhadorasBackup != null;
+            if (!mCartelasGanhadorasBackup.get(0).equalsIgnoreCase(
                     getString(R.string.list_item_confere_outra_cartela))) {
-                cartelasGanhadoras.add(0, getString(R.string.list_item_confere_outra_cartela));
+                mCartelasGanhadorasBackup.add(0, getString(R.string.list_item_confere_outra_cartela));
             }
 
             Objects.requireNonNull(getActivity())
                     .setTitle(getString(R.string.cartelas_ganhadoras_title) + " - " +
-                            (cartelasGanhadoras.size() - 1) + " Cartelas");
+                            (mCartelasGanhadorasBackup.size() - 1) + " Cartelas");
 
+            mCartelasGanhadoras = new ArrayList<>(mCartelasGanhadorasBackup);
             CartelasGanhadorasAdapter adapter =
                     new CartelasGanhadorasAdapter(getActivity(),
                             mVisualizaCartelasFragment,
                             getArguments().getParcelableArrayList(Constant.EXTRA_PEDRAS));
-            adapter.submitList(cartelasGanhadoras);
+            adapter.submitList(mCartelasGanhadoras);
             rvCartelasGanhadoras.setAdapter(adapter);
         }
     }
 
+    private void gerenciarFiltro(String texto) {
+        mCartelasGanhadoras.clear();
+        mCartelasGanhadoras.addAll(ArrayUtils.filtrar(mCartelasGanhadorasBackup, texto));
+        rvCartelasGanhadoras.getAdapter().notifyDataSetChanged();
+    }
 }
 
 class CartelasGanhadorasAdapter extends ListAdapter<String, CartelasGanhadorasAdapter.ViewHolder> {
