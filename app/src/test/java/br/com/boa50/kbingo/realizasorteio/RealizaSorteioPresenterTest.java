@@ -125,7 +125,7 @@ public class RealizaSorteioPresenterTest {
     }
 
     @Test
-    public void sortearTodasPedras_EncerrarSorteio() {
+    public void sortearTodasPedras_encerrarSorteio() {
         for (int i = 0; i <= QUANTIDADE_PEDRAS_SORTEAVEIS; i++) {
             realizaSorteioPresenter.sortearPedra();
         }
@@ -135,7 +135,7 @@ public class RealizaSorteioPresenterTest {
     }
 
     @Test
-    public void resetarPedras_ReiniciarSorteio() {
+    public void resetarPedras_reiniciarSorteio() {
         ArgumentCaptor<Pedra> pedra = ArgumentCaptor.forClass(Pedra.class);
 
         realizaSorteioPresenter.sortearPedra();
@@ -150,20 +150,20 @@ public class RealizaSorteioPresenterTest {
     }
 
     @Test
-    public void alterarTipoSorteio_ApresentarTipoSorteio() {
+    public void alterarTipoSorteio_apresentarTipoSorteio() {
         realizaSorteioPresenter.alterarTipoSorteio(anyInt());
 
         verify(realizaSorteioView).apresentarTipoSorteio(true);
     }
 
     @Test
-    public void carregarCartelas_VerificarQuantidadeCarregada() {
+    public void carregarCartelas_verificarQuantidadeCarregada() {
         assertThat(realizaSorteioPresenter.getState().getCartelas().size(),
                 equalTo(QUANTIDADE_CARTELAS));
     }
 
     @Test
-    public void sortearPedras_AtualizarQuantidadePedrasSorteadas() {
+    public void sortearPedras_atualizarQuantidadePedrasSorteadas() {
         ArgumentCaptor<Pedra> pedra = ArgumentCaptor.forClass(Pedra.class);
 
         realizaSorteioPresenter.sortearPedra();
@@ -185,7 +185,7 @@ public class RealizaSorteioPresenterTest {
     }
 
     @Test
-    public void sortearPedras_VerificarCartelaGanhadora() {
+    public void sortearPedras_verificarCartelaGanhadora() {
         for (int i = 0; i < QUANTIDADE_PEDRAS_SORTEAVEIS; i++) {
             realizaSorteioPresenter.sortearPedra();
         }
@@ -197,27 +197,33 @@ public class RealizaSorteioPresenterTest {
     }
 
     @Test
-    public void sortearPedras_RealizarNovoSorteio_LimparQuantidadePedrasSorteadas() {
-        realizaSorteioPresenter.sortearPedra();
-        realizaSorteioPresenter.sortearPedra();
-
-        realizaSorteioPresenter.resetarPedras();
-        List<CartelaDTO> cartelas = realizaSorteioPresenter.getState().getCartelas();
-
-        for (int i = 0; i < cartelas.size(); i++) {
-            assertThat(cartelas.get(i).getQtdPedrasSorteadas(), equalTo(0));
-        }
-    }
-
-    @Test
-    public void sortearPedras_RegistrarMaxPedrasSorteadasPorCartela() {
+    public void sortearPedras_registrarMaxPedrasSorteadasPorCartela() {
         for (int i = 0; i < QUANTIDADE_PEDRAS_SORTEAVEIS; i++) {
             realizaSorteioPresenter.sortearPedra();
         }
         List<CartelaDTO> cartelas = realizaSorteioPresenter.getState().getCartelas();
 
         for (int i = 0; i < cartelas.size(); i++) {
-            assertThat(cartelas.get(i).getQtdPedrasSorteadas(), equalTo(cartelas.get(i).getCartelaPedras().size()));
+            assertThat(cartelas.get(i).getQtdPedrasSorteadas(),
+                    equalTo(cartelas.get(i).getCartelaPedras().size()));
+        }
+    }
+
+    @Test
+    public void sortearPedras_verificarCartelaGanhadora_resetarPedras_zerarGanhadoras_zerarPedrasSorteadas() {
+        for (int i = 0; i < QUANTIDADE_PEDRAS_SORTEAVEIS; i++) {
+            realizaSorteioPresenter.sortearPedra();
+        }
+        List<CartelaDTO> cartelas = realizaSorteioPresenter.getState().getCartelas();
+
+        for (int i = 0; i < cartelas.size(); i++) {
+            assertThat(cartelas.get(i).isGanhadora(), equalTo(true));
+        }
+
+        realizaSorteioPresenter.resetarPedras();
+        for (int i = 0; i < cartelas.size(); i++) {
+            assertThat(cartelas.get(i).isGanhadora(), equalTo(false));
+            assertThat(cartelas.get(i).getQtdPedrasSorteadas(), equalTo(0));
         }
     }
 }
