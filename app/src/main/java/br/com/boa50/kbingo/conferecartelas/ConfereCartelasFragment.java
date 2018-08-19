@@ -1,6 +1,7 @@
 package br.com.boa50.kbingo.conferecartelas;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,6 +61,8 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
         unbinder = ButterKnife.bind(this, view);
         rvCartelasGanhadoras.setHasFixedSize(true);
         rvCartelasGanhadoras.setLayoutManager(new LinearLayoutManager(mContext));
+        rvCartelasGanhadoras.addItemDecoration(new DividerItemDecoration(
+                rvCartelasGanhadoras.getContext(), DividerItemDecoration.VERTICAL));
 
         return view;
     }
@@ -107,6 +111,11 @@ class CartelasGanhadorasAdapter extends ListAdapter<String, CartelasGanhadorasAd
     private Fragment mFragment;
     private ArrayList<Pedra> mPedras;
 
+    private class VIEW_TYPES {
+        static final int Header = 1;
+        static final int Normal = 2;
+    }
+
     CartelasGanhadorasAdapter(FragmentActivity fragmentActivity, Fragment fragment, ArrayList<Pedra> pedras) {
         super(DIFF_CALLBACK);
         mFragmentActivity = fragmentActivity;
@@ -114,10 +123,19 @@ class CartelasGanhadorasAdapter extends ListAdapter<String, CartelasGanhadorasAd
         mPedras = pedras;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) return VIEW_TYPES.Header;
+        else return VIEW_TYPES.Normal;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false));
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_item_cartelas_ganhadoras, parent, false);
+        if (viewType == VIEW_TYPES.Header) return new ViewHolder(view, true);
+        else return new ViewHolder(view);
     }
 
     @Override
@@ -142,8 +160,13 @@ class CartelasGanhadorasAdapter extends ListAdapter<String, CartelasGanhadorasAd
         TextView mTextView;
 
         ViewHolder(View v) {
+            this(v, false);
+        }
+
+        ViewHolder(View v, boolean header) {
             super(v);
-            mTextView = v.findViewById(android.R.id.text1);
+            mTextView = v.findViewById(R.id.tv_cartela_numero);
+            if (header) mTextView.setTypeface(null, Typeface.BOLD);
             v.setOnClickListener(this);
         }
 
