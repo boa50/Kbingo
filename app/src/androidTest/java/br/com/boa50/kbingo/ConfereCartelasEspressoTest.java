@@ -34,7 +34,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
 import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
 import static br.com.boa50.kbingo.CustomMatchers.withBackgroundDrawable;
-import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class ConfereCartelasEspressoTest {

@@ -2,7 +2,6 @@ package br.com.boa50.kbingo;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
-import android.os.SystemClock;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
