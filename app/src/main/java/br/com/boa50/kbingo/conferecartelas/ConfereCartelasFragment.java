@@ -18,8 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,7 +30,6 @@ import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.ActivityUtils;
-import br.com.boa50.kbingo.util.ArrayUtils;
 import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,8 +50,6 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     RecyclerView rvCartelasGanhadoras;
 
     private Unbinder unbinder;
-    private ArrayList<String> mCartelasGanhadorasBackup;
-    private ArrayList<String> mCartelasGanhadoras;
 
     @Inject
     public ConfereCartelasFragment() {}
@@ -90,7 +85,7 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                gerenciarFiltro(newText);
+                mPresenter.filtrarCartelas(newText);
                 return true;
             }
         });
@@ -107,36 +102,32 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        mPresenter.subscribe(this);
         ActivityUtils.hideSoftKeyboardFrom(mContext, Objects.requireNonNull(getView()));
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            mCartelasGanhadorasBackup = bundle.getStringArrayList(Constant.EXTRA_CARTELAS_GANHADORAS);
-
-            assert mCartelasGanhadorasBackup != null;
-            if (!mCartelasGanhadorasBackup.get(0).equalsIgnoreCase(
-                    getString(R.string.list_item_confere_outra_cartela))) {
-                mCartelasGanhadorasBackup.add(0, getString(R.string.list_item_confere_outra_cartela));
-            }
-
-            Objects.requireNonNull(getActivity())
-                    .setTitle(getString(R.string.cartelas_ganhadoras_title) + " - " +
-                            (mCartelasGanhadorasBackup.size() - 1) + " Cartelas");
-
-            mCartelasGanhadoras = new ArrayList<>(mCartelasGanhadorasBackup);
-            CartelasGanhadorasAdapter adapter =
-                    new CartelasGanhadorasAdapter(getActivity(),
-                            mVisualizaCartelasFragment,
-                            getArguments().getParcelableArrayList(Constant.EXTRA_PEDRAS));
-            adapter.submitList(mCartelasGanhadoras);
-            rvCartelasGanhadoras.setAdapter(adapter);
+        if (getArguments() != null) {
+            mPresenter.subscribe(this,
+                    getArguments().getStringArrayList(Constant.EXTRA_CARTELAS_GANHADORAS),
+                    getString(R.string.list_item_confere_outra_cartela));
         }
     }
 
-    private void gerenciarFiltro(String texto) {
-        mCartelasGanhadoras.clear();
-        mCartelasGanhadoras.addAll(ArrayUtils.filtrar(mCartelasGanhadorasBackup, texto));
+    @Override
+    public void apresentarCartelas() {
+        Objects.requireNonNull(getActivity())
+                .setTitle(getString(R.string.cartelas_ganhadoras_title) + " - " +
+                        mPresenter.getCartelasGanhadorasSize() + " Cartelas");
+
+        assert getArguments() != null;
+        CartelasGanhadorasAdapter adapter =
+                new CartelasGanhadorasAdapter(getActivity(),
+                        mVisualizaCartelasFragment,
+                        getArguments().getParcelableArrayList(Constant.EXTRA_PEDRAS));
+        adapter.submitList(mPresenter.getCartelasGanhadoras());
+        rvCartelasGanhadoras.setAdapter(adapter);
+    }
+
+    @Override
+    public void apresentarCartelasFiltradas() {
         rvCartelasGanhadoras.getAdapter().notifyDataSetChanged();
     }
 }
