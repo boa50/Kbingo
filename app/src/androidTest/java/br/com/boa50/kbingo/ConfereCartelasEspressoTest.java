@@ -1,6 +1,7 @@
 package br.com.boa50.kbingo;
 
 import android.content.Intent;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -26,6 +27,7 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -92,8 +94,8 @@ public class ConfereCartelasEspressoTest {
 
     @Test
     public void pedraSorteada_aparecerFundoVerde() {
-        onView(withText(R.string.list_item_confere_outra_cartela))
-                .perform(click());
+        onView(withId(R.id.rv_cartelas_ganhadoras))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         onView(withId(R.id.et_numero_cartela))
                 .perform(replaceText("0001"));
@@ -159,9 +161,30 @@ public class ConfereCartelasEspressoTest {
         onView(withId(R.id.item_busca))
                 .check(matches(isDisplayed()));
 
-        onView(withText(R.string.list_item_confere_outra_cartela))
-                .perform(click());
+        onView(withId(R.id.rv_cartelas_ganhadoras))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.item_busca))
                 .check(doesNotExist());
+    }
+
+    @Test
+    public void filtrarCartelas_selecinarCartela_conferirCartela() {
+        String cartelaFiltrada = "0001";
+
+        onView(withId(R.id.item_busca))
+                .perform(click());
+
+        onView(withId(android.support.design.R.id.search_src_text))
+                .perform(typeText(cartelaFiltrada));
+
+        onView(withId(R.id.rv_cartelas_ganhadoras))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        onView(withId(R.id.et_numero_cartela))
+                .check(matches(isDisplayed()));
+        onView(withText(cartelaFiltrada))
+                .check(matches(isDisplayed()));
+        onView(withText("14"))
+                .check(matches(isDisplayed()));
     }
 }

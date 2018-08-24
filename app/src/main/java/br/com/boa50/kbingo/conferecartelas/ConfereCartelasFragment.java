@@ -50,6 +50,7 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     RecyclerView rvCartelasGanhadoras;
 
     private Unbinder unbinder;
+    private SearchView mSearchView;
 
     @Inject
     public ConfereCartelasFragment() {}
@@ -75,9 +76,9 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem busca = menu.findItem(R.id.item_busca);
         busca.setVisible(true);
-        SearchView searchView = (SearchView) busca.getActionView();
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView = (SearchView) busca.getActionView();
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -95,6 +96,7 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mSearchView.setOnQueryTextListener(null);
         unbinder.unbind();
         mPresenter.unsubscribe();
     }
