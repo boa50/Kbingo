@@ -13,6 +13,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -78,6 +79,7 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
         busca.setVisible(true);
         mSearchView = (SearchView) busca.getActionView();
         mSearchView.setMaxWidth(Integer.MAX_VALUE);
+        mSearchView.setInputType(InputType.TYPE_CLASS_NUMBER);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
