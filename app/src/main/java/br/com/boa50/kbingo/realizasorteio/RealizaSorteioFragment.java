@@ -107,7 +107,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         mLastClickTime = 0;
         setHasOptionsMenu(true);
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mState = null;
 
         return view;
     }
@@ -268,7 +267,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mTabLetrasSelecionada = savedInstanceState.getInt(ARGS_TAB_LETRAS_SELECIONADA);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_TIPO_SORTEIO)) abrirDialogTipoSorteio();
         } else {
-            mTabLetrasSelecionada = 0;
             mTipoSorteioAlterado = -1;
         }
 
