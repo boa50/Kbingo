@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -95,6 +96,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private SharedPreferences mSharedPref;
     private int mTipoSorteioAlterado;
     private RealizaSorteioContract.State mState;
+    private TextView mTextoCartelasBadge;
 
     @Inject
     public RealizaSorteioFragment() {}
@@ -115,7 +117,14 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.item_novo_sorteio).setVisible(true);
         menu.findItem(R.id.item_alterar_tipo_sorteio).setVisible(true);
-        menu.findItem(R.id.item_confere_cartelas).setVisible(true);
+
+        MenuItem itemConfereCartelas = menu.findItem(R.id.item_confere_cartelas);
+        itemConfereCartelas.setVisible(true);
+        View actionView = itemConfereCartelas.getActionView();
+        mTextoCartelasBadge = actionView.findViewById(R.id.item_confere_cartelas_badge);
+        actionView.setOnClickListener(v -> onOptionsItemSelected(itemConfereCartelas));
+        atualizarCartelasGanhadorasBadge();
+
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -324,6 +333,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         PedrasSorteadasFragment fragment =
                 (PedrasSorteadasFragment) mPageAdapter.getFragment(position/QTDE_PEDRAS_LETRA);
         fragment.transitarTextViewPedra(mPresenter.getState().getPedras().get(position).getId());
+
     }
 
     @Override
@@ -339,6 +349,25 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         }
         mPageAdapter.notifyDataSetChanged();
         vpPedrasSorteadas.setCurrentItem(0);
+    }
+
+    @Override
+    public void atualizarCartelasGanhadorasBadge() {
+        int qtdCartelasGanhadora = mPresenter.getState().getQtdCartelasGanhadoras();
+
+        if (qtdCartelasGanhadora > 0) {
+            if (qtdCartelasGanhadora <= 9) {
+                mTextoCartelasBadge.setText(String.format(
+                        Locale.ENGLISH,
+                        Constant.FORMAT_PEDRA,
+                        qtdCartelasGanhadora));
+            } else {
+                mTextoCartelasBadge.setText(R.string.item_confere_cartelas_badge_texto_plus);
+            }
+            mTextoCartelasBadge.setVisibility(View.VISIBLE);
+        } else {
+            mTextoCartelasBadge.setVisibility(View.GONE);
+        }
     }
 
     public class PedrasSorteadasPageAdapter extends FragmentPagerAdapter {

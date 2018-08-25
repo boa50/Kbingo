@@ -19,6 +19,11 @@
     <dimen name="pedras_tab_height">72dp</dimen>
     <dimen name="pedras_tab_elevation">4dp</dimen>
     <dimen name="pedras_tab_indicator_height">4dp</dimen>
+    <dimen name="badge_cartela_lado">22dp</dimen>
+    <dimen name="badge_cartela_margin_end">-8dp</dimen>
+    <dimen name="badge_cartela_margin_top">2dp</dimen>
+    <dimen name="badge_cartela_padding">3dp</dimen>
+    <dimen name="badge_cartela_text_size">12sp</dimen>
 
     <!--Visualizar cartela-->
     <dimen name="input_layout_hint_size">24sp</dimen>

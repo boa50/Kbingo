@@ -14,6 +14,7 @@
 
     <color name="colorAccent">@color/colorSecondary</color>
     <color name="rippleBlack">#40000000</color>
+    <color name="vermelhoDestaque">#D50000</color>
 
     <color name="textoPadrao">@color/textSecondary</color>
     <color name="backgroundPadrao">#FAFAFA</color>
@@ -23,13 +24,14 @@
     <color name="pedraSecundariaEnabled">@color/textPrimary</color>
     <color name="pedraPrimariaDisabled">#757575</color>
     <color name="pedraSecundariaDisabled">@color/textPrimary</color>
-    <color name="pedraTextoEnabled">#D50000</color>
+    <color name="pedraTextoEnabled">@color/vermelhoDestaque</color>
     <color name="headerBackground">@color/colorPrimaryDark</color>
     <color name="headerTexto">@color/textPrimary</color>
     <color name="tabTextoOpcao">#801B1B1B</color>
+    <color name="badgeItemCartelas">@color/vermelhoDestaque</color>
 
     <!--Visualizar cartelas-->
-    <color name="headerCartelaTexto">#D50000</color>
+    <color name="headerCartelaTexto">@color/vermelhoDestaque</color>
     <color name="pedraSorteadaCartela">#B2FF59</color>
     <color name="cartelaBorder">#333333</color>
 </resources>

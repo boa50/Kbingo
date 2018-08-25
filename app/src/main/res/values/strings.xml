@@ -22,6 +22,8 @@
     <string name="dialog_novo_sorteio_positive">Novo Sorteio</string>
     <string name="dialog_novo_sorteio_tipo_sorteio_message">Para alterar o tipo de sorteio um novo sorteio deve ser iniciado.</string>
     <string name="dialog_tipo_sorteio_title">Escolha o tipo de sorteio</string>
+    <string name="item_confere_cartelas_content_description">Imagem de cartela</string>
+    <string name="item_confere_cartelas_badge_texto_plus">+9</string>
 
     <!--Conferir cartela-->
     <string name="toast_sem_cartela_ganhadora">Ainda não há nenhuma cartela ganhadora</string>

@@ -20,6 +20,7 @@ import io.reactivex.Single;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
@@ -88,7 +89,7 @@ public class RealizaSorteioPresenterTest {
         QUANTIDADE_CARTELAS = CARTELAS_PEDRAS.size();
 
         realizaSorteioPresenter.subscribe(realizaSorteioView,
-                new RealizaSorteioState(null, null, TipoSorteioDTO.CINCO_PEDRAS, null));
+                new RealizaSorteioState(null, null, TipoSorteioDTO.CINCO_PEDRAS, null, 0));
     }
 
     @Test
@@ -150,9 +151,14 @@ public class RealizaSorteioPresenterTest {
     }
 
     @Test
+    public void resetarPedras_atualizarCartelasGanhadorasBadge() {
+        realizaSorteioPresenter.resetarPedras();
+        verify(realizaSorteioView).atualizarCartelasGanhadorasBadge();
+    }
+
+    @Test
     public void alterarTipoSorteio_apresentarTipoSorteio() {
         realizaSorteioPresenter.alterarTipoSorteio(anyInt());
-
         verify(realizaSorteioView).apresentarTipoSorteio(true);
     }
 
@@ -185,7 +191,7 @@ public class RealizaSorteioPresenterTest {
     }
 
     @Test
-    public void sortearPedras_verificarCartelaGanhadora() {
+    public void sortearPedras_verificarCartelaGanhadora_atualizarCartelasGanhadorasBadge() {
         for (int i = 0; i < QUANTIDADE_PEDRAS_SORTEAVEIS; i++) {
             realizaSorteioPresenter.sortearPedra();
         }
@@ -194,6 +200,9 @@ public class RealizaSorteioPresenterTest {
         for (int i = 0; i < cartelas.size(); i++) {
             assertThat(cartelas.get(i).isGanhadora(), equalTo(true));
         }
+
+        assertThat(realizaSorteioPresenter.getState().getQtdCartelasGanhadoras(), greaterThan(0));
+        verify(realizaSorteioView, times(2)).atualizarCartelasGanhadorasBadge();
     }
 
     @Test
