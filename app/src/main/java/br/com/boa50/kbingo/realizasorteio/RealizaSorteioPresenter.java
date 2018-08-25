@@ -29,12 +29,14 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     private final BaseSchedulerProvider mScheduleProvider;
     private CompositeDisposable mCompositeDisposable;
 
+    private List<Integer> mPosicoes;
+
     private ArrayList<Pedra> mPedras;
     private Pedra mUltimaPedraSorteada;
     private int mTipoSorteio;
-
-    private List<Integer> mPosicoes;
     private ArrayList<CartelaDTO> mCartelas;
+    private int mQtdCartelasGanhadoras;
+
 
     @Inject
     RealizaSorteioPresenter(
@@ -60,11 +62,13 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             mUltimaPedraSorteada = state.getUltimaPedraSorteada();
             mTipoSorteio = state.getTipoSorteio();
             mCartelas = state.getCartelas();
+            mQtdCartelasGanhadoras = state.getQtdCartelasGanhadoras();
         } else {
             mPedras = null;
             mUltimaPedraSorteada = null;
             mTipoSorteio = TipoSorteioDTO.CARTELA_CHEIA;
             mCartelas = null;
+            mQtdCartelasGanhadoras = 0;
         }
 
         carregarPedras();
@@ -74,7 +78,8 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     @NonNull
     @Override
     public RealizaSorteioContract.State getState() {
-        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada, mTipoSorteio, mCartelas);
+        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada, mTipoSorteio, mCartelas,
+                mQtdCartelasGanhadoras);
     }
 
     @Override
@@ -116,6 +121,8 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
         preencherPosicoesSorteio();
         mUltimaPedraSorteada = null;
+        mQtdCartelasGanhadoras = 0;
+        mView.atualizarCartelasGanhadorasBadge();
 
         mView.reiniciarSorteio();
     }
@@ -192,7 +199,11 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
                 cartela.setQtdPedrasSorteadas(cartela.getQtdPedrasSorteadas() + 1);
 
-                if (cartela.getQtdPedrasSorteadas() >= qtdePedrasSorteio) cartela.setGanhadora(true);
+                if (cartela.getQtdPedrasSorteadas() >= qtdePedrasSorteio) {
+                    cartela.setGanhadora(true);
+                    mQtdCartelasGanhadoras++;
+                    mView.atualizarCartelasGanhadorasBadge();
+                }
             }
         }
     }

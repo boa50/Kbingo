@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout style="?android:attr/actionButtonStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:focusable="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/ic_cartela"
+        android:contentDescription="@string/item_confere_cartelas_content_description" />
+
+    <TextView
+        android:id="@+id/item_confere_cartelas_badge"
+        android:layout_width="@dimen/badge_cartela_lado"
+        android:layout_height="@dimen/badge_cartela_lado"
+        android:layout_gravity="end|top"
+        android:layout_marginEnd="@dimen/badge_cartela_margin_end"
+        android:layout_marginRight="@dimen/badge_cartela_margin_end"
+        android:layout_marginTop="@dimen/badge_cartela_margin_top"
+        android:background="@drawable/badge_background"
+        android:gravity="center"
+        android:padding="@dimen/badge_cartela_padding"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/badge_cartela_text_size"/>
+
+</FrameLayout>
