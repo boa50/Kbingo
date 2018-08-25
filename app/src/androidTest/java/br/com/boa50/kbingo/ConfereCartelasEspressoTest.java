@@ -1,6 +1,7 @@
 package br.com.boa50.kbingo;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -35,6 +36,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
 import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
+import static br.com.boa50.kbingo.CustomMatchers.isFocused;
 import static br.com.boa50.kbingo.CustomMatchers.withBackgroundDrawable;
 
 @RunWith(AndroidJUnit4.class)
@@ -171,10 +173,7 @@ public class ConfereCartelasEspressoTest {
     public void filtrarCartelas_selecinarCartela_conferirCartela() {
         String cartelaFiltrada = "0001";
 
-        onView(withId(R.id.item_busca))
-                .perform(click());
-        onView(withId(android.support.design.R.id.search_src_text))
-                .perform(typeText(cartelaFiltrada));
+        filtrarCartelas(cartelaFiltrada);
 
         onView(withId(R.id.rv_cartelas_ganhadoras))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
@@ -189,10 +188,7 @@ public class ConfereCartelasEspressoTest {
 
     @Test
     public void filtrarCartelas_selecionarCartela_voltar_todasCartelasApresentadas() {
-        onView(withId(R.id.item_busca))
-                .perform(click());
-        onView(withId(android.support.design.R.id.search_src_text))
-                .perform(typeText("1"));
+        filtrarCartelas("1");
 
         onView(withId(R.id.rv_cartelas_ganhadoras))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
@@ -201,5 +197,25 @@ public class ConfereCartelasEspressoTest {
 
         onView(withText(cartelasGanhadorasMock.get(cartelasGanhadorasMock.size()-1)))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void filtrarCartelas_mudarOrientacao_manterInformacoes() {
+        String textoFiltro = "0050";
+        filtrarCartelas(textoFiltro);
+
+        mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        onView(withText(textoFiltro))
+                .check(matches(isDisplayed()));
+        onView(withText(textoFiltro))
+                .check(matches(isFocused()));
+    }
+
+    private void filtrarCartelas(String textoFiltro) {
+        onView(withId(R.id.item_busca))
+                .perform(click());
+        onView(withId(android.support.design.R.id.search_src_text))
+                .perform(typeText(textoFiltro));
     }
 }

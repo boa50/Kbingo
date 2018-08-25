@@ -1,6 +1,7 @@
 package br.com.boa50.kbingo.conferecartelas;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,7 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.InputType;
@@ -39,6 +40,7 @@ import dagger.android.support.DaggerFragment;
 
 @ActivityScoped
 public class ConfereCartelasFragment extends DaggerFragment implements ConfereCartelasContract.View {
+    private static final String ARGS_TEXTO_BUSCA = "textoBusca";
 
     @Inject
     Context mContext;
@@ -52,6 +54,7 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
 
     private Unbinder unbinder;
     private SearchView mSearchView;
+    private String mTextoBusca;
 
     @Inject
     public ConfereCartelasFragment() {}
@@ -65,10 +68,7 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
         View view = inflater.inflate(R.layout.conferecartelas_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        rvCartelasGanhadoras.setHasFixedSize(true);
-        rvCartelasGanhadoras.setLayoutManager(new LinearLayoutManager(mContext));
-        rvCartelasGanhadoras.addItemDecoration(new DividerItemDecoration(
-                rvCartelasGanhadoras.getContext(), DividerItemDecoration.VERTICAL));
+        estilizarRecyclerView();
 
         return view;
     }
@@ -88,10 +88,16 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (!newText.isEmpty()) mTextoBusca = newText;
                 mPresenter.filtrarCartelas(newText);
                 return true;
             }
         });
+
+        if (!mTextoBusca.isEmpty()) {
+            busca.expandActionView();
+            mSearchView.setQuery(mTextoBusca, false);
+        }
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -104,6 +110,12 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(ARGS_TEXTO_BUSCA, mTextoBusca);
+    }
+
+    @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         ActivityUtils.hideSoftKeyboardFrom(mContext, Objects.requireNonNull(getView()));
@@ -113,6 +125,35 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
                     getArguments().getStringArrayList(Constant.EXTRA_CARTELAS_GANHADORAS),
                     getString(R.string.list_item_confere_outra_cartela));
         }
+
+        if (savedInstanceState != null) {
+            mTextoBusca = savedInstanceState.getString(ARGS_TEXTO_BUSCA);
+        } else {
+            mTextoBusca = "";
+        }
+    }
+
+    private void estilizarRecyclerView() {
+        rvCartelasGanhadoras.setHasFixedSize(true);
+
+        int gridColunas;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            gridColunas = 2;
+        } else {
+            gridColunas = 3;
+        }
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, gridColunas);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position == 0) return gridColunas;
+                else return 1;
+            }
+        });
+        rvCartelasGanhadoras.setLayoutManager(gridLayoutManager);
+        rvCartelasGanhadoras.addItemDecoration(new DividerItemDecoration(
+                rvCartelasGanhadoras.getContext(), DividerItemDecoration.VERTICAL));
     }
 
     @Override

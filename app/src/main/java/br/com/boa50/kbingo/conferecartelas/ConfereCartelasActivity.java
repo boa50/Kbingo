@@ -49,7 +49,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         mPedras = getIntent().getParcelableArrayListExtra(Constant.EXTRA_PEDRAS);
         mCartelasGanhadoras = getIntent().getStringArrayListExtra(Constant.EXTRA_CARTELAS_GANHADORAS);
 
-        direcionarFragment();
+        if (savedInstanceState == null) direcionarFragment();
     }
 
     @Override
