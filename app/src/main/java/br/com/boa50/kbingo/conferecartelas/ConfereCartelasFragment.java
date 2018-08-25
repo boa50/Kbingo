@@ -98,7 +98,7 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mSearchView.setOnQueryTextListener(null);
+        if (mSearchView != null) mSearchView.setOnQueryTextListener(null);
         unbinder.unbind();
         mPresenter.unsubscribe();
     }
