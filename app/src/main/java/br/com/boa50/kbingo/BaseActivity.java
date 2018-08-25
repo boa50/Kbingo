@@ -80,6 +80,7 @@ public class BaseActivity extends DaggerAppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                ActivityUtils.hideSoftKeyboard(this);
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }

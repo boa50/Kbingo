@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/item_novo_sorteio"
         android:title="@string/item_novo_sorteio"
+        android:orderInCategory="2"
+        android:visible="false"/>
+    <item android:id="@+id/item_alterar_tipo_sorteio"
+        android:title="@string/item_alterar_tipo_sorteio"
+        android:orderInCategory="1"
         android:visible="false"/>
     <item android:id="@+id/item_confere_cartelas"
         android:title="@string/conferir_cartelas_title"
