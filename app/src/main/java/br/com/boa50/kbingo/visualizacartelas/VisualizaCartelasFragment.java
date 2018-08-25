@@ -24,10 +24,12 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
+import br.com.boa50.kbingo.util.ActivityUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -68,8 +70,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mUltimaCartelaNumero = bundle.getString("mUltimaCartelaNumero");
-            mPedras = bundle.getParcelableArrayList("mPedras");
+            mUltimaCartelaNumero = bundle.getString(Constant.EXTRA_ULTIMA_CARTELA);
+            mPedras = bundle.getParcelableArrayList(Constant.EXTRA_PEDRAS);
         }
 
         if (savedInstanceState == null && mUltimaCartelaNumero == null) {
@@ -173,18 +175,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     @Override
     public void apresentarMaximoIdCartela(int id) {
-        Toast toast = Toast.makeText(mContext,
-                mContext.getResources().getText(R.string.toast_cartela_maxima).toString() + " " + id,
-                Toast.LENGTH_SHORT);
-
-        ViewGroup group = (ViewGroup) toast.getView();
-        TextView messageTextView = (TextView) group.getChildAt(0);
-        messageTextView.setTextSize(
-                TypedValue.COMPLEX_UNIT_PX,
-                mContext.getResources().getDimension(R.dimen.toast_text_size)
-        );
-
-        toast.show();
+        String texto = mContext.getResources().getText(R.string.toast_cartela_maxima).toString() + " " + id;
+        ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
     }
 
     private void estilizarCelulaCartela(TextView textView, boolean header, boolean sorteada) {

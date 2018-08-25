@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".BaseActivity" />
-        <activity android:name=".conferecartelas.ConfereCartelasActivity" />
+        <activity android:name=".conferecartelas.ConfereCartelasActivity"
+            android:windowSoftInputMode="adjustNothing"/>
     </application>
 
 </manifest>

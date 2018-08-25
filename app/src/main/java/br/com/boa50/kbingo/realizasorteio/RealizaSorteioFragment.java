@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Animatable;
@@ -12,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -44,10 +46,12 @@ import javax.inject.Inject;
 import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
+import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.ActivityUtils;
+import br.com.boa50.kbingo.util.CartelaUtils;
 import br.com.boa50.kbingo.util.PedraUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,15 +60,17 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
 import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
+import static br.com.boa50.kbingo.util.StateUtils.readStateFromBundle;
+import static br.com.boa50.kbingo.util.StateUtils.writeStateToBundle;
 
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
-    private static final String ARGS_PEDRAS = "pedras";
-    private static final String ARGS_PEDRA_ULTIMA = "ultimaPedra";
     private static final String ARGS_TAB_LETRAS_SELECIONADA = "tabLetrasSelecionada";
     private static final String ARGS_GRID_COLUNAS = "gridColunas";
     private static final String ARGS_LETRA_POSITION = "letraPosition";
     private static final String ARGS_DIALOG_NOVO_SORTEIO = "dialogNovoSorteio";
+    private static final String ARGS_DIALOG_TIPO_SORTEIO = "dialogTipoSorteio";
+    private static final String ARGS_TIPO_SORTEIO_ALTERADO = "tipoSorteioAlterado";
 
     @Inject
     RealizaSorteioContract.Presenter mPresenter;
@@ -81,34 +87,27 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private Unbinder unbinder;
     private int mGridColunas;
     PedrasSorteadasPageAdapter mPageAdapter;
-    private ArrayList<Pedra> mPedras;
     private List<Letra> mLetras;
-    private String mUltimaPedraValor;
     private long mLastClickTime;
     private Dialog mDialogNovoSorteio;
+    private Dialog mDialogTipoSorteio;
     private int mTabLetrasSelecionada;
+    private SharedPreferences mSharedPref;
+    private int mTipoSorteioAlterado;
+    private RealizaSorteioContract.State mState;
 
     @Inject
     public RealizaSorteioFragment() {}
 
     @Override
-    @SuppressWarnings("unchecked")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.realizasorteio_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
         mLastClickTime = 0;
         setHasOptionsMenu(true);
-
-        if (savedInstanceState != null) {
-            mPedras = savedInstanceState.getParcelableArrayList(ARGS_PEDRAS);
-            mUltimaPedraValor = savedInstanceState.getString(ARGS_PEDRA_ULTIMA);
-            if (savedInstanceState.getBoolean(ARGS_DIALOG_NOVO_SORTEIO)) abrirDialogResetarPedras();
-            mTabLetrasSelecionada = savedInstanceState.getInt(ARGS_TAB_LETRAS_SELECIONADA);
-        } else {
-            mUltimaPedraValor = "";
-            mTabLetrasSelecionada = 0;
-        }
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mState = null;
 
         return view;
     }
@@ -116,6 +115,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.item_novo_sorteio).setVisible(true);
+        menu.findItem(R.id.item_alterar_tipo_sorteio).setVisible(true);
         menu.findItem(R.id.item_confere_cartelas).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
@@ -124,11 +124,16 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_novo_sorteio:
-                abrirDialogResetarPedras();
+                abrirDialogNovoSorteio();
+                return true;
+            case R.id.item_alterar_tipo_sorteio:
+                abrirDialogTipoSorteio();
                 return true;
             case R.id.item_confere_cartelas:
                 Intent intent = new Intent(getActivity(), ConfereCartelasActivity.class);
-                intent.putExtra("mPedras", mPedras);
+                intent.putExtra(Constant.EXTRA_PEDRAS, mPresenter.getState().getPedras());
+                intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS,
+                        CartelaUtils.getCartelasGanhadoras(mPresenter.getState().getCartelas()));
                 startActivity(intent);
                 return true;
             default:
@@ -136,35 +141,90 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         }
     }
 
-    private void abrirDialogResetarPedras() {
-        if (mDialogNovoSorteio == null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-            builder.setTitle(R.string.dialog_novo_sorteio_title)
-                    .setPositiveButton(R.string.dialog_novo_sorteio_positive,
-                            (dialog, which) -> resetarPedras())
-                    .setNegativeButton(R.string.dialog_negative,
-                            (dialog, which) -> {});
+    private void abrirDialogNovoSorteio() {
+        abrirDialogNovoSorteio(-1);
+    }
 
-            mDialogNovoSorteio = builder.create();
+    private void abrirDialogNovoSorteio(int tipoSorteioAlterado) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        builder.setTitle(R.string.dialog_novo_sorteio_title)
+                .setNegativeButton(R.string.dialog_negative,
+                        (dialog, which) -> mTipoSorteioAlterado = -1);
+
+        if (tipoSorteioAlterado >= 0) {
+            mTipoSorteioAlterado = tipoSorteioAlterado;
+            builder.setMessage(R.string.dialog_novo_sorteio_tipo_sorteio_message)
+                    .setPositiveButton(R.string.dialog_novo_sorteio_positive,
+                            (dialog, which) -> {
+                        mPresenter.resetarPedras();
+                        mPresenter.alterarTipoSorteio(tipoSorteioAlterado);
+                        mTipoSorteioAlterado = -1;
+                    });
+        } else {
+            builder.setPositiveButton(R.string.dialog_novo_sorteio_positive,
+                            (dialog, which) -> mPresenter.resetarPedras());
         }
 
+        mDialogNovoSorteio = builder.create();
+        mDialogNovoSorteio.setCanceledOnTouchOutside(false);
         mDialogNovoSorteio.show();
+    }
+
+    private void abrirDialogTipoSorteio() {
+        final int[] sorteioSelecionado = {mPresenter.getState().getTipoSorteio()};
+        boolean hasPedraSorteada = mPresenter.hasPedraSorteada();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        builder.setTitle(R.string.dialog_tipo_sorteio_title)
+                .setSingleChoiceItems(TipoSorteioDTO.getTiposSorteioNome(), sorteioSelecionado[0],
+                        (dialog, which) -> sorteioSelecionado[0] = which)
+                .setPositiveButton(R.string.dialog_confirmative,
+                        (dialog, which) -> {
+                    if (hasPedraSorteada &&
+                            mPresenter.getState().getTipoSorteio() != sorteioSelecionado[0]) {
+                        abrirDialogNovoSorteio(sorteioSelecionado[0]);
+                    } else {
+                        mPresenter.alterarTipoSorteio(sorteioSelecionado[0]);
+                    }
+                })
+                .setNegativeButton(R.string.dialog_negative,
+                        (dialog, which) -> apresentarTipoSorteio(false));
+
+        mDialogTipoSorteio = builder.create();
+        mDialogTipoSorteio.setCanceledOnTouchOutside(false);
+        mDialogTipoSorteio.show();
+    }
+
+    @Override
+    public void apresentarTipoSorteio(boolean tipoAlterado) {
+        if (tipoAlterado || (mSharedPref.getInt(getString(R.string.pref_tipo_sorteio), -1) < 0)) {
+            mSharedPref.edit()
+                    .putInt(getString(R.string.pref_tipo_sorteio), mPresenter.getState().getTipoSorteio())
+                    .apply();
+        }
+
+        Objects.requireNonNull(getActivity())
+                .setTitle(getString(R.string.realizar_sorteio_title) + " - " +
+                TipoSorteioDTO.getTipoSorteio(mPresenter.getState().getTipoSorteio()).getNome());
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(ARGS_PEDRAS, mPedras);
-        outState.putString(ARGS_PEDRA_ULTIMA, mUltimaPedraValor);
         outState.putBoolean(ARGS_DIALOG_NOVO_SORTEIO,
                 mDialogNovoSorteio != null && mDialogNovoSorteio.isShowing());
+        outState.putBoolean(ARGS_DIALOG_TIPO_SORTEIO,
+                mDialogTipoSorteio != null && mDialogTipoSorteio.isShowing());
+        outState.putInt(ARGS_TIPO_SORTEIO_ALTERADO, mTipoSorteioAlterado);
         outState.putInt(ARGS_TAB_LETRAS_SELECIONADA, vpPedrasSorteadas.getCurrentItem());
+        writeStateToBundle(outState, mPresenter.getState());
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mTabLetrasSelecionada = vpPedrasSorteadas.getCurrentItem();
+        mState = mPresenter.getState();
 
         FragmentManager manager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -177,14 +237,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-        mPresenter.unsubscribe();
-        mPedras = null;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -194,15 +246,34 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mGridColunas = Constant.QTDE_PEDRAS_LINHA_LANDSCAPE;
         }
 
-        if (!mUltimaPedraValor.isEmpty()) {
-            if (mUltimaPedraValor == getResources().getText(R.string.sorteio_fim))
-                apresentarFimSorteio();
-            else
-                apresentarPedra(mUltimaPedraValor);
+        mPresenter.subscribe(this, mState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+        mPresenter.unsubscribe();
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mState = readStateFromBundle(savedInstanceState);
+            if (savedInstanceState.getBoolean(ARGS_DIALOG_NOVO_SORTEIO)) {
+                abrirDialogNovoSorteio(savedInstanceState.getInt(ARGS_TIPO_SORTEIO_ALTERADO));
+            }
+            mTabLetrasSelecionada = savedInstanceState.getInt(ARGS_TAB_LETRAS_SELECIONADA);
+            if (savedInstanceState.getBoolean(ARGS_DIALOG_TIPO_SORTEIO)) abrirDialogTipoSorteio();
+        } else {
+            mTabLetrasSelecionada = 0;
+            mTipoSorteioAlterado = -1;
         }
 
-        mPresenter.setPedras(mPedras);
-        mPresenter.subscribe(this);
+        if (mSharedPref.getInt(getString(R.string.pref_tipo_sorteio), -1) < 0)  abrirDialogTipoSorteio();
+        else apresentarTipoSorteio(false);
     }
 
     @OnClick(R.id.bt_sortear_pedra)
@@ -211,16 +282,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mPresenter.sortearPedra();
             mLastClickTime = SystemClock.elapsedRealtime();
         }
-    }
-
-    void resetarPedras() {
-        btSortearPedra.setTextSize(
-                TypedValue.COMPLEX_UNIT_PX,
-                getResources().getDimension(R.dimen.pedra_grande_texto)
-        );
-
-        mPresenter.resetarPedras();
-        mUltimaPedraValor = "";
     }
 
     @Override
@@ -234,7 +295,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 getResources().getDimension(R.dimen.pedra_grande_texto_sorteada)
         );
         btSortearPedra.setText(pedraValor);
-        mUltimaPedraValor = pedraValor;
     }
 
     @Override
@@ -244,18 +304,14 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 getResources().getDimension(R.dimen.pedra_grande_texto)
         );
         btSortearPedra.setText(getResources().getText(R.string.sorteio_fim));
-        mUltimaPedraValor = btSortearPedra.getText().toString();
     }
 
     @Override
-    public void iniciarLayout(List<Letra> letras, ArrayList<Pedra> pedras) {
+    public void iniciarLayout(List<Letra> letras) {
         mLetras = letras;
-        mPedras = pedras;
 
-        if (mPageAdapter == null) {
-            mPageAdapter = new PedrasSorteadasPageAdapter(
-                    Objects.requireNonNull(getActivity()).getSupportFragmentManager());
-        }
+        mPageAdapter = new PedrasSorteadasPageAdapter(
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager());
 
         vpPedrasSorteadas.setAdapter(mPageAdapter);
         vpPedrasSorteadas.setOffscreenPageLimit(4);
@@ -269,11 +325,15 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         PedrasSorteadasFragment fragment =
                 (PedrasSorteadasFragment) mPageAdapter.getFragment(position/QTDE_PEDRAS_LETRA);
-        fragment.transitarTextViewPedra(mPedras.get(position).getId());
+        fragment.transitarTextViewPedra(mPresenter.getState().getPedras().get(position).getId());
     }
 
     @Override
     public void reiniciarSorteio() {
+        btSortearPedra.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimension(R.dimen.pedra_grande_texto)
+        );
         btSortearPedra.setText(getResources().getText(R.string.bt_sortear_pedra));
 
         for (int i = 0; i < mPageAdapter.getCount(); i++) {
@@ -296,7 +356,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         @Override
         public Fragment getItem(int position) {
-            return PedrasSorteadasFragment.newInstance(mGridColunas, position, mPedras);
+            return PedrasSorteadasFragment.newInstance(mGridColunas, position, mPresenter.getState().getPedras());
         }
 
         @Override
@@ -329,6 +389,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     public static class PedrasSorteadasFragment extends Fragment {
+        private static final String ARGS_PEDRAS = "pedras";
 
         @BindView(R.id.gl_pedras_sorteadas)
         GridLayout glPedrasSorteadas;
