@@ -86,8 +86,8 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
             fragment = mVisualizaCartelasFragment;
             bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
             setTitle(R.string.conferir_cartelas_title);
-            Toast.makeText(getApplicationContext(),
-                    R.string.toast_sem_cartela_ganhadora, Toast.LENGTH_SHORT).show();
+            ActivityUtils.showToastEstilizado(getApplicationContext(),
+                    R.string.toast_sem_cartela_ganhadora, Toast.LENGTH_SHORT);
         }
 
         fragment.setArguments(bundle);
