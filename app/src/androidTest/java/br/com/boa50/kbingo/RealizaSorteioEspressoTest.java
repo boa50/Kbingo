@@ -166,11 +166,11 @@ public class RealizaSorteioEspressoTest {
     }
 
     @Test
-    public void trocarFragments_resetarInformacoes() {
+    public void trocarFragments_manterInformacoes() {
         onView(withId(R.id.bt_sortear_pedra))
                 .perform(click());
 
-        String textoUltimaPedraSorteada = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
+        String text = getButtonText(withId(R.id.bt_sortear_pedra));
 
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .perform(click());
@@ -178,7 +178,11 @@ public class RealizaSorteioEspressoTest {
         CustomProcedures.changeNavigation(R.id.item_visualizar_cartelas);
         CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
 
-        verificarLayoutPadrao(textoUltimaPedraSorteada);
+        onView(withId(R.id.bt_sortear_pedra))
+                .check(matches(withText(text)));
+        onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
+                .check(matches(isSelected()));
+        verificarUltimaPedraSorteada(text.substring(1), true);
     }
 
     @Test
