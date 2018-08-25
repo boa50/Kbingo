@@ -173,7 +173,6 @@ public class ConfereCartelasEspressoTest {
 
         onView(withId(R.id.item_busca))
                 .perform(click());
-
         onView(withId(android.support.design.R.id.search_src_text))
                 .perform(typeText(cartelaFiltrada));
 
@@ -185,6 +184,22 @@ public class ConfereCartelasEspressoTest {
         onView(withText(cartelaFiltrada))
                 .check(matches(isDisplayed()));
         onView(withText("14"))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void filtrarCartelas_selecionarCartela_voltar_todasCartelasApresentadas() {
+        onView(withId(R.id.item_busca))
+                .perform(click());
+        onView(withId(android.support.design.R.id.search_src_text))
+                .perform(typeText("1"));
+
+        onView(withId(R.id.rv_cartelas_ganhadoras))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        pressBack();
+
+        onView(withText(cartelasGanhadorasMock.get(cartelasGanhadorasMock.size()-1)))
                 .check(matches(isDisplayed()));
     }
 }
