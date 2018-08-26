@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/realizar_sorteio_submenu_title">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item android:id="@+id/item_realizar_sorteio"
+                    android:title="@string/realizar_sorteio_title"
+                    android:icon="@drawable/ic_sorteio_pedra" />
+                <item android:id="@+id/item_sorteio_cartela"
+                    android:title="@string/sorteio_cartela_title"
+                    android:icon="@drawable/ic_sorteio_cartela" />
+            </group>
+        </menu>
+    </item>
+
     <group android:checkableBehavior="single">
-        <item android:id="@+id/item_realizar_sorteio"
-            android:title="@string/realizar_sorteio_title" />
-        <item android:id="@+id/item_sorteio_cartela"
-            android:title="@string/sorteio_cartela_title" />
         <item android:id="@+id/item_visualizar_cartelas"
-            android:title="@string/visualizar_cartelas_title" />
+            android:title="@string/visualizar_cartelas_title"
+            android:icon="@drawable/ic_cartela"/>
     </group>
 </menu>
