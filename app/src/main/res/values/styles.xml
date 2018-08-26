@@ -81,7 +81,12 @@
     </style>
 
     <!--Visualizar cartelas-->
-    <style name="InputLayoutHint" parent="TextAppearance.Design.Hint">
-        <item name="android:textSize">@dimen/input_layout_hint_size</item>
+    <style name="SorteioCartelaInputLayoutHint" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">@dimen/sorteio_cartela_input_layout_hint</item>
+    </style>
+
+    <!--Visualizar cartelas-->
+    <style name="VisualizaCartelasInputLayoutHint" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">@dimen/input_layout_hint</item>
     </style>
 </resources>
