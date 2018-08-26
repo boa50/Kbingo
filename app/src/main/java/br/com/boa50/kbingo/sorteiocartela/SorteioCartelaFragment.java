@@ -3,15 +3,19 @@ package br.com.boa50.kbingo.sorteiocartela;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.di.ActivityScoped;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
@@ -20,6 +24,9 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
 
     @Inject
     SorteioCartelaContract.Presenter mPresenter;
+
+    @BindView(R.id.bt_sorteio_cartela)
+    Button btSorteioCartela;
 
     private Unbinder unbinder;
 
@@ -37,6 +44,11 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         return view;
     }
 
+    @OnClick(R.id.bt_sorteio_cartela)
+    void sortearCartela() {
+        mPresenter.sortearCartela();
+    }
+
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
@@ -48,5 +60,14 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         super.onDestroy();
         unbinder.unbind();
         mPresenter.unsubscribe();
+    }
+
+    @Override
+    public void apresentarCartela(String numeroCartela) {
+        btSorteioCartela.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimension(R.dimen.pedra_sorteio_cartela_sorteada_texto)
+        );
+        btSorteioCartela.setText(numeroCartela);
     }
 }
