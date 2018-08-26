@@ -5,6 +5,7 @@ import br.com.boa50.kbingo.MainActivity;
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasModule;
 import br.com.boa50.kbingo.realizasorteio.RealizaSorteioModule;
+import br.com.boa50.kbingo.sorteiocartela.SorteioCartelaModule;
 import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasModule;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -16,7 +17,8 @@ public abstract class ActivityBindingModule {
     abstract MainActivity mainActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = {RealizaSorteioModule.class, VisualizaCartelasModule.class})
+    @ContributesAndroidInjector(modules = {RealizaSorteioModule.class, VisualizaCartelasModule.class,
+            SorteioCartelaModule.class})
     abstract BaseActivity baseActivity();
 
     @ActivityScoped
