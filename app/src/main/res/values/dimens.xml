@@ -33,9 +33,11 @@
     <dimen name="pedra_sorteio_cartela_margin_start_end">8dp</dimen>
     <dimen name="pedra_sorteio_cartela_texto">36sp</dimen>
     <dimen name="pedra_sorteio_cartela_sorteada_texto">72sp</dimen>
+    <dimen name="numero_cartela_filtro_text">16sp</dimen>
+    <dimen name="sorteio_cartela_input_layout_hint">16sp</dimen>
 
     <!--Visualizar cartela-->
-    <dimen name="input_layout_hint_size">24sp</dimen>
+    <dimen name="input_layout_hint">24sp</dimen>
     <dimen name="input_layout_margin_start_end">24dp</dimen>
     <dimen name="numero_cartela_text">30sp</dimen>
     <dimen name="pedra_text">50sp</dimen>
