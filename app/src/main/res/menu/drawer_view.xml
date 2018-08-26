@@ -5,7 +5,7 @@
             <group android:checkableBehavior="single">
                 <item android:id="@+id/item_realizar_sorteio"
                     android:title="@string/realizar_sorteio_title"
-                    android:icon="@drawable/ic_sorteio_pedra" />
+                    android:icon="@drawable/ic_sorteio_pedras" />
                 <item android:id="@+id/item_sorteio_cartela"
                     android:title="@string/sorteio_cartela_title"
                     android:icon="@drawable/ic_sorteio_cartela" />
