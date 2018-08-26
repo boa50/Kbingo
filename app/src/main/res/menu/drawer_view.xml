@@ -3,6 +3,8 @@
     <group android:checkableBehavior="single">
         <item android:id="@+id/item_realizar_sorteio"
             android:title="@string/realizar_sorteio_title" />
+        <item android:id="@+id/item_sorteio_cartela"
+            android:title="@string/sorteio_cartela_title" />
         <item android:id="@+id/item_visualizar_cartelas"
             android:title="@string/visualizar_cartelas_title" />
     </group>
