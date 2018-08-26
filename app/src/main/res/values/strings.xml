@@ -27,6 +27,9 @@
     <string name="item_confere_cartelas_content_description">Imagem de cartela</string>
     <string name="item_confere_cartelas_badge_texto_plus">+9</string>
 
+    <!--Sorteio Cartela-->
+    <string name="bt_sorteio_cartela">Sortear\nCartela</string>
+
     <!--Conferir cartela-->
     <string name="toast_sem_cartela_ganhadora">Ainda não há nenhuma cartela ganhadora</string>
     <string name="list_item_confere_outra_cartela">Conferir outra cartela</string>

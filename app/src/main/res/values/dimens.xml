@@ -25,6 +25,14 @@
     <dimen name="badge_cartela_padding">3dp</dimen>
     <dimen name="badge_cartela_text_size">12sp</dimen>
 
+    <!--Sorteio Cartela-->
+    <dimen name="pedra_sorteio_cartela_lado">400dp</dimen>
+    <dimen name="pedra_sorteio_cartela_card_radius">200dp</dimen>
+    <dimen name="pedra_sorteio_cartela_card_elevation">4dp</dimen>
+    <dimen name="pedra_sorteio_cartela_margin_top">16dp</dimen>
+    <dimen name="pedra_sorteio_cartela_margin_start_end">8dp</dimen>
+    <dimen name="pedra_sorteio_cartela_texto">36sp</dimen>
+
     <!--Visualizar cartela-->
     <dimen name="input_layout_hint_size">24sp</dimen>
     <dimen name="input_layout_margin_start_end">24dp</dimen>

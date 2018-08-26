@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_sorteio_cartela"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sorteio de Cartela"/>
+        style="@style/PedraSorteioCartelaCard"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/bt_sorteio_cartela"
+            android:layout_width="@dimen/pedra_sorteio_cartela_lado"
+            android:layout_height="@dimen/pedra_sorteio_cartela_lado"
+            style="@style/PedraSorteioCartela"
+            android:text="@string/bt_sorteio_cartela" />
+
+    </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>
