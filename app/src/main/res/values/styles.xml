@@ -17,7 +17,16 @@
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
-    <!--Realizar Sorteio-->
+    <style name="PedraEnabledTheme">
+        <item name="pedra_cor_primaria">@color/pedraPrimariaEnabled</item>
+        <item name="pedra_cor_secundaria">@color/pedraSecundariaEnabled</item>
+    </style>
+
+    <style name="PedraEnabled">
+        <item name="android:background">@drawable/pedragrande</item>
+        <item name="android:theme">@style/PedraEnabledTheme</item>
+    </style>
+
     <style name="BaseButtonColored" parent="Widget.AppCompat.Button.Colored">
         <item name="android:paddingLeft">@dimen/button_padding_left_right</item>
         <item name="android:paddingRight">@dimen/button_padding_left_right</item>
@@ -29,11 +38,7 @@
         <item name="background">@color/colorSecondary</item>
     </style>
 
-    <style name="PedraEnabled">
-        <item name="pedra_cor_primaria">@color/pedraPrimariaEnabled</item>
-        <item name="pedra_cor_secundaria">@color/pedraSecundariaEnabled</item>
-    </style>
-
+    <!--Realizar Sorteio-->
     <style name="PedraGrandeCard">
         <item name="android:layout_marginTop">@dimen/pedra_grande_margin_top</item>
         <item name="android:layout_marginLeft">@dimen/pedra_grande_margin_start_end</item>
@@ -42,9 +47,7 @@
         <item name="cardElevation">@dimen/pedra_grande_card_elevation</item>
     </style>
 
-    <style name="PedraGrande">
-        <item name="android:background">@drawable/pedragrande</item>
-        <item name="android:theme">@style/PedraEnabled</item>
+    <style name="PedraGrande" parent="PedraEnabled">
         <item name="android:textSize">@dimen/pedra_grande_texto</item>
     </style>
 
@@ -63,6 +66,19 @@
     </style>
 
     <style name="TabLetras" parent="BaseTabLetras" />
+
+    <!--Sorteio Cartela-->
+    <style name="PedraSorteioCartelaCard">
+        <item name="android:layout_marginTop">@dimen/pedra_sorteio_cartela_margin_top</item>
+        <item name="android:layout_marginLeft">@dimen/pedra_sorteio_cartela_margin_start_end</item>
+        <item name="android:layout_marginRight">@dimen/pedra_sorteio_cartela_margin_start_end</item>
+        <item name="cardCornerRadius">@dimen/pedra_sorteio_cartela_card_radius</item>
+        <item name="cardElevation">@dimen/pedra_sorteio_cartela_card_elevation</item>
+    </style>
+
+    <style name="PedraSorteioCartela" parent="PedraEnabled">
+        <item name="android:textSize">@dimen/pedra_sorteio_cartela_texto</item>
+    </style>
 
     <!--Visualizar cartelas-->
     <style name="InputLayoutHint" parent="TextAppearance.Design.Hint">
