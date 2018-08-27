@@ -38,6 +38,18 @@
         <item name="background">@color/colorSecondary</item>
     </style>
 
+    <style name="BaseListItem">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceListItemSmall</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">?android:attr/listPreferredItemHeightSmall</item>
+    </style>
+
+    <style name="ListItem" parent="BaseListItem">
+        <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingLeft</item>
+        <item name="android:paddingRight">?android:attr/listPreferredItemPaddingRight</item>
+    </style>
+
     <!--Realizar Sorteio-->
     <style name="PedraGrandeCard">
         <item name="android:layout_marginTop">@dimen/pedra_grande_margin_top</item>
