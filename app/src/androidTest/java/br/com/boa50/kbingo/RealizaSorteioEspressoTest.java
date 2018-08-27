@@ -368,7 +368,7 @@ public class RealizaSorteioEspressoTest {
         Drawable drawable = VectorDrawableCompat.create(
                 mActivityRule.getActivity().getResources(),
                 R.drawable.pedra,
-                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
+                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabledTheme).getTheme());
 
         if (enabled) {
             onView(withText(textoUltimaPedraSorteada))
