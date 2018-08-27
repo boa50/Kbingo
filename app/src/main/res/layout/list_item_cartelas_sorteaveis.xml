@@ -4,6 +4,6 @@
     android:id="@+id/tv_cartela_numero"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:focusable="true"
-    android:clickable="true"
+    android:focusable="false"
+    android:clickable="false"
     style="@style/ListItem" />
