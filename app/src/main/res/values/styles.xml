@@ -50,6 +50,14 @@
         <item name="android:paddingRight">?android:attr/listPreferredItemPaddingRight</item>
     </style>
 
+    <style name="BaseDivisoriaLinha">
+        <item name="android:layout_width">@dimen/divisoria_linha_width</item>
+        <item name="android:layout_height">@dimen/divisoria_linha_height</item>
+        <item name="android:background">@color/divisoriaLinha</item>
+    </style>
+
+    <style name="DivisoriaLinha" parent="BaseDivisoriaLinha" />
+
     <!--Realizar Sorteio-->
     <style name="PedraGrandeCard">
         <item name="android:layout_marginTop">@dimen/pedra_grande_margin_top</item>
