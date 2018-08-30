@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
+import br.com.boa50.kbingo.util.CartelaUtils;
 
 public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, CartelasFiltroAdapter.ViewHolder> {
 
@@ -29,8 +30,8 @@ public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, Cartela
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mTextView.setText(String.valueOf(getItem(position).getCartelaId()));
-        holder.mCheckBox.setEnabled(getItem(position).isSelecionada());
+        holder.mTextView.setText(CartelaUtils.formatarNumeroCartela(getItem(position).getCartelaId()));
+        holder.mCheckBox.setChecked(getItem(position).isSelecionada());
     }
 
     private static final DiffUtil.ItemCallback<CartelaFiltroDTO> DIFF_CALLBACK =
@@ -56,7 +57,7 @@ public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, Cartela
             super(itemView);
             mTextView = itemView.findViewById(R.id.tv_cartela_numero);
             mCheckBox = itemView.findViewById(R.id.cb_cartela_selecao);
-            itemView.setOnClickListener(this);
+            mCheckBox.setOnClickListener(this);
         }
 
         @Override

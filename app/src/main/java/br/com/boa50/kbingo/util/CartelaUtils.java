@@ -23,14 +23,18 @@ public final class CartelaUtils {
         ArrayList<String> cartelasGanhadoras = new ArrayList<>();
         for (CartelaDTO cartela : cartelas) {
             if (cartela.isGanhadora()) {
-                cartelasGanhadoras.add(String.format(
-                        Locale.ENGLISH,
-                        Constant.FORMAT_CARTELA,
-                        cartela.getCartelaId()));
+                cartelasGanhadoras.add(formatarNumeroCartela(cartela.getCartelaId()));
             }
         }
 
         Collections.sort(cartelasGanhadoras, (o1, o2) -> new BigDecimal(o1).compareTo(new BigDecimal(o2)));
         return cartelasGanhadoras;
+    }
+
+    public static String formatarNumeroCartela(int cartelaId) {
+        return String.format(
+                Locale.ENGLISH,
+                Constant.FORMAT_CARTELA,
+                cartelaId);
     }
 }
