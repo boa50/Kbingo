@@ -38,6 +38,7 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
     public void subscribe(@NonNull SorteioCartelaContract.View view) {
         mView = view;
         mCartelasSorteaveis = new ArrayList<>();
+        recuperarCartelasFiltro();
     }
 
     @Override
@@ -75,5 +76,16 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
                     Constant.FORMAT_CARTELA,
                     i));
         }
+    }
+
+    private void recuperarCartelasFiltro() {
+        Disposable disposable = mAppDataSource
+                .getCartelasFiltro()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui())
+                .subscribe(
+                        cartelasFiltro -> mView.preencherCartelasFiltro(cartelasFiltro)
+                );
+        mCompositeDisposable.add(disposable);
     }
 }

@@ -1,17 +1,25 @@
 package br.com.boa50.kbingo.sorteiocartela;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.R;
+import br.com.boa50.kbingo.adapter.CartelasFiltroAdapter;
+import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,10 +31,14 @@ import dagger.android.support.DaggerFragment;
 public class SorteioCartelaFragment extends DaggerFragment implements SorteioCartelaContract.View {
 
     @Inject
+    Context mContext;
+    @Inject
     SorteioCartelaContract.Presenter mPresenter;
 
     @BindView(R.id.bt_sorteio_cartela)
     Button btSorteioCartela;
+    @BindView(R.id.rv_sorteio_cartela_filtro)
+    RecyclerView rvCartelaFiltro;
 
     private Unbinder unbinder;
 
@@ -69,5 +81,17 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
                 getResources().getDimension(R.dimen.pedra_sorteio_cartela_sorteada_texto)
         );
         btSorteioCartela.setText(numeroCartela);
+    }
+
+    @Override
+    public void preencherCartelasFiltro(List<CartelaFiltroDTO> cartelasFiltro) {
+        rvCartelaFiltro.setHasFixedSize(true);
+        rvCartelaFiltro.setLayoutManager(new LinearLayoutManager(mContext));
+        rvCartelaFiltro.addItemDecoration(new DividerItemDecoration(
+                rvCartelaFiltro.getContext(), DividerItemDecoration.VERTICAL));
+
+        CartelasFiltroAdapter adapter = new CartelasFiltroAdapter();
+        adapter.submitList(cartelasFiltro);
+        rvCartelaFiltro.setAdapter(adapter);
     }
 }
