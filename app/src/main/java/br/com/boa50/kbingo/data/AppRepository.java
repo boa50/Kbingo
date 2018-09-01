@@ -11,6 +11,7 @@ import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.data.utils.PopularTabelas;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -45,25 +46,53 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public Single<List<CartelaFiltroDTO>> getCartelasFiltro() {
+    public Flowable<List<CartelaFiltroDTO>> getCartelasFiltro() {
         if (cartelasFiltro != null)
-            return Single.just(cartelasFiltro);
+            return Flowable.fromIterable(cartelasFiltro).toList().toFlowable();
         else
             cartelasFiltro = new ArrayList<>();
 
-        final int[] maxId = new int[1];
+//        final int[] maxId = new int[1];
+//        Executors.newSingleThreadScheduledExecutor().execute(() ->
+//                (new CompositeDisposable())
+//                        .add(getCartelaUltimoId()
+//                                .subscribe(id -> maxId[0] = id)));
+//
+//        while (maxId[0] <= 0) {}
+//
+//        for (int cartelaId = 1; cartelaId <= maxId[0]; cartelaId++){
+//            cartelasFiltro.add(new CartelaFiltroDTO(cartelaId, false, false));
+//        }
+
+//        Executors.newSingleThreadScheduledExecutor().execute(() ->
+//                (new CompositeDisposable())
+//                        .add(getCartelaUltimoId()
+//                                .subscribe(this::preencherCartelasFiltro)));
+
         Executors.newSingleThreadScheduledExecutor().execute(() ->
                 (new CompositeDisposable())
                         .add(getCartelaUltimoId()
-                                .subscribe(id -> maxId[0] = id)));
+                                .subscribe(id -> {
+                                    Thread.sleep(5000);
+                                    preencherCartelasFiltro(id);
+                                })));
 
-        while (maxId[0] <= 0) {}
+//        return Flowable.fromIterable(cartelasFiltro).toList().toFlowable();
 
-        for (int cartelaId = 1; cartelaId <= maxId[0]; cartelaId++){
+        return getCartelaUltimoId()
+                .flatMap(maxId -> Flowable.range(1, maxId)
+                .flatMap(id -> cartelasFiltro.add(retornarCartelaFiltro(id)))
+                        .toList()
+                        .toFlowable());
+    }
+
+    private void preencherCartelasFiltro(int cartelasMaxId) {
+        for (int cartelaId = 1; cartelaId <= cartelasMaxId; cartelaId++){
             cartelasFiltro.add(new CartelaFiltroDTO(cartelaId, false, false));
         }
-
-        return Single.just(cartelasFiltro);
+    }
+    private CartelaFiltroDTO retornarCartelaFiltro(int id) {
+        return new CartelaFiltroDTO(id, false, false);
     }
 
     @Override
