@@ -5,6 +5,9 @@
     <dimen name="button_margin">8dp</dimen>
     <dimen name="button_text_size">14sp</dimen>
 
+    <!--CheckBox-->
+    <dimen name="checkbox_padding_left">16dp</dimen>
+
     <!--Divisoria Linha-->
     <dimen name="divisoria_linha_width">0dp</dimen>
     <dimen name="divisoria_linha_height">1dp</dimen>
@@ -31,15 +34,21 @@
     <dimen name="badge_cartela_text_size">12sp</dimen>
 
     <!--Sorteio Cartela-->
-    <dimen name="pedra_sorteio_cartela_lado">400dp</dimen>
-    <dimen name="pedra_sorteio_cartela_card_radius">200dp</dimen>
-    <dimen name="pedra_sorteio_cartela_card_elevation">4dp</dimen>
-    <dimen name="pedra_sorteio_cartela_margin_top">16dp</dimen>
-    <dimen name="pedra_sorteio_cartela_margin_start_end">8dp</dimen>
-    <dimen name="pedra_sorteio_cartela_texto">36sp</dimen>
-    <dimen name="pedra_sorteio_cartela_sorteada_texto">72sp</dimen>
-    <dimen name="numero_cartela_filtro_text">16sp</dimen>
-    <dimen name="sorteio_cartela_input_layout_hint">16sp</dimen>
+    <dimen name="sc_container_layout_height">350dp</dimen>
+    <dimen name="sc_container_layout_padding">8dp</dimen>
+    <dimen name="sc_inside_container_layout_margin">4dp</dimen>
+    <dimen name="sc_pedra_lado">400dp</dimen>
+    <dimen name="sc_pedra_card_radius">200dp</dimen>
+    <dimen name="sc_pedra_card_elevation">4dp</dimen>
+    <dimen name="sc_pedra_margin_top">16dp</dimen>
+    <dimen name="sc_pedra_margin_start_end">8dp</dimen>
+    <dimen name="sc_pedra_texto">36sp</dimen>
+    <dimen name="sc_pedra_sorteada_texto">72sp</dimen>
+    <dimen name="sc_numero_cartela_filtro_text">16sp</dimen>
+    <dimen name="sc_input_layout_hint">16sp</dimen>
+    <dimen name="sc_input_layout_margin_top">16dp</dimen>
+    <dimen name="sc_input_layout_margin_bottom">-8dp</dimen>
+    <dimen name="sc_title_cartelas_sorteaveis_margin">4dp</dimen>
 
     <!--Visualizar cartela-->
     <dimen name="input_layout_hint">24sp</dimen>

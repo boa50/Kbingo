@@ -57,11 +57,11 @@ public class AppRepository implements AppDataSource {
                         .add(getCartelaUltimoId()
                                 .subscribe(id -> maxId[0] = id)));
 
-        do {
-            for (int cartelaId = 1; cartelaId <= maxId[0]; cartelaId++){
-                cartelasFiltro.add(new CartelaFiltroDTO(cartelaId, false, false));
-            }
-        } while (maxId[0] <= 0);
+        while (maxId[0] <= 0) {}
+
+        for (int cartelaId = 1; cartelaId <= maxId[0]; cartelaId++){
+            cartelasFiltro.add(new CartelaFiltroDTO(cartelaId, false, false));
+        }
 
         return Single.just(cartelasFiltro);
     }

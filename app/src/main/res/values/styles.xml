@@ -58,6 +58,11 @@
 
     <style name="DivisoriaLinha" parent="BaseDivisoriaLinha" />
 
+    <style name="CheckBox">
+        <item name="android:paddingLeft">@dimen/checkbox_padding_left</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+
     <!--Realizar Sorteio-->
     <style name="PedraGrandeCard">
         <item name="android:layout_marginTop">@dimen/pedra_grande_margin_top</item>
@@ -89,20 +94,20 @@
 
     <!--Sorteio Cartela-->
     <style name="PedraSorteioCartelaCard">
-        <item name="android:layout_marginTop">@dimen/pedra_sorteio_cartela_margin_top</item>
-        <item name="android:layout_marginLeft">@dimen/pedra_sorteio_cartela_margin_start_end</item>
-        <item name="android:layout_marginRight">@dimen/pedra_sorteio_cartela_margin_start_end</item>
-        <item name="cardCornerRadius">@dimen/pedra_sorteio_cartela_card_radius</item>
-        <item name="cardElevation">@dimen/pedra_sorteio_cartela_card_elevation</item>
+        <item name="android:layout_marginTop">@dimen/sc_pedra_margin_top</item>
+        <item name="android:layout_marginLeft">@dimen/sc_pedra_margin_start_end</item>
+        <item name="android:layout_marginRight">@dimen/sc_pedra_margin_start_end</item>
+        <item name="cardCornerRadius">@dimen/sc_pedra_card_radius</item>
+        <item name="cardElevation">@dimen/sc_pedra_card_elevation</item>
     </style>
 
     <style name="PedraSorteioCartela" parent="PedraEnabled">
-        <item name="android:textSize">@dimen/pedra_sorteio_cartela_texto</item>
+        <item name="android:textSize">@dimen/sc_pedra_texto</item>
     </style>
 
     <!--Visualizar cartelas-->
     <style name="SorteioCartelaInputLayoutHint" parent="TextAppearance.Design.Hint">
-        <item name="android:textSize">@dimen/sorteio_cartela_input_layout_hint</item>
+        <item name="android:textSize">@dimen/sc_input_layout_hint</item>
     </style>
 
     <!--Visualizar cartelas-->

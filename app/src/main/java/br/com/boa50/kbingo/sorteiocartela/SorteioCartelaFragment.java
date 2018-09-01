@@ -78,7 +78,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     public void apresentarCartela(String numeroCartela) {
         btSorteioCartela.setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
-                getResources().getDimension(R.dimen.pedra_sorteio_cartela_sorteada_texto)
+                getResources().getDimension(R.dimen.sc_pedra_sorteada_texto)
         );
         btSorteioCartela.setText(numeroCartela);
     }
