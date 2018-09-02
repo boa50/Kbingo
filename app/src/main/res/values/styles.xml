@@ -39,7 +39,6 @@
     </style>
 
     <style name="BaseListItem">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:textAppearance">?android:attr/textAppearanceListItemSmall</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:minHeight">?android:attr/listPreferredItemHeightSmall</item>
