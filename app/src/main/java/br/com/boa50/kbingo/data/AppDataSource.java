@@ -19,6 +19,7 @@ public interface AppDataSource {
     Single<List<CartelaPedra>> getPedrasByCartelaId(int id);
 
     Flowable<List<CartelaFiltroDTO>> getCartelasFiltro();
+    Flowable<List<Integer>> getCartelasSorteaveis();
 
     void initializeDatabase();
 }
