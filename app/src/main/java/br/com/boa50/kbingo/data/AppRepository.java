@@ -45,7 +45,6 @@ public class AppRepository implements AppDataSource {
         return db.cartelaPedraDao().loadCartelaPedras(id);
     }
 
-
     @Override
     public Flowable<List<CartelaFiltroDTO>> getCartelasFiltro() {
         if (cartelasFiltro != null)
@@ -55,13 +54,14 @@ public class AppRepository implements AppDataSource {
 
         return getCartelaUltimoId().toFlowable()
                 .flatMap(maxId -> Flowable.range(1, maxId)
-                        .map(this::atualizaCartelasFiltro));
+                        .map(this::retornaCartelaFiltro).toList().toFlowable());
     }
 
-    private List<CartelaFiltroDTO> atualizaCartelasFiltro(int id) {
-        CartelaFiltroDTO cartelaFiltro = new CartelaFiltroDTO(id, false, false);
-        cartelasFiltro.add(cartelaFiltro);
-        return cartelasFiltro;
+    private CartelaFiltroDTO retornaCartelaFiltro(int id) {
+        if (cartelasFiltro.size() < id){
+            cartelasFiltro.add(new CartelaFiltroDTO(id, false, false));
+        }
+        return cartelasFiltro.get(id - 1);
     }
 
     @Override
