@@ -11,9 +11,11 @@ public interface SorteioCartelaContract {
     interface View extends BaseView {
         void apresentarCartela(String numeroCartela);
         void preencherCartelasFiltro(List<CartelaFiltroDTO> cartelasFiltro);
+        void preencherCartelasSorteaveis(List<Integer> cartelasSorteaveis);
     }
 
     interface Presenter extends BasePresenter<View> {
         void sortearCartela();
+        void atualizarCartelasSorteaveis();
     }
 }

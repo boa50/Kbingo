@@ -12,12 +12,15 @@ import android.widget.TextView;
 
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
+import br.com.boa50.kbingo.sorteiocartela.SorteioCartelaContract;
 import br.com.boa50.kbingo.util.CartelaUtils;
 
 public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, CartelasFiltroAdapter.ViewHolder> {
+    private SorteioCartelaContract.Presenter mPresenter;
 
-    public CartelasFiltroAdapter() {
+    public CartelasFiltroAdapter(SorteioCartelaContract.Presenter presenter) {
         super(DIFF_CALLBACK);
+        mPresenter = presenter;
     }
 
     @NonNull
@@ -48,13 +51,11 @@ public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, Cartela
                 }
             };
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-//        TextView mTextView;
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         AppCompatCheckBox mCheckBox;
 
         ViewHolder(View itemView) {
             super(itemView);
-//            mTextView = itemView.findViewById(R.id.tv_cartela_numero);
             mCheckBox = itemView.findViewById(R.id.cb_cartela_selecao);
             mCheckBox.setOnClickListener(this);
         }

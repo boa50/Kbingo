@@ -1,5 +1,7 @@
 package br.com.boa50.kbingo.data;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -57,6 +59,20 @@ public class AppRepository implements AppDataSource {
                         .flatMap(id -> Flowable.just(new CartelaFiltroDTO(id, false, false))
                                 .doOnNext(cartelaFiltroDTO -> cartelasFiltro.add(cartelaFiltroDTO))
                                 .map(cartelaFiltroDTO -> cartelasFiltro)));
+    }
+
+    @Override
+    public Flowable<List<Integer>> getCartelasSorteaveis() {
+        List<Integer> cartelasSorteaveis = new ArrayList<>();
+
+        Flowable<List<Integer>> cartelasSorteaveisFlowable = getCartelasFiltro()
+                .flatMap(cartelasFiltro -> Flowable.fromIterable(cartelasFiltro)
+                        .filter(CartelaFiltroDTO::isSelecionada)
+                        .doOnNext(cartelaFiltroDTO -> cartelasSorteaveis
+                                .add(cartelaFiltroDTO.getCartelaId()))
+                        .map(cartelaFiltroDTO -> cartelasSorteaveis));
+
+        return Flowable.concat(cartelasSorteaveisFlowable, Flowable.just(new ArrayList<>()));
     }
 
     @Override

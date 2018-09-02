@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.adapter.CartelasFiltroAdapter;
+import br.com.boa50.kbingo.adapter.CartelasSorteaveisAdapter;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import butterknife.BindView;
@@ -39,6 +40,8 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     Button btSorteioCartela;
     @BindView(R.id.rv_sorteio_cartela_filtro)
     RecyclerView rvCartelaFiltro;
+    @BindView(R.id.rv_sorteio_cartela_sorteaveis)
+    RecyclerView rvCartelasSorteaveis;
 
     private Unbinder unbinder;
 
@@ -93,9 +96,27 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
             rvCartelaFiltro.addItemDecoration(new DividerItemDecoration(
                     rvCartelaFiltro.getContext(), DividerItemDecoration.VERTICAL));
 
-            CartelasFiltroAdapter adapter = new CartelasFiltroAdapter();
+            CartelasFiltroAdapter adapter = new CartelasFiltroAdapter(mPresenter);
             adapter.submitList(cartelasFiltro);
             rvCartelaFiltro.setAdapter(adapter);
+        }
+    }
+
+    @Override
+    public void preencherCartelasSorteaveis(List<Integer> cartelasSorteaveis) {
+        if (cartelasSorteaveis.isEmpty()) cartelasSorteaveis.add(-1);
+
+        if (rvCartelasSorteaveis.getAdapter() != null) {
+            rvCartelasSorteaveis.getAdapter().notifyDataSetChanged();
+        } else {
+            rvCartelasSorteaveis.setHasFixedSize(true);
+            rvCartelasSorteaveis.setLayoutManager(new LinearLayoutManager(mContext));
+            rvCartelasSorteaveis.addItemDecoration(new DividerItemDecoration(
+                    rvCartelasSorteaveis.getContext(), DividerItemDecoration.VERTICAL));
+
+            CartelasSorteaveisAdapter adapter = new CartelasSorteaveisAdapter();
+            adapter.submitList(cartelasSorteaveis);
+            rvCartelasSorteaveis.setAdapter(adapter);
         }
     }
 }
