@@ -54,14 +54,9 @@ public class AppRepository implements AppDataSource {
 
         return getCartelaUltimoId().toFlowable()
                 .flatMap(maxId -> Flowable.range(1, maxId)
-                        .map(this::retornaCartelaFiltro).toList().toFlowable());
-    }
-
-    private CartelaFiltroDTO retornaCartelaFiltro(int id) {
-        if (cartelasFiltro.size() < id){
-            cartelasFiltro.add(new CartelaFiltroDTO(id, false, false));
-        }
-        return cartelasFiltro.get(id - 1);
+                        .flatMap(id -> Flowable.just(new CartelaFiltroDTO(id, false, false))
+                                .doOnNext(cartelaFiltroDTO -> cartelasFiltro.add(cartelaFiltroDTO))
+                                .map(cartelaFiltroDTO -> cartelasFiltro)));
     }
 
     @Override

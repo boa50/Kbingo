@@ -85,13 +85,17 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
 
     @Override
     public void preencherCartelasFiltro(List<CartelaFiltroDTO> cartelasFiltro) {
-        rvCartelaFiltro.setHasFixedSize(true);
-        rvCartelaFiltro.setLayoutManager(new LinearLayoutManager(mContext));
-        rvCartelaFiltro.addItemDecoration(new DividerItemDecoration(
-                rvCartelaFiltro.getContext(), DividerItemDecoration.VERTICAL));
+        if (rvCartelaFiltro.getAdapter() != null) {
+            rvCartelaFiltro.getAdapter().notifyDataSetChanged();
+        } else {
+            rvCartelaFiltro.setHasFixedSize(true);
+            rvCartelaFiltro.setLayoutManager(new LinearLayoutManager(mContext));
+            rvCartelaFiltro.addItemDecoration(new DividerItemDecoration(
+                    rvCartelaFiltro.getContext(), DividerItemDecoration.VERTICAL));
 
-        CartelasFiltroAdapter adapter = new CartelasFiltroAdapter();
-        adapter.submitList(cartelasFiltro);
-        rvCartelaFiltro.setAdapter(adapter);
+            CartelasFiltroAdapter adapter = new CartelasFiltroAdapter();
+            adapter.submitList(cartelasFiltro);
+            rvCartelaFiltro.setAdapter(adapter);
+        }
     }
 }
