@@ -30,7 +30,7 @@ public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, Cartela
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mTextView.setText(CartelaUtils.formatarNumeroCartela(getItem(position).getCartelaId()));
+        holder.mCheckBox.setText(CartelaUtils.formatarNumeroCartela(getItem(position).getCartelaId()));
         holder.mCheckBox.setChecked(getItem(position).isSelecionada());
     }
 
@@ -49,13 +49,12 @@ public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, Cartela
             };
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView mTextView;
+//        TextView mTextView;
         AppCompatCheckBox mCheckBox;
-
 
         ViewHolder(View itemView) {
             super(itemView);
-            mTextView = itemView.findViewById(R.id.tv_cartela_numero);
+//            mTextView = itemView.findViewById(R.id.tv_cartela_numero);
             mCheckBox = itemView.findViewById(R.id.cb_cartela_selecao);
             mCheckBox.setOnClickListener(this);
         }
