@@ -45,6 +45,7 @@ public class AppRepository implements AppDataSource {
         return db.cartelaPedraDao().loadCartelaPedras(id);
     }
 
+
     @Override
     public Flowable<List<CartelaFiltroDTO>> getCartelasFiltro() {
         if (cartelasFiltro != null)
@@ -52,47 +53,15 @@ public class AppRepository implements AppDataSource {
         else
             cartelasFiltro = new ArrayList<>();
 
-//        final int[] maxId = new int[1];
-//        Executors.newSingleThreadScheduledExecutor().execute(() ->
-//                (new CompositeDisposable())
-//                        .add(getCartelaUltimoId()
-//                                .subscribe(id -> maxId[0] = id)));
-//
-//        while (maxId[0] <= 0) {}
-//
-//        for (int cartelaId = 1; cartelaId <= maxId[0]; cartelaId++){
-//            cartelasFiltro.add(new CartelaFiltroDTO(cartelaId, false, false));
-//        }
-
-//        Executors.newSingleThreadScheduledExecutor().execute(() ->
-//                (new CompositeDisposable())
-//                        .add(getCartelaUltimoId()
-//                                .subscribe(this::preencherCartelasFiltro)));
-
-        Executors.newSingleThreadScheduledExecutor().execute(() ->
-                (new CompositeDisposable())
-                        .add(getCartelaUltimoId()
-                                .subscribe(id -> {
-                                    Thread.sleep(5000);
-                                    preencherCartelasFiltro(id);
-                                })));
-
-//        return Flowable.fromIterable(cartelasFiltro).toList().toFlowable();
-
-        return getCartelaUltimoId()
+        return getCartelaUltimoId().toFlowable()
                 .flatMap(maxId -> Flowable.range(1, maxId)
-                .flatMap(id -> cartelasFiltro.add(retornarCartelaFiltro(id)))
-                        .toList()
-                        .toFlowable());
+                        .map(this::atualizaCartelasFiltro));
     }
 
-    private void preencherCartelasFiltro(int cartelasMaxId) {
-        for (int cartelaId = 1; cartelaId <= cartelasMaxId; cartelaId++){
-            cartelasFiltro.add(new CartelaFiltroDTO(cartelaId, false, false));
-        }
-    }
-    private CartelaFiltroDTO retornarCartelaFiltro(int id) {
-        return new CartelaFiltroDTO(id, false, false);
+    private List<CartelaFiltroDTO> atualizaCartelasFiltro(int id) {
+        CartelaFiltroDTO cartelaFiltro = new CartelaFiltroDTO(id, false, false);
+        cartelasFiltro.add(cartelaFiltro);
+        return cartelasFiltro;
     }
 
     @Override
