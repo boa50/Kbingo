@@ -1,5 +1,6 @@
 package br.com.boa50.kbingo.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.util.DiffUtil;
@@ -13,9 +14,11 @@ import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.util.CartelaUtils;
 
 public class CartelasSorteaveisAdapter extends ListAdapter<Integer, CartelasSorteaveisAdapter.ViewHolder> {
+    private Context mContext;
 
-    public CartelasSorteaveisAdapter() {
+    public CartelasSorteaveisAdapter(Context context) {
         super(DIFF_CALLBACK);
+        mContext = context;
     }
 
     @NonNull
@@ -31,7 +34,7 @@ public class CartelasSorteaveisAdapter extends ListAdapter<Integer, CartelasSort
         if (getItem(position) >= 0) {
             holder.mTextView.setText(CartelaUtils.formatarNumeroCartela(getItem(position)));
         } else {
-            holder.mTextView.setText("Todas as cartelas");
+            holder.mTextView.setText(mContext.getText(R.string.todas_cartelas_sorteaveis));
         }
 
     }

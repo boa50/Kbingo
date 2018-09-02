@@ -1,7 +1,5 @@
 package br.com.boa50.kbingo.data;
 
-import com.google.common.collect.Lists;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -21,6 +19,7 @@ public class AppRepository implements AppDataSource {
 
     private AppDatabase db;
     private List<CartelaFiltroDTO> cartelasFiltro;
+    private List<Integer> cartelasSorteaveis;
 
     @Inject
     public AppRepository(AppDatabase db) {
@@ -63,7 +62,8 @@ public class AppRepository implements AppDataSource {
 
     @Override
     public Flowable<List<Integer>> getCartelasSorteaveis() {
-        List<Integer> cartelasSorteaveis = new ArrayList<>();
+        if (cartelasSorteaveis == null) cartelasSorteaveis = new ArrayList<>();
+        else cartelasSorteaveis.clear();
 
         Flowable<List<Integer>> cartelasSorteaveisFlowable = getCartelasFiltro()
                 .flatMap(cartelasFiltro -> Flowable.fromIterable(cartelasFiltro)
@@ -72,7 +72,12 @@ public class AppRepository implements AppDataSource {
                                 .add(cartelaFiltroDTO.getCartelaId()))
                         .map(cartelaFiltroDTO -> cartelasSorteaveis));
 
-        return Flowable.concat(cartelasSorteaveisFlowable, Flowable.just(new ArrayList<>()));
+        return Flowable.concat(cartelasSorteaveisFlowable, Flowable.just(cartelasSorteaveis));
+    }
+
+    @Override
+    public void updateCartelasFiltro(int id, boolean selecionada) {
+        cartelasFiltro.get(id - 1).setSelecionada(selecionada);
     }
 
     @Override

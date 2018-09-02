@@ -16,6 +16,6 @@ public interface SorteioCartelaContract {
 
     interface Presenter extends BasePresenter<View> {
         void sortearCartela();
-        void atualizarCartelasSorteaveis();
+        void atualizarCartelasSorteaveis(int id, boolean selecionada);
     }
 }
