@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
@@ -62,7 +61,8 @@ public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, Cartela
 
         @Override
         public void onClick(View v) {
-
+            mPresenter.atualizarCartelasSorteaveis(
+                    Integer.valueOf(mCheckBox.getText().toString()), mCheckBox.isChecked());
         }
     }
 }

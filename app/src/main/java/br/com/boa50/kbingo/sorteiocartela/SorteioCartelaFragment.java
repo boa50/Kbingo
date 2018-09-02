@@ -114,7 +114,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
             rvCartelasSorteaveis.addItemDecoration(new DividerItemDecoration(
                     rvCartelasSorteaveis.getContext(), DividerItemDecoration.VERTICAL));
 
-            CartelasSorteaveisAdapter adapter = new CartelasSorteaveisAdapter();
+            CartelasSorteaveisAdapter adapter = new CartelasSorteaveisAdapter(mContext);
             adapter.submitList(cartelasSorteaveis);
             rvCartelasSorteaveis.setAdapter(adapter);
         }

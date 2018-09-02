@@ -32,6 +32,7 @@
     <string name="filtro_cartelas_ganhadoras">Filtrar por cartelas ganhadoras</string>
     <string name="et_sorteio_cartela_numero_hint">Número da cartela</string>
     <string name="titulo_cartelas_sorteaveis">Cartelas Sorteáveis:</string>
+    <string name="todas_cartelas_sorteaveis">Todas as cartelas</string>
 
     <!--Conferir cartela-->
     <string name="toast_sem_cartela_ganhadora">Ainda não há nenhuma cartela ganhadora</string>

@@ -71,8 +71,9 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
     }
 
     @Override
-    public void atualizarCartelasSorteaveis() {
-        //TODO
+    public void atualizarCartelasSorteaveis(int id, boolean selecionada) {
+        mAppDataSource.updateCartelasFiltro(id, selecionada);
+        recuperarCartelasSorteaveis();
     }
 
     private void preencherCartelasSorteaveis(int maxId) {

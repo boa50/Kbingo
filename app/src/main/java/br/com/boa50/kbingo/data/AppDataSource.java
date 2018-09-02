@@ -21,5 +21,7 @@ public interface AppDataSource {
     Flowable<List<CartelaFiltroDTO>> getCartelasFiltro();
     Flowable<List<Integer>> getCartelasSorteaveis();
 
+    void updateCartelasFiltro(int id, boolean selecionada);
+
     void initializeDatabase();
 }
