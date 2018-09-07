@@ -4,16 +4,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -38,7 +42,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
 
     @BindView(R.id.bt_sorteio_cartela)
     Button btSorteioCartela;
-    @BindView(R.id.rv_sorteio_cartela_filtro)
+//    @BindView(R.id.rv_sorteio_cartela_filtro)
     RecyclerView rvCartelaFiltro;
     @BindView(R.id.rv_sorteio_cartela_sorteaveis)
     RecyclerView rvCartelasSorteaveis;
@@ -55,6 +59,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.sorteiocartela_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
         return view;
     }
@@ -68,6 +73,23 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         mPresenter.subscribe(this);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.item_filtrar_cartelas_sorteaveis).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_filtrar_cartelas_sorteaveis:
+                abrirDialogFiltroCartelas();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -118,5 +140,19 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
             adapter.submitList(cartelasSorteaveis);
             rvCartelasSorteaveis.setAdapter(adapter);
         }
+    }
+
+    private void abrirDialogFiltroCartelas() {
+        View view = Objects.requireNonNull(getActivity()).getLayoutInflater()
+                .inflate(R.layout.dialog_cartelas_filtro, null);
+        rvCartelaFiltro = view.findViewById(R.id.rv_sorteio_cartela_filtro);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        builder.setTitle(R.string.dialog_filtrar_cartelas_title)
+                .setView(view)
+                .setNeutralButton(R.string.dialog_confirmative, null);
+        mPresenter.carregarFiltroCartelasSorteaveis();
+
+        builder.create().show();
     }
 }

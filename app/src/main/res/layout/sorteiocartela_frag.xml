@@ -6,9 +6,10 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/ll_sorteio_cartela_container"
+        android:id="@+id/ll_cartelas_sorteaveis"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/sc_container_layout_height"
+        android:layout_height="@dimen/sc_cartelas_sorteaveis_height"
+        android:orientation="vertical"
         android:baselineAligned="false"
         android:paddingStart="@dimen/sc_container_layout_padding"
         android:paddingLeft="@dimen/sc_container_layout_padding"
@@ -19,74 +20,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginEnd="@dimen/sc_inside_container_layout_margin"
-            android:layout_marginRight="@dimen/sc_inside_container_layout_margin"
-            android:layout_weight="1">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sc_title_cartelas_sorteaveis_margin"
+            android:layout_marginBottom="@dimen/sc_title_cartelas_sorteaveis_margin"
+            style="@style/Base.TextAppearance.AppCompat.SearchResult.Subtitle"
+            android:text="@string/titulo_cartelas_sorteaveis" />
 
-            <CheckBox
-                android:id="@+id/cb_filtro_cartelas_ganhadoras"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/CheckBox"
-                android:text="@string/filtro_cartelas_ganhadoras" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_sorteio_cartela_numero"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/sc_input_layout_margin_top"
-                android:layout_marginBottom="@dimen/sc_input_layout_margin_bottom"
-                app:hintTextAppearance="@style/SorteioCartelaInputLayoutHint">
-
-                <EditText
-                    android:id="@+id/et_sorteio_cartela_numero"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/et_sorteio_cartela_numero_hint"
-                    android:inputType="number"
-                    android:maxLength="4"
-                    android:textSize="@dimen/sc_numero_cartela_filtro_text"
-                    android:imeOptions="actionDone"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_sorteio_cartela_filtro"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_sorteio_cartela_sorteaveis"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/sc_inside_container_layout_margin"
-            android:layout_marginLeft="@dimen/sc_inside_container_layout_margin"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/sc_title_cartelas_sorteaveis_margin"
-                android:layout_marginBottom="@dimen/sc_title_cartelas_sorteaveis_margin"
-                style="@style/Base.TextAppearance.AppCompat.SearchResult.Subtitle"
-                android:text="@string/titulo_cartelas_sorteaveis" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_sorteio_cartela_sorteaveis"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-
-
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <View
         style="@style/DivisoriaLinha"
-        app:layout_constraintTop_toBottomOf="@id/ll_sorteio_cartela_container"
+        app:layout_constraintTop_toBottomOf="@id/ll_cartelas_sorteaveis"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -95,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/PedraSorteioCartelaCard"
-        app:layout_constraintTop_toBottomOf="@id/ll_sorteio_cartela_container"
+        app:layout_constraintTop_toBottomOf="@id/ll_cartelas_sorteaveis"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">

@@ -33,6 +33,8 @@
     <string name="et_sorteio_cartela_numero_hint">Número da cartela</string>
     <string name="titulo_cartelas_sorteaveis">Cartelas Sorteáveis:</string>
     <string name="todas_cartelas_sorteaveis">Todas as cartelas</string>
+    <string name="item_filtrar_cartelas_sorteaveis">Filtrar cartelas sorteáveis</string>
+    <string name="dialog_filtrar_cartelas_title">Filtrar cartelas sorteáveis</string>
 
     <!--Conferir cartela-->
     <string name="toast_sem_cartela_ganhadora">Ainda não há nenhuma cartela ganhadora</string>
