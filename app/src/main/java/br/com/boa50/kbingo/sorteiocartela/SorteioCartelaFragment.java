@@ -8,13 +8,18 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.List;
 import java.util.Objects;
@@ -135,17 +140,35 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         }
     }
 
-    private void estilizarRecyclerView(RecyclerView recyclerView, int colunasNumero) {
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(mContext, colunasNumero));
-        recyclerView.addItemDecoration(new DividerItemDecoration(
-                recyclerView.getContext(), DividerItemDecoration.VERTICAL));
-    }
-
     private void abrirDialogFiltroCartelas() {
         View view = Objects.requireNonNull(getActivity()).getLayoutInflater()
                 .inflate(R.layout.dialog_cartelas_filtro, null);
         rvCartelaFiltro = view.findViewById(R.id.rv_sorteio_cartela_filtro);
+        EditText etFiltroCartelas = view.findViewById(R.id.et_sorteio_cartela_numero);
+        etFiltroCartelas.clearFocus();
+        etFiltroCartelas.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty())
+                    mPresenter.carregarFiltroCartelasSorteaveis(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+//        etFiltroCartelas.setOnEditorActionListener((textView, i, keyEvent) -> {
+//            if (!etFiltroCartelas.getText().toString().isEmpty())
+//                return true;
+//
+//            return false;
+//        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setTitle(R.string.dialog_filtrar_cartelas_title)
@@ -153,5 +176,12 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         mPresenter.carregarFiltroCartelasSorteaveis();
 
         builder.create().show();
+    }
+
+    private void estilizarRecyclerView(RecyclerView recyclerView, int colunasNumero) {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(mContext, colunasNumero));
+        recyclerView.addItemDecoration(new DividerItemDecoration(
+                recyclerView.getContext(), DividerItemDecoration.VERTICAL));
     }
 }
