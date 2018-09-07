@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -22,8 +22,6 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.R;
-import br.com.boa50.kbingo.adapter.CartelasFiltroAdapter;
-import br.com.boa50.kbingo.adapter.CartelasSorteaveisAdapter;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import butterknife.BindView;
@@ -39,13 +37,16 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     Context mContext;
     @Inject
     SorteioCartelaContract.Presenter mPresenter;
+    @Inject
+    CartelasSorteaveisAdapter cartelasSorteaveisAdapter;
+    @Inject
+    CartelasFiltroAdapter cartelasFiltroAdapter;
 
     @BindView(R.id.bt_sorteio_cartela)
     Button btSorteioCartela;
-//    @BindView(R.id.rv_sorteio_cartela_filtro)
-    RecyclerView rvCartelaFiltro;
     @BindView(R.id.rv_sorteio_cartela_sorteaveis)
     RecyclerView rvCartelasSorteaveis;
+    RecyclerView rvCartelaFiltro;
 
     private Unbinder unbinder;
 
@@ -113,14 +114,10 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         if (rvCartelaFiltro.getAdapter() != null) {
             rvCartelaFiltro.getAdapter().notifyDataSetChanged();
         } else {
-            rvCartelaFiltro.setHasFixedSize(true);
-            rvCartelaFiltro.setLayoutManager(new LinearLayoutManager(mContext));
-            rvCartelaFiltro.addItemDecoration(new DividerItemDecoration(
-                    rvCartelaFiltro.getContext(), DividerItemDecoration.VERTICAL));
+            estilizarRecyclerView(rvCartelaFiltro, 2);
 
-            CartelasFiltroAdapter adapter = new CartelasFiltroAdapter(mPresenter);
-            adapter.submitList(cartelasFiltro);
-            rvCartelaFiltro.setAdapter(adapter);
+            cartelasFiltroAdapter.submitList(cartelasFiltro);
+            rvCartelaFiltro.setAdapter(cartelasFiltroAdapter);
         }
     }
 
@@ -131,15 +128,18 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         if (rvCartelasSorteaveis.getAdapter() != null) {
             rvCartelasSorteaveis.getAdapter().notifyDataSetChanged();
         } else {
-            rvCartelasSorteaveis.setHasFixedSize(true);
-            rvCartelasSorteaveis.setLayoutManager(new LinearLayoutManager(mContext));
-            rvCartelasSorteaveis.addItemDecoration(new DividerItemDecoration(
-                    rvCartelasSorteaveis.getContext(), DividerItemDecoration.VERTICAL));
+            estilizarRecyclerView(rvCartelasSorteaveis, 3);
 
-            CartelasSorteaveisAdapter adapter = new CartelasSorteaveisAdapter(mContext);
-            adapter.submitList(cartelasSorteaveis);
-            rvCartelasSorteaveis.setAdapter(adapter);
+            cartelasSorteaveisAdapter.submitList(cartelasSorteaveis);
+            rvCartelasSorteaveis.setAdapter(cartelasSorteaveisAdapter);
         }
+    }
+
+    private void estilizarRecyclerView(RecyclerView recyclerView, int colunasNumero) {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(mContext, colunasNumero));
+        recyclerView.addItemDecoration(new DividerItemDecoration(
+                recyclerView.getContext(), DividerItemDecoration.VERTICAL));
     }
 
     private void abrirDialogFiltroCartelas() {
@@ -149,8 +149,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setTitle(R.string.dialog_filtrar_cartelas_title)
-                .setView(view)
-                .setNeutralButton(R.string.dialog_confirmative, null);
+                .setView(view);
         mPresenter.carregarFiltroCartelasSorteaveis();
 
         builder.create().show();

@@ -1,4 +1,4 @@
-package br.com.boa50.kbingo.adapter;
+package br.com.boa50.kbingo.sorteiocartela;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,13 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.util.CartelaUtils;
 
 public class CartelasSorteaveisAdapter extends ListAdapter<Integer, CartelasSorteaveisAdapter.ViewHolder> {
     private Context mContext;
 
-    public CartelasSorteaveisAdapter(Context context) {
+    @Inject
+    CartelasSorteaveisAdapter(@NonNull Context context) {
         super(DIFF_CALLBACK);
         mContext = context;
     }

@@ -1,4 +1,4 @@
-package br.com.boa50.kbingo.adapter;
+package br.com.boa50.kbingo.sorteiocartela;
 
 import android.support.annotation.NonNull;
 import android.support.v7.recyclerview.extensions.ListAdapter;
@@ -9,15 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
-import br.com.boa50.kbingo.sorteiocartela.SorteioCartelaContract;
 import br.com.boa50.kbingo.util.CartelaUtils;
 
 public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, CartelasFiltroAdapter.ViewHolder> {
     private SorteioCartelaContract.Presenter mPresenter;
 
-    public CartelasFiltroAdapter(SorteioCartelaContract.Presenter presenter) {
+    @Inject
+    CartelasFiltroAdapter(@NonNull SorteioCartelaContract.Presenter presenter) {
         super(DIFF_CALLBACK);
         mPresenter = presenter;
     }
