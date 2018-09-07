@@ -104,7 +104,6 @@
         <item name="android:textSize">@dimen/sc_pedra_texto</item>
     </style>
 
-    <!--Visualizar cartelas-->
     <style name="SorteioCartelaInputLayoutHint" parent="TextAppearance.Design.Hint">
         <item name="android:textSize">@dimen/sc_input_layout_hint</item>
     </style>

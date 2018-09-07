@@ -18,8 +18,11 @@ import br.com.boa50.kbingo.data.AppDatabase;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -65,6 +68,19 @@ public class SorteioCartelaEspressoTest {
     }
 
     @Test
+    public void abrirFiltro_configuracoesIniciais() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        onView(withId(R.id.et_sorteio_cartela_numero))
+                .check(matches(not(hasFocus())));
+
+        onView(withId(R.id.rv_sorteio_cartela_filtro))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
     public void filtraCartela_apareceCartelaSorteavel() {
         onView(withText(R.string.todas_cartelas_sorteaveis))
                 .check(matches(isDisplayed()));
@@ -74,9 +90,6 @@ public class SorteioCartelaEspressoTest {
                 .perform(click());
 
         onView(withId(R.id.rv_sorteio_cartela_filtro))
-                .check(matches(isDisplayed()));
-
-        onView(withId(R.id.rv_sorteio_cartela_filtro))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         Espresso.closeSoftKeyboard();
@@ -84,5 +97,48 @@ public class SorteioCartelaEspressoTest {
 
         onView(withText("0001"))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void removerFiltro_aparecerTodasCartelasSorteaveis() {
+        onView(withText(R.string.todas_cartelas_sorteaveis))
+                .check(matches(isDisplayed()));
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        onView(withId(R.id.rv_sorteio_cartela_filtro))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.rv_sorteio_cartela_filtro))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        Espresso.closeSoftKeyboard();
+        pressBack();
+
+        onView(withText(R.string.todas_cartelas_sorteaveis))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void filtrarFiltro_aparecerOpcoesCorretas() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        onView(withId(R.id.et_sorteio_cartela_numero))
+                .perform(replaceText("1"));
+
+        onView(withText("0001"))
+                .check(matches(isDisplayed()));
+        onView(withText("0010"))
+                .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withText("0005"))
+                .check(doesNotExist());
     }
 }

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:focusableInTouchMode="true"
     android:padding="@dimen/sc_container_filtro_layout_padding">
 
     <CheckBox
@@ -29,8 +30,7 @@
             android:hint="@string/et_sorteio_cartela_numero_hint"
             android:inputType="number"
             android:maxLength="4"
-            android:textSize="@dimen/sc_numero_cartela_filtro_text"
-            android:imeOptions="actionDone"/>
+            android:textSize="@dimen/sc_numero_cartela_filtro_text" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.v7.widget.RecyclerView

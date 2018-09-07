@@ -77,7 +77,7 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
     @Override
     public void carregarFiltroCartelasSorteaveis(String filtro) {
         Disposable disposable = mAppDataSource
-                .getCartelasFiltro()
+                .getCartelasFiltro(filtro)
                 .subscribeOn(mScheduleProvider.io())
                 .observeOn(mScheduleProvider.ui())
                 .subscribe(

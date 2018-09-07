@@ -11,6 +11,7 @@ import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.data.utils.PopularTabelas;
+import br.com.boa50.kbingo.util.CartelaUtils;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
@@ -49,7 +50,12 @@ public class AppRepository implements AppDataSource {
     @Override
     public Flowable<List<CartelaFiltroDTO>> getCartelasFiltro(String filtro) {
         if (cartelasFiltro != null)
-            return Flowable.fromIterable(cartelasFiltro).toList().toFlowable();
+            return Flowable.fromIterable(cartelasFiltro)
+                    .filter(cartelaFiltroDTO ->
+                            CartelaUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
+                                    .contains(filtro))
+                    .toList()
+                    .toFlowable();
         else
             cartelasFiltro = new ArrayList<>();
 
@@ -65,7 +71,6 @@ public class AppRepository implements AppDataSource {
         if (cartelasSorteaveis == null) cartelasSorteaveis = new ArrayList<>();
         else cartelasSorteaveis.clear();
 
-        //TODO verificar como vai ficar a filtragem das cartelas sorteáveis
         Flowable<List<Integer>> cartelasSorteaveisFlowable = getCartelasFiltro("")
                 .flatMap(cartelasFiltro -> Flowable.fromIterable(cartelasFiltro)
                         .filter(CartelaFiltroDTO::isSelecionada)
