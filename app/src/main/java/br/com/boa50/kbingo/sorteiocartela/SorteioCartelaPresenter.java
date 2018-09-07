@@ -38,7 +38,7 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
     public void subscribe(@NonNull SorteioCartelaContract.View view) {
         mView = view;
         mCartelasSorteaveis = new ArrayList<>();
-        recuperarCartelasFiltro();
+//        recuperarCartelasFiltro();
         recuperarCartelasSorteaveis();
     }
 
@@ -71,6 +71,18 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
     }
 
     @Override
+    public void carregarFiltroCartelasSorteaveis() {
+        Disposable disposable = mAppDataSource
+                .getCartelasFiltro()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui())
+                .subscribe(
+                        cartelasFiltro -> mView.preencherCartelasFiltro(cartelasFiltro)
+                );
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
     public void atualizarCartelasSorteaveis(int id, boolean selecionada) {
         mAppDataSource.updateCartelasFiltro(id, selecionada);
         recuperarCartelasSorteaveis();
@@ -85,16 +97,16 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
         }
     }
 
-    private void recuperarCartelasFiltro() {
-        Disposable disposable = mAppDataSource
-                .getCartelasFiltro()
-                .subscribeOn(mScheduleProvider.io())
-                .observeOn(mScheduleProvider.ui())
-                .subscribe(
-                        cartelasFiltro -> mView.preencherCartelasFiltro(cartelasFiltro)
-                );
-        mCompositeDisposable.add(disposable);
-    }
+//    private void recuperarCartelasFiltro() {
+//        Disposable disposable = mAppDataSource
+//                .getCartelasFiltro()
+//                .subscribeOn(mScheduleProvider.io())
+//                .observeOn(mScheduleProvider.ui())
+//                .subscribe(
+//                        cartelasFiltro -> mView.preencherCartelasFiltro(cartelasFiltro)
+//                );
+//        mCompositeDisposable.add(disposable);
+//    }
 
     private void recuperarCartelasSorteaveis() {
         Disposable disposable = mAppDataSource
