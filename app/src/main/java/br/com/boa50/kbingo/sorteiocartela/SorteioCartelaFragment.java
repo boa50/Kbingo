@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.List;
 import java.util.Objects;
@@ -117,10 +115,9 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     @Override
     public void preencherCartelasFiltro(List<CartelaFiltroDTO> cartelasFiltro) {
         if (rvCartelaFiltro.getAdapter() != null) {
-            rvCartelaFiltro.getAdapter().notifyDataSetChanged();
+            cartelasFiltroAdapter.submitList(cartelasFiltro);
         } else {
             estilizarRecyclerView(rvCartelaFiltro, 2);
-
             cartelasFiltroAdapter.submitList(cartelasFiltro);
             rvCartelaFiltro.setAdapter(cartelasFiltroAdapter);
         }
@@ -131,10 +128,9 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         if (cartelasSorteaveis.isEmpty()) cartelasSorteaveis.add(-1);
 
         if (rvCartelasSorteaveis.getAdapter() != null) {
-            rvCartelasSorteaveis.getAdapter().notifyDataSetChanged();
+            cartelasSorteaveisAdapter.notifyDataSetChanged();
         } else {
             estilizarRecyclerView(rvCartelasSorteaveis, 3);
-
             cartelasSorteaveisAdapter.submitList(cartelasSorteaveis);
             rvCartelasSorteaveis.setAdapter(cartelasSorteaveisAdapter);
         }
@@ -144,37 +140,25 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         View view = Objects.requireNonNull(getActivity()).getLayoutInflater()
                 .inflate(R.layout.dialog_cartelas_filtro, null);
         rvCartelaFiltro = view.findViewById(R.id.rv_sorteio_cartela_filtro);
+
         EditText etFiltroCartelas = view.findViewById(R.id.et_sorteio_cartela_numero);
-        etFiltroCartelas.clearFocus();
         etFiltroCartelas.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().isEmpty())
-                    mPresenter.carregarFiltroCartelasSorteaveis(charSequence.toString());
+                mPresenter.carregarFiltroCartelasSorteaveis(charSequence.toString());
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+            public void afterTextChanged(Editable editable) {}
         });
-//        etFiltroCartelas.setOnEditorActionListener((textView, i, keyEvent) -> {
-//            if (!etFiltroCartelas.getText().toString().isEmpty())
-//                return true;
-//
-//            return false;
-//        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setTitle(R.string.dialog_filtrar_cartelas_title)
                 .setView(view);
         mPresenter.carregarFiltroCartelasSorteaveis();
-
         builder.create().show();
     }
 
