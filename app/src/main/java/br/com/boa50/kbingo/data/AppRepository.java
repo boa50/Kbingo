@@ -47,7 +47,7 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public Flowable<List<CartelaFiltroDTO>> getCartelasFiltro() {
+    public Flowable<List<CartelaFiltroDTO>> getCartelasFiltro(String filtro) {
         if (cartelasFiltro != null)
             return Flowable.fromIterable(cartelasFiltro).toList().toFlowable();
         else
@@ -65,7 +65,8 @@ public class AppRepository implements AppDataSource {
         if (cartelasSorteaveis == null) cartelasSorteaveis = new ArrayList<>();
         else cartelasSorteaveis.clear();
 
-        Flowable<List<Integer>> cartelasSorteaveisFlowable = getCartelasFiltro()
+        //TODO verificar como vai ficar a filtragem das cartelas sorteáveis
+        Flowable<List<Integer>> cartelasSorteaveisFlowable = getCartelasFiltro("")
                 .flatMap(cartelasFiltro -> Flowable.fromIterable(cartelasFiltro)
                         .filter(CartelaFiltroDTO::isSelecionada)
                         .doOnNext(cartelaFiltroDTO -> cartelasSorteaveis
