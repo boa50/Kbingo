@@ -35,7 +35,7 @@
 
     <!--Sorteio Cartela-->
     <dimen name="sc_cartelas_sorteaveis_height">200dp</dimen>
-    <dimen name="sc_container_layout_padding">8dp</dimen>
+    <dimen name="sc_container_layout_padding">16dp</dimen>
     <dimen name="sc_pedra_lado">400dp</dimen>
     <dimen name="sc_pedra_card_radius">200dp</dimen>
     <dimen name="sc_pedra_card_elevation">4dp</dimen>
@@ -47,7 +47,8 @@
     <dimen name="sc_input_layout_hint">16sp</dimen>
     <dimen name="sc_input_layout_margin_top">16dp</dimen>
     <dimen name="sc_input_layout_margin_bottom">-8dp</dimen>
-    <dimen name="sc_title_cartelas_sorteaveis_margin">4dp</dimen>
+    <dimen name="sc_dialog_filtro_cartelas_rv_height">300dp</dimen>
+    <dimen name="sc_container_filtro_layout_padding">20dp</dimen>
 
     <!--Visualizar cartela-->
     <dimen name="input_layout_hint">24sp</dimen>

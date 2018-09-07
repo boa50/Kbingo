@@ -23,8 +23,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sc_title_cartelas_sorteaveis_margin"
-            android:layout_marginBottom="@dimen/sc_title_cartelas_sorteaveis_margin"
             style="@style/Base.TextAppearance.AppCompat.SearchResult.Subtitle"
             android:text="@string/titulo_cartelas_sorteaveis" />
 
