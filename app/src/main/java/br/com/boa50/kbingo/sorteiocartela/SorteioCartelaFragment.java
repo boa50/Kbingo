@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import java.util.List;
@@ -140,20 +141,26 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         View view = Objects.requireNonNull(getActivity()).getLayoutInflater()
                 .inflate(R.layout.dialog_cartelas_filtro, null);
         rvCartelaFiltro = view.findViewById(R.id.rv_sorteio_cartela_filtro);
-
         EditText etFiltroCartelas = view.findViewById(R.id.et_sorteio_cartela_numero);
+        CheckBox cbFiltroCartelasGanhadoras = view.findViewById(R.id.cb_filtro_cartelas_ganhadoras);
+
         etFiltroCartelas.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mPresenter.carregarFiltroCartelasSorteaveis(charSequence.toString());
+                mPresenter.carregarFiltroCartelasSorteaveis(
+                        charSequence.toString(), cbFiltroCartelasGanhadoras.isChecked());
             }
 
             @Override
             public void afterTextChanged(Editable editable) {}
         });
+
+        cbFiltroCartelasGanhadoras.setOnCheckedChangeListener((buttonView, isChecked) ->
+                mPresenter.carregarFiltroCartelasSorteaveis(
+                        etFiltroCartelas.getText().toString(), isChecked));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setTitle(R.string.dialog_filtrar_cartelas_title)
