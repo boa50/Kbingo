@@ -58,7 +58,7 @@ public class SorteioCartelaPresenterTest {
         cartelasSorteaveis = Lists.newArrayList();
 
         when(appDataSource.getCartelaUltimoId()).thenReturn(Single.just(cartelaMaxId));
-        when(appDataSource.getCartelasFiltro("")).thenReturn(Flowable.just(cartelasFiltro));
+        when(appDataSource.getCartelasFiltro()).thenReturn(Flowable.just(cartelasFiltro));
         when(appDataSource.getCartelasSorteaveis()).thenReturn(Flowable.just(cartelasSorteaveis));
         presenter.subscribe(view);
     }
@@ -107,5 +107,13 @@ public class SorteioCartelaPresenterTest {
         verify(view, times(2)).preencherCartelasSorteaveis(cartelasSorteaveisCaptor.capture());
         assertThat(cartelasSorteaveisCaptor.getValue().get(0), equalTo(1));
         assertThat(cartelasSorteaveisCaptor.getValue().size(), equalTo(1));
+    }
+
+    @Test
+    public void carregarCartelasFiltroBusca_retornarDadosCorretos() {
+        presenter.carregarFiltroCartelasSorteaveis("2");
+        verify(view).preencherCartelasFiltro(cartelasFiltroCaptor.capture());
+        assertThat(cartelasFiltroCaptor.getValue().get(0), equalTo(cartelasFiltro.get(1)));
+        assertThat(cartelasFiltroCaptor.getValue().size(), equalTo(1));
     }
 }
