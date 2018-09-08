@@ -18,7 +18,7 @@ public interface AppDataSource {
     Single<Integer> getCartelaUltimoId();
     Single<List<CartelaPedra>> getPedrasByCartelaId(int id);
 
-    Flowable<List<CartelaFiltroDTO>> getCartelasFiltro(String filtro);
+    Flowable<List<CartelaFiltroDTO>> getCartelasFiltro();
     Flowable<List<Integer>> getCartelasSorteaveis();
 
     void updateCartelasFiltro(int id, boolean selecionada);

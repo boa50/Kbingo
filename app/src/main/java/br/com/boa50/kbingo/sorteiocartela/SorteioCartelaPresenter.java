@@ -11,7 +11,9 @@ import javax.inject.Inject;
 import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.di.ActivityScoped;
+import br.com.boa50.kbingo.util.CartelaUtils;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
+import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -77,7 +79,13 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
     @Override
     public void carregarFiltroCartelasSorteaveis(String filtro) {
         Disposable disposable = mAppDataSource
-                .getCartelasFiltro(filtro)
+                .getCartelasFiltro()
+                .flatMap(cartelasFiltro -> Flowable.fromIterable(cartelasFiltro)
+                        .filter(cartelaFiltroDTO ->
+                                CartelaUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
+                                        .contains(filtro))
+                        .toList()
+                        .toFlowable())
                 .subscribeOn(mScheduleProvider.io())
                 .observeOn(mScheduleProvider.ui())
                 .subscribe(
