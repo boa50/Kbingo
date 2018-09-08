@@ -73,17 +73,24 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
 
     @Override
     public void carregarFiltroCartelasSorteaveis() {
-        carregarFiltroCartelasSorteaveis("");
+        carregarFiltroCartelasSorteaveis("", false);
     }
 
     @Override
-    public void carregarFiltroCartelasSorteaveis(String filtro) {
+    public void carregarFiltroCartelasSorteaveis(String filtro, boolean apenasGanhadoras) {
         Disposable disposable = mAppDataSource
                 .getCartelasFiltro()
                 .flatMap(cartelasFiltro -> Flowable.fromIterable(cartelasFiltro)
-                        .filter(cartelaFiltroDTO ->
-                                CartelaUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
-                                        .contains(filtro))
+                        .filter(cartelaFiltroDTO -> {
+                            if (apenasGanhadoras) {
+                               return  CartelaUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
+                                       .contains(filtro) &&
+                                       cartelaFiltroDTO.isGanhadora();
+                            } else {
+                                return CartelaUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
+                                        .contains(filtro);
+                            }
+                        })
                         .toList()
                         .toFlowable())
                 .subscribeOn(mScheduleProvider.io())
