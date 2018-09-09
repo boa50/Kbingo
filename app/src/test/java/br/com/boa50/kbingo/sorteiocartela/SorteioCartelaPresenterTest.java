@@ -111,7 +111,7 @@ public class SorteioCartelaPresenterTest {
 
     @Test
     public void carregarCartelasFiltroBusca_retornarDadosCorretos() {
-        presenter.carregarFiltroCartelasSorteaveis("2");
+        presenter.carregarFiltroCartelasSorteaveis("2", false);
         verify(view).preencherCartelasFiltro(cartelasFiltroCaptor.capture());
         assertThat(cartelasFiltroCaptor.getValue().get(0), equalTo(cartelasFiltro.get(1)));
         assertThat(cartelasFiltroCaptor.getValue().size(), equalTo(1));

@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.boa50.kbingo.data.AppDataSource;
@@ -16,6 +17,7 @@ import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.util.schedulers.ImmediateScheduleProvider;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -79,17 +81,24 @@ public class RealizaSorteioPresenterTest {
                 )
         );
 
+        List<CartelaDTO> CARTELAS = new ArrayList<>();
+        for (List<CartelaPedra> cartelaPedras : CARTELAS_PEDRAS) {
+            CARTELAS.add(new CartelaDTO(cartelaPedras.get(0).getCartelaId(), cartelaPedras));
+        }
+
         when(appDataSource.getPedras()).thenReturn(Single.just(PEDRAS));
         when(appDataSource.getLetras()).thenReturn(Single.just(LETRAS));
         when(appDataSource.getCartelaUltimoId()).thenReturn(Single.just(CARTELAS_PEDRAS.size()));
+        when(appDataSource.getCartelas()).thenReturn(Flowable.just(CARTELAS));
         when(appDataSource.getPedrasByCartelaId(1)).thenReturn(Single.just(CARTELAS_PEDRAS.get(0)));
         when(appDataSource.getPedrasByCartelaId(2)).thenReturn(Single.just(CARTELAS_PEDRAS.get(1)));
+        when(appDataSource.getTipoSorteio()).thenReturn(TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS));
 
         QUANTIDADE_PEDRAS_SORTEAVEIS = PEDRAS.size();
         QUANTIDADE_CARTELAS = CARTELAS_PEDRAS.size();
 
         realizaSorteioPresenter.subscribe(realizaSorteioView,
-                new RealizaSorteioState(null, null, TipoSorteioDTO.CINCO_PEDRAS, null, 0));
+                new RealizaSorteioState(null, null, /*TipoSorteioDTO.CINCO_PEDRAS,*/ null, 0));
     }
 
     @Test
