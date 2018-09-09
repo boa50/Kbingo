@@ -98,21 +98,12 @@ public class RealizaSorteioEspressoTest {
 
         String text = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
 
-        Drawable drawable = VectorDrawableCompat.create(
-                mActivityRule.getActivity().getResources(),
-                R.drawable.pedra,
-                new ContextThemeWrapper(mActivityRule.getActivity(), R.style.PedraEnabled).getTheme());
-
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), QTDE_LETRAS - 1))
                 .perform(click());
         onView(indexChildOf(withParent(withId(R.id.tl_pedras_sorteadas)), 0))
                 .perform(click());
 
-        onView(withText(text))
-                .check(matches(withTextColor(R.color.pedraTextoEnabled)));
-        onView(withText(text))
-                .check(matches(withBackgroundDrawable(drawable)));
-
+        verificarUltimaPedraSorteada(text, true);
     }
 
     @Test
@@ -269,6 +260,7 @@ public class RealizaSorteioEspressoTest {
 
     @Test
     public void sortearPedra_AlterarTipoSorteio_RealizarNovoSorteio() {
+        setTipoSorteioDefault();
         onView(withId(R.id.bt_sortear_pedra))
                 .perform(click());
 
@@ -292,6 +284,7 @@ public class RealizaSorteioEspressoTest {
 
     @Test
     public void sortearPedra_AlterarTipoSorteio_CancelarNovoSorteio() {
+        setTipoSorteioDefault();
         onView(withId(R.id.bt_sortear_pedra))
                 .perform(click());
 

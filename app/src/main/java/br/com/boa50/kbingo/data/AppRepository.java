@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.data.dto.CartelaDTO;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
+import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
@@ -22,10 +23,29 @@ public class AppRepository implements AppDataSource {
     private List<CartelaDTO> cartelas;
     private List<CartelaFiltroDTO> cartelasFiltro;
     private List<Integer> cartelasSorteaveis;
+    private Integer tipoSorteioId;
 
     @Inject
     public AppRepository(AppDatabase db) {
         this.db = db;
+    }
+
+    @Override
+    public TipoSorteioDTO getTipoSorteio() {
+        return TipoSorteioDTO.getTipoSorteio(getTipoSorteioId());
+    }
+
+    @Override
+    public int getTipoSorteioId() {
+        if (tipoSorteioId == null)
+            tipoSorteioId = TipoSorteioDTO.CARTELA_CHEIA;
+
+        return tipoSorteioId;
+    }
+
+    @Override
+    public void setTipoSorteioId(int tipoSorteioId) {
+        this.tipoSorteioId = tipoSorteioId;
     }
 
     @Override

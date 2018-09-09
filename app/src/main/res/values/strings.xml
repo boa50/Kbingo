@@ -12,9 +12,6 @@
     <string name="dialog_sair_app_title">Deseja realmente sair do Kbingo?</string>
     <string name="dialog_sair_app_positive">Sair</string>
 
-    <!--Shared Preferences-->
-    <string name="pref_tipo_sorteio">prefTipoSorteio</string>
-
     <!--Realizar sorteio-->
     <string name="bt_sortear_pedra">Sortear\nPedra</string>
     <string name="item_novo_sorteio">Novo Sorteio</string>
