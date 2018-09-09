@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
+import br.com.boa50.kbingo.data.dto.CartelaDTO;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
@@ -18,6 +19,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class AppRepository implements AppDataSource {
 
     private AppDatabase db;
+    private List<CartelaDTO> cartelas;
     private List<CartelaFiltroDTO> cartelasFiltro;
     private List<Integer> cartelasSorteaveis;
 
@@ -47,17 +49,36 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
+    public Flowable<List<CartelaDTO>> getCartelas() {
+        if (cartelas != null) {
+            return Flowable.fromIterable(cartelas).toList().toFlowable();
+        } else {
+            cartelas = new ArrayList<>();
+        }
+
+        return getCartelaUltimoId().toFlowable()
+                .flatMap(maxId -> Flowable.range(1, maxId)
+                .flatMap(id -> getPedrasByCartelaId(id).toFlowable()
+                .flatMap(cartelaPedras -> Flowable.just(new CartelaDTO(id, cartelaPedras))
+                .doOnNext(cartela -> cartelas.add(cartela))
+                .toList()
+                .toFlowable())));
+    }
+
+    @Override
     public Flowable<List<CartelaFiltroDTO>> getCartelasFiltro() {
-        if (cartelasFiltro != null)
+        if (cartelasFiltro != null) {
             return Flowable.fromIterable(cartelasFiltro).toList().toFlowable();
-        else
+        } else {
             cartelasFiltro = new ArrayList<>();
+        }
 
         return getCartelaUltimoId().toFlowable()
                 .flatMap(maxId -> Flowable.range(1, maxId)
                         .flatMap(id -> Flowable.just(new CartelaFiltroDTO(id, false, false))
                                 .doOnNext(cartelaFiltroDTO -> cartelasFiltro.add(cartelaFiltroDTO))
-                                .map(cartelaFiltroDTO -> cartelasFiltro)));
+                                .toList()
+                                .toFlowable()));
     }
 
     @Override
@@ -68,9 +89,10 @@ public class AppRepository implements AppDataSource {
         Flowable<List<Integer>> cartelasSorteaveisFlowable = getCartelasFiltro()
                 .flatMap(cartelasFiltro -> Flowable.fromIterable(cartelasFiltro)
                         .filter(CartelaFiltroDTO::isSelecionada)
-                        .doOnNext(cartelaFiltroDTO -> cartelasSorteaveis
-                                .add(cartelaFiltroDTO.getCartelaId()))
-                        .map(cartelaFiltroDTO -> cartelasSorteaveis));
+                        .map(CartelaFiltroDTO::getCartelaId)
+                        .doOnNext(cartelaId -> cartelasSorteaveis.add(cartelaId))
+                        .toList()
+                        .toFlowable());
 
         return Flowable.concat(cartelasSorteaveisFlowable, Flowable.just(cartelasSorteaveis));
     }

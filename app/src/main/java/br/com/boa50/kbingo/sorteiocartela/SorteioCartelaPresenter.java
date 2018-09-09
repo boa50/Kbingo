@@ -95,9 +95,8 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
                         .toFlowable())
                 .subscribeOn(mScheduleProvider.io())
                 .observeOn(mScheduleProvider.ui())
-                .subscribe(
-                        cartelasFiltro -> mView.preencherCartelasFiltro(cartelasFiltro)
-                );
+                .subscribe(cartelasFiltro -> mView.preencherCartelasFiltro(cartelasFiltro));
+
         mCompositeDisposable.add(disposable);
     }
 
