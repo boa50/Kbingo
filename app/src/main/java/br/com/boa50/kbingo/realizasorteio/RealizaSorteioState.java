@@ -9,16 +9,13 @@ public class RealizaSorteioState implements RealizaSorteioContract.State {
     private final ArrayList<Pedra> mPedras;
     private final Pedra mUltimaPedraSorteada;
     private final ArrayList<CartelaDTO> mCartelas;
-    private final int mQtdCartelasGanhadoras;
 
     public RealizaSorteioState(ArrayList<Pedra> pedras,
                                Pedra ultimaPedraSorteada,
-                               ArrayList<CartelaDTO> cartelas,
-                               int qtdCartelasGanhadoras) {
+                               ArrayList<CartelaDTO> cartelas) {
         mPedras = pedras;
         mUltimaPedraSorteada = ultimaPedraSorteada;
         mCartelas = cartelas;
-        mQtdCartelasGanhadoras = qtdCartelasGanhadoras;
     }
 
     @Override
@@ -34,10 +31,5 @@ public class RealizaSorteioState implements RealizaSorteioContract.State {
     @Override
     public ArrayList<CartelaDTO> getCartelas() {
         return mCartelas;
-    }
-
-    @Override
-    public int getQtdCartelasGanhadoras() {
-        return mQtdCartelasGanhadoras;
     }
 }

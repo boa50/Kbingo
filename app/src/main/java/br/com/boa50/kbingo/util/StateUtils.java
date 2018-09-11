@@ -10,20 +10,17 @@ public final class StateUtils {
     private static final String ARGS_PEDRAS = "pedras";
     private static final String ARGS_PEDRA_ULTIMA = "ultimaPedra";
     private static final String ARGS_CARTELAS = "cartelas";
-    private static final String ARGS_QTD_CARTELAS_GANHADORAS = "qtdCartelasGanhadoras";
 
     public static void writeStateToBundle(@NonNull Bundle outState, RealizaSorteioContract.State state) {
         outState.putParcelableArrayList(ARGS_PEDRAS, state.getPedras());
         outState.putParcelable(ARGS_PEDRA_ULTIMA, state.getUltimaPedraSorteada());
         outState.putParcelableArrayList(ARGS_CARTELAS, state.getCartelas());
-        outState.putInt(ARGS_QTD_CARTELAS_GANHADORAS, state.getQtdCartelasGanhadoras());
     }
 
     public static RealizaSorteioContract.State readStateFromBundle(@NonNull Bundle outState) {
         return new RealizaSorteioState(
                 outState.getParcelableArrayList(ARGS_PEDRAS),
                 outState.getParcelable(ARGS_PEDRA_ULTIMA),
-                outState.getParcelableArrayList(ARGS_CARTELAS),
-                outState.getInt(ARGS_QTD_CARTELAS_GANHADORAS));
+                outState.getParcelableArrayList(ARGS_CARTELAS));
     }
 }
