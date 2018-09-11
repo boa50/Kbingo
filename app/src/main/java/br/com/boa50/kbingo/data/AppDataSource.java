@@ -25,9 +25,11 @@ public interface AppDataSource {
     Single<List<CartelaPedra>> getPedrasByCartelaId(int id);
 
     Flowable<List<CartelaDTO>> getCartelas();
+    Flowable<List<CartelaDTO>> getCartelasGanhadoras();
     Flowable<List<CartelaFiltroDTO>> getCartelasFiltro();
     Flowable<List<Integer>> getCartelasSorteaveis();
 
+    void updateCartelas(Pedra ultimaPedraSorteada);
     void updateCartelasFiltro(int id, boolean selecionada);
 
     void initializeDatabase();

@@ -16,17 +16,18 @@ import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
+import br.com.boa50.kbingo.util.CartelaUtils;
 import br.com.boa50.kbingo.util.schedulers.ImmediateScheduleProvider;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,6 +37,7 @@ public class RealizaSorteioPresenterTest {
 
     private int QUANTIDADE_PEDRAS_SORTEAVEIS;
     private int QUANTIDADE_CARTELAS;
+    private List<CartelaDTO> CARTELAS;
 
     @Mock
     private RealizaSorteioContract.View realizaSorteioView;
@@ -81,7 +83,7 @@ public class RealizaSorteioPresenterTest {
                 )
         );
 
-        List<CartelaDTO> CARTELAS = new ArrayList<>();
+        CARTELAS = new ArrayList<>();
         for (List<CartelaPedra> cartelaPedras : CARTELAS_PEDRAS) {
             CARTELAS.add(new CartelaDTO(cartelaPedras.get(0).getCartelaId(), cartelaPedras));
         }
@@ -90,6 +92,8 @@ public class RealizaSorteioPresenterTest {
         when(appDataSource.getLetras()).thenReturn(Single.just(LETRAS));
         when(appDataSource.getCartelaUltimoId()).thenReturn(Single.just(CARTELAS_PEDRAS.size()));
         when(appDataSource.getCartelas()).thenReturn(Flowable.just(CARTELAS));
+        when(appDataSource.getCartelasGanhadoras()).thenReturn(
+                Flowable.fromIterable(CARTELAS).filter(CartelaDTO::isGanhadora).toList().toFlowable());
         when(appDataSource.getPedrasByCartelaId(1)).thenReturn(Single.just(CARTELAS_PEDRAS.get(0)));
         when(appDataSource.getPedrasByCartelaId(2)).thenReturn(Single.just(CARTELAS_PEDRAS.get(1)));
         when(appDataSource.getTipoSorteio()).thenReturn(TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS));
@@ -98,7 +102,29 @@ public class RealizaSorteioPresenterTest {
         QUANTIDADE_CARTELAS = CARTELAS_PEDRAS.size();
 
         realizaSorteioPresenter.subscribe(realizaSorteioView,
-                new RealizaSorteioState(null, null, /*TipoSorteioDTO.CINCO_PEDRAS,*/ null, 0));
+                new RealizaSorteioState(null, null, null));
+    }
+
+    private void sortearPedraMock() {
+        ArgumentCaptor<Pedra> pedra = ArgumentCaptor.forClass(Pedra.class);
+
+        realizaSorteioPresenter.sortearPedra();
+        verify(realizaSorteioView, atLeastOnce()).apresentarPedra(pedra.capture());
+        updateCartelas(pedra.getValue());
+    }
+
+    private void updateCartelas(Pedra ultimaPedraSorteada) {
+        int qtdePedrasSorteio = appDataSource.getTipoSorteio().getQuantidadePedras();
+
+        for (CartelaDTO cartela : CARTELAS) {
+            if (CartelaUtils.hasCartelaPedra(cartela.getCartelaPedras(), ultimaPedraSorteada)) {
+                cartela.setQtdPedrasSorteadas(cartela.getQtdPedrasSorteadas() + 1);
+
+                if (cartela.getQtdPedrasSorteadas() >= qtdePedrasSorteio) {
+                    cartela.setGanhadora(true);
+                }
+            }
+        }
     }
 
     @Test
@@ -162,7 +188,7 @@ public class RealizaSorteioPresenterTest {
     @Test
     public void resetarPedras_atualizarCartelasGanhadorasBadge() {
         realizaSorteioPresenter.resetarPedras();
-        verify(realizaSorteioView).atualizarCartelasGanhadorasBadge();
+        verify(realizaSorteioView).atualizarCartelasGanhadorasBadge(0);
     }
 
     @Test
@@ -183,6 +209,7 @@ public class RealizaSorteioPresenterTest {
 
         realizaSorteioPresenter.sortearPedra();
         verify(realizaSorteioView).apresentarPedra(pedra.capture());
+        updateCartelas(pedra.getValue());
         List<CartelaDTO> cartelas = realizaSorteioPresenter.getState().getCartelas();
 
         switch (pedra.getValue().getId()) {
@@ -202,7 +229,7 @@ public class RealizaSorteioPresenterTest {
     @Test
     public void sortearPedras_verificarCartelaGanhadora_atualizarCartelasGanhadorasBadge() {
         for (int i = 0; i < QUANTIDADE_PEDRAS_SORTEAVEIS; i++) {
-            realizaSorteioPresenter.sortearPedra();
+            sortearPedraMock();
         }
         List<CartelaDTO> cartelas = realizaSorteioPresenter.getState().getCartelas();
 
@@ -210,14 +237,13 @@ public class RealizaSorteioPresenterTest {
             assertThat(cartelas.get(i).isGanhadora(), equalTo(true));
         }
 
-        assertThat(realizaSorteioPresenter.getState().getQtdCartelasGanhadoras(), greaterThan(0));
-        verify(realizaSorteioView, times(2)).atualizarCartelasGanhadorasBadge();
+        verify(realizaSorteioView, times(QUANTIDADE_PEDRAS_SORTEAVEIS)).atualizarCartelasGanhadorasBadge(anyInt());
     }
 
     @Test
     public void sortearPedras_registrarMaxPedrasSorteadasPorCartela() {
         for (int i = 0; i < QUANTIDADE_PEDRAS_SORTEAVEIS; i++) {
-            realizaSorteioPresenter.sortearPedra();
+            sortearPedraMock();
         }
         List<CartelaDTO> cartelas = realizaSorteioPresenter.getState().getCartelas();
 
@@ -230,7 +256,7 @@ public class RealizaSorteioPresenterTest {
     @Test
     public void sortearPedras_verificarCartelaGanhadora_resetarPedras_zerarGanhadoras_zerarPedrasSorteadas() {
         for (int i = 0; i < QUANTIDADE_PEDRAS_SORTEAVEIS; i++) {
-            realizaSorteioPresenter.sortearPedra();
+            sortearPedraMock();
         }
         List<CartelaDTO> cartelas = realizaSorteioPresenter.getState().getCartelas();
 

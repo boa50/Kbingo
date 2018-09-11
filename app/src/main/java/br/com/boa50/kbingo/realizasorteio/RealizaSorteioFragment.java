@@ -121,7 +121,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         View actionView = itemConfereCartelas.getActionView();
         mTextoCartelasBadge = actionView.findViewById(R.id.item_confere_cartelas_badge);
         actionView.setOnClickListener(v -> onOptionsItemSelected(itemConfereCartelas));
-        atualizarCartelasGanhadorasBadge();
+        mPresenter.atualizarCartelasGanhadoras();
 
         super.onPrepareOptionsMenu(menu);
     }
@@ -347,15 +347,13 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     @Override
-    public void atualizarCartelasGanhadorasBadge() {
-        int qtdCartelasGanhadora = mPresenter.getState().getQtdCartelasGanhadoras();
-
-        if (qtdCartelasGanhadora > 0) {
-            if (qtdCartelasGanhadora <= 9) {
+    public void atualizarCartelasGanhadorasBadge(int qtdCartelasGanhadoras) {
+        if (qtdCartelasGanhadoras > 0) {
+            if (qtdCartelasGanhadoras <= 9) {
                 mTextoCartelasBadge.setText(String.format(
                         Locale.ENGLISH,
                         Constant.FORMAT_PEDRA,
-                        qtdCartelasGanhadora));
+                        qtdCartelasGanhadoras));
             } else {
                 mTextoCartelasBadge.setText(R.string.item_confere_cartelas_badge_texto_plus);
             }

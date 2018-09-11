@@ -20,11 +20,12 @@ public interface RealizaSorteioContract {
         void atualizarPedra(int position);
         void reiniciarSorteio();
         void apresentarTipoSorteio(boolean tipoAlterado);
-        void atualizarCartelasGanhadorasBadge();
+        void atualizarCartelasGanhadorasBadge(int qtdCartelasGanhadoras);
     }
 
     interface Presenter extends BaseStatefulPresenter<View, State> {
         void sortearPedra();
+        void atualizarCartelasGanhadoras();
         void resetarPedras();
         TipoSorteioDTO getTipoSorteio();
         int getTipoSorteioId();
@@ -36,6 +37,5 @@ public interface RealizaSorteioContract {
         ArrayList<Pedra> getPedras();
         Pedra getUltimaPedraSorteada();
         ArrayList<CartelaDTO> getCartelas();
-        int getQtdCartelasGanhadoras();
     }
 }

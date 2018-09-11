@@ -15,7 +15,6 @@ import br.com.boa50.kbingo.data.dto.CartelaDTO;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
-import br.com.boa50.kbingo.util.CartelaUtils;
 import br.com.boa50.kbingo.util.PedraUtils;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -34,7 +33,6 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     private ArrayList<Pedra> mPedras;
     private Pedra mUltimaPedraSorteada;
     private ArrayList<CartelaDTO> mCartelas;
-    private int mQtdCartelasGanhadoras;
 
     @Inject
     RealizaSorteioPresenter(
@@ -58,12 +56,10 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             mPedras = state.getPedras();
             mUltimaPedraSorteada = state.getUltimaPedraSorteada();
             mCartelas = state.getCartelas();
-            mQtdCartelasGanhadoras = state.getQtdCartelasGanhadoras();
         } else {
             mPedras = null;
             mUltimaPedraSorteada = null;
             mCartelas = null;
-            mQtdCartelasGanhadoras = 0;
         }
 
         carregarPedras();
@@ -73,8 +69,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     @NonNull
     @Override
     public RealizaSorteioContract.State getState() {
-        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada, mCartelas,
-                mQtdCartelasGanhadoras);
+        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada, mCartelas);
     }
 
     @Override
@@ -92,11 +87,23 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             mUltimaPedraSorteada.setSorteada(true);
             mView.apresentarPedra(mUltimaPedraSorteada);
 
-            atualizarCartelasSorteadas();
+            mAppDataSource.updateCartelas(mUltimaPedraSorteada);
+            atualizarCartelasGanhadoras();
 
             mView.atualizarPedra(mPosicoes.get(0));
             mPosicoes.remove(0);
         }
+    }
+
+    @Override
+    public void atualizarCartelasGanhadoras() {
+        Disposable disposable = mAppDataSource
+                .getCartelasGanhadoras()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui())
+                .subscribe(cartelas -> mView.atualizarCartelasGanhadorasBadge(cartelas.size()));
+
+        mCompositeDisposable.add(disposable);
     }
 
     private void apresentarUltimaPedraSorteada() {
@@ -116,8 +123,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
         preencherPosicoesSorteio();
         mUltimaPedraSorteada = null;
-        mQtdCartelasGanhadoras = 0;
-        mView.atualizarCartelasGanhadorasBadge();
+        atualizarCartelasGanhadoras();
 
         mView.reiniciarSorteio();
     }
@@ -171,27 +177,9 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                     .getCartelas()
                     .subscribeOn(mScheduleProvider.io())
                     .observeOn(mScheduleProvider.ui())
-                    .subscribe(cartelas -> mCartelas.addAll(cartelas)
-                    );
+                    .subscribe(cartelas -> mCartelas.addAll(cartelas));
 
             mCompositeDisposable.add(disposable);
-        }
-    }
-
-    private void atualizarCartelasSorteadas() {
-        for (CartelaDTO cartela : mCartelas) {
-            int qtdePedrasSorteio = mAppDataSource.getTipoSorteio().getQuantidadePedras();
-            if (cartela.getQtdPedrasSorteadas() < qtdePedrasSorteio &&
-                    CartelaUtils.hasCartelaPedra(cartela.getCartelaPedras(), mUltimaPedraSorteada)) {
-
-                cartela.setQtdPedrasSorteadas(cartela.getQtdPedrasSorteadas() + 1);
-
-                if (cartela.getQtdPedrasSorteadas() >= qtdePedrasSorteio) {
-                    cartela.setGanhadora(true);
-                    mQtdCartelasGanhadoras++;
-                    mView.atualizarCartelasGanhadorasBadge();
-                }
-            }
         }
     }
 

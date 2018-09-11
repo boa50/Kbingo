@@ -13,6 +13,7 @@ import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.data.utils.PopularTabelas;
+import br.com.boa50.kbingo.util.CartelaUtils;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
@@ -78,11 +79,20 @@ public class AppRepository implements AppDataSource {
 
         return getCartelaUltimoId().toFlowable()
                 .flatMap(maxId -> Flowable.range(1, maxId)
-                .flatMap(id -> getPedrasByCartelaId(id).toFlowable()
-                .flatMap(cartelaPedras -> Flowable.just(new CartelaDTO(id, cartelaPedras))
-                .doOnNext(cartela -> cartelas.add(cartela))
-                .toList()
-                .toFlowable())));
+                        .flatMap(id -> getPedrasByCartelaId(id).toFlowable()
+                                .flatMap(cartelaPedras -> Flowable.just(new CartelaDTO(id, cartelaPedras))
+                                        .doOnNext(cartela -> cartelas.add(cartela))
+                                        .toList()
+                                        .toFlowable())));
+    }
+
+    @Override
+    public Flowable<List<CartelaDTO>> getCartelasGanhadoras() {
+        return getCartelas()
+                .flatMap(cartelas -> Flowable.fromIterable(cartelas)
+                        .filter(CartelaDTO::isGanhadora)
+                        .toList()
+                        .toFlowable());
     }
 
     @Override
@@ -118,8 +128,26 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
+    public void updateCartelas(Pedra ultimaPedraSorteada) {
+        if (cartelas == null) return;
+        int qtdePedrasSorteio = getTipoSorteio().getQuantidadePedras();
+
+        for (CartelaDTO cartela : cartelas) {
+            if (CartelaUtils.hasCartelaPedra(cartela.getCartelaPedras(), ultimaPedraSorteada)) {
+                cartela.setQtdPedrasSorteadas(cartela.getQtdPedrasSorteadas() + 1);
+
+                if (cartela.getQtdPedrasSorteadas() >= qtdePedrasSorteio) {
+                    cartela.setGanhadora(true);
+                }
+            }
+        }
+    }
+
+    @Override
     public void updateCartelasFiltro(int id, boolean selecionada) {
-        cartelasFiltro.get(id - 1).setSelecionada(selecionada);
+        if (cartelasFiltro != null) {
+            cartelasFiltro.get(id - 1).setSelecionada(selecionada);
+        }
     }
 
     @Override
