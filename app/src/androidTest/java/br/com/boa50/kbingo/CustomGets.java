@@ -108,7 +108,7 @@ final class CustomGets {
 
             @Override
             public String getDescription() {
-                return "getting size from a RecyclerView";
+                return "getting child view from a RecyclerView";
             }
 
             @Override
