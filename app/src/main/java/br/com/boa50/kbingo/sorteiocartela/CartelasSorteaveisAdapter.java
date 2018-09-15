@@ -39,7 +39,6 @@ public class CartelasSorteaveisAdapter extends ListAdapter<Integer, CartelasSort
         } else {
             holder.mTextView.setText(mContext.getText(R.string.todas_cartelas_sorteaveis));
         }
-
     }
 
     private static final DiffUtil.ItemCallback<Integer> DIFF_CALLBACK =

@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
 import br.com.boa50.kbingo.di.ActivityScoped;
+import br.com.boa50.kbingo.util.CartelaUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -106,12 +107,12 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     }
 
     @Override
-    public void apresentarCartela(String numeroCartela) {
+    public void apresentarCartela(int numeroCartela) {
         btSorteioCartela.setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimension(R.dimen.sc_pedra_sorteada_texto)
         );
-        btSorteioCartela.setText(numeroCartela);
+        btSorteioCartela.setText(CartelaUtils.formatarNumeroCartela(numeroCartela));
     }
 
     @Override
@@ -130,7 +131,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         if (cartelasSorteaveis.isEmpty()) cartelasSorteaveis.add(-1);
 
         if (rvCartelasSorteaveis.getAdapter() != null) {
-            cartelasSorteaveisAdapter.notifyDataSetChanged();
+            cartelasSorteaveisAdapter.submitList(cartelasSorteaveis);
         } else {
             estilizarRecyclerView(rvCartelasSorteaveis, 3);
             cartelasSorteaveisAdapter.submitList(cartelasSorteaveis);
