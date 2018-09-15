@@ -1,5 +1,6 @@
 package br.com.boa50.kbingo.sorteiocartela;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -85,6 +86,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.item_filtrar_cartelas_sorteaveis).setVisible(true);
+        menu.findItem(R.id.item_limpar_filtro_cartelas).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -93,6 +95,9 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         switch (item.getItemId()) {
             case R.id.item_filtrar_cartelas_sorteaveis:
                 abrirDialogFiltroCartelas();
+                return true;
+            case R.id.item_limpar_filtro_cartelas:
+                abrirDialogLimparFiltro();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -181,5 +186,21 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, colunasNumero));
         recyclerView.addItemDecoration(new DividerItemDecoration(
                 recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+    }
+
+    private void abrirDialogLimparFiltro() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        builder.setTitle(R.string.dialog_limpar_filtro_cartelas_title)
+                .setNegativeButton(R.string.dialog_negative,
+                        (dialog, which) -> {})
+                .setPositiveButton(R.string.dialog_limpar_filtro_cartelas_positive,
+                        (dialog, which) -> {
+                            mPresenter.limparCartelasSorteaveis();
+                            mCbCartelasGanhadoras = false;
+                        });
+
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 }

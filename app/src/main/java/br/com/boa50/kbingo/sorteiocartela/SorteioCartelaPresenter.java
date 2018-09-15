@@ -89,6 +89,12 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
         recuperarCartelasSorteaveis();
     }
 
+    @Override
+    public void limparCartelasSorteaveis() {
+        mAppDataSource.cleanCartelasFiltro();
+        recuperarCartelasSorteaveis();
+    }
+
     private void recuperarCartelasSorteaveis() {
         Disposable disposable = mAppDataSource
                 .getCartelasSorteaveis()
