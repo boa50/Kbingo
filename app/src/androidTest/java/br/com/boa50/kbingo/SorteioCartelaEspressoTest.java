@@ -267,4 +267,51 @@ public class SorteioCartelaEspressoTest {
         onView(withText(vhFiltroText))
                 .check(matches(isChecked()));
     }
+
+    @Test
+    public void filtrarCartelas_limparFiltro_zerarInformacoes() {
+        CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
+        CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS);
+        CustomProcedures.sortearPedras(7);
+
+        CustomProcedures.changeNavigation(R.id.item_sorteio_cartela);
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        onView(withId(R.id.cb_filtro_cartelas_ganhadoras))
+                .perform(click());
+
+        View vhFiltro = getRecyclerViewChild(withId(R.id.rv_sorteio_cartela_filtro), 0);
+        String vhFiltroText = ((CheckBox) vhFiltro.findViewById(R.id.cb_cartela_selecao)).getText().toString();
+
+        onView(withId(R.id.rv_sorteio_cartela_filtro))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        pressBack();
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_limpar_filtro_cartelas))
+                .perform(click());
+        onView(withText(R.string.dialog_limpar_filtro_cartelas_title))
+                .check(matches(isDisplayed()));
+        onView(withText(R.string.dialog_limpar_filtro_cartelas_positive))
+                .perform(click());
+
+        onView(withText(R.string.todas_cartelas_sorteaveis))
+                .check(matches(isDisplayed()));
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        onView(withId(R.id.cb_filtro_cartelas_ganhadoras))
+                .check(matches(not(isChecked())));
+
+        onView(withId(R.id.rv_sorteio_cartela_filtro))
+                .perform(RecyclerViewActions.scrollToPosition(Integer.valueOf(vhFiltroText) - 1));
+        onView(withText(vhFiltroText))
+                .check(matches(not(isChecked())));
+    }
 }

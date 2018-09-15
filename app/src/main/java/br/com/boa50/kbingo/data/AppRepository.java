@@ -158,6 +158,15 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
+    public void cleanCartelasFiltro() {
+        if (cartelasFiltro != null) {
+            for (CartelaFiltroDTO cartelaFiltroDTO : cartelasFiltro) {
+                updateCartelasFiltro(cartelaFiltroDTO.getCartelaId(), false);
+            }
+        }
+    }
+
+    @Override
     public void initializeDatabase() {
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
             CompositeDisposable disposable = new CompositeDisposable();

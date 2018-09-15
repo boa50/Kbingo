@@ -19,5 +19,6 @@ public interface SorteioCartelaContract {
         void carregarFiltroCartelasSorteaveis();
         void carregarFiltroCartelasSorteaveis(String filtro, boolean apenasGanhadoras);
         void atualizarCartelasSorteaveis(int id, boolean selecionada);
+        void limparCartelasSorteaveis();
     }
 }
