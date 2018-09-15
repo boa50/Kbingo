@@ -20,7 +20,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -67,18 +68,18 @@ public class SorteioCartelaPresenterTest {
     public void sortearCartela_apresentarCartela() {
         presenter.sortearCartela();
 
-        verify(view).apresentarCartela(anyString());
+        verify(view).apresentarCartela(anyInt());
     }
 
     @Test
     public void sortearCartela_retornarDentroDoRange() {
-        ArgumentCaptor<String> numCartela = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Integer> numCartela = ArgumentCaptor.forClass(Integer.class);
         presenter.sortearCartela();
 
         verify(view).apresentarCartela(numCartela.capture());
 
-        assertThat(Integer.valueOf(numCartela.getValue()), greaterThanOrEqualTo(cartelaMinId));
-        assertThat(Integer.valueOf(numCartela.getValue()), lessThanOrEqualTo(cartelaMaxId));
+        assertThat(numCartela.getValue(), greaterThanOrEqualTo(cartelaMinId));
+        assertThat(numCartela.getValue(), lessThanOrEqualTo(cartelaMaxId));
     }
 
     @Test
@@ -145,5 +146,30 @@ public class SorteioCartelaPresenterTest {
         presenter.carregarFiltroCartelasSorteaveis("", true);
         verify(view, times(2)).preencherCartelasFiltro(cartelasFiltroCaptor.capture());
         assertThat(cartelasFiltroCaptor.getValue().size(), equalTo(3));
+    }
+
+    @Test
+    public void alterarCartelasSorteaveis_sortearNoRange() {
+        ArgumentCaptor<Integer> numCartela = ArgumentCaptor.forClass(Integer.class);
+        int minId = cartelasFiltro.get(0).getCartelaId();
+        int maxId = cartelasFiltro.get(1).getCartelaId();
+
+        cartelasSorteaveis.add(minId);
+        presenter.atualizarCartelasSorteaveis(minId, true);
+
+        presenter.sortearCartela();
+        verify(view).apresentarCartela(numCartela.capture());
+        assertThat(numCartela.getValue(), equalTo(minId));
+
+        cartelasSorteaveis.add(maxId);
+        presenter.atualizarCartelasSorteaveis(maxId, true);
+
+        for (int i = 0; i < 50; i++) {
+            presenter.sortearCartela();
+            verify(view, atLeastOnce()).apresentarCartela(numCartela.capture());
+
+            assertThat(numCartela.getValue(), greaterThanOrEqualTo(minId));
+            assertThat(numCartela.getValue(), lessThanOrEqualTo(maxId));
+        }
     }
 }

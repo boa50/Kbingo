@@ -133,6 +133,36 @@ public class SorteioCartelaEspressoTest {
     }
 
     @Test
+    public void filtrarCartela_trocarFragment_removerFiltro_aparecerTodasCartelasSorteaveis() {
+        onView(withText(R.string.todas_cartelas_sorteaveis))
+                .check(matches(isDisplayed()));
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        onView(withId(R.id.rv_sorteio_cartela_filtro))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        pressBack();
+
+        CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
+        CustomProcedures.changeNavigation(R.id.item_sorteio_cartela);
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        onView(withId(R.id.rv_sorteio_cartela_filtro))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        pressBack();
+
+        onView(withText(R.string.todas_cartelas_sorteaveis))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
     public void filtrarFiltroBusca_aparecerOpcoesCorretas() {
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
@@ -193,7 +223,7 @@ public class SorteioCartelaEspressoTest {
     }
 
     @Test
-    public void trocarFragments_manterInformacoes() {
+    public void trocarFragments_manterInformacoesFiltro() {
         CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
         CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS);
         CustomProcedures.sortearPedras(7);

@@ -3,12 +3,11 @@ package br.com.boa50.kbingo.sorteiocartela;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.List;
 import java.util.Random;
 
 import javax.inject.Inject;
 
-import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.CartelaUtils;
@@ -26,7 +25,7 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
     private final BaseSchedulerProvider mScheduleProvider;
     private CompositeDisposable mCompositeDisposable;
 
-    private ArrayList<String> mCartelasSorteaveis;
+    private ArrayList<Integer> mCartelasSorteaveis;
 
     @Inject
     SorteioCartelaPresenter(@NonNull AppDataSource appDataSource,
@@ -51,24 +50,8 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
 
     @Override
     public void sortearCartela() {
-        if (mCartelasSorteaveis.isEmpty()) {
-            Disposable disposable = mAppDataSource
-                    .getCartelaUltimoId()
-                    .subscribeOn(mScheduleProvider.io())
-                    .observeOn(mScheduleProvider.ui())
-                    .subscribe(
-                            cartelaId ->{
-                                preencherCartelasSorteaveis(cartelaId);
-                                mView.apresentarCartela(mCartelasSorteaveis.get(
-                                        new Random().nextInt(mCartelasSorteaveis.size())));
-                            }
-                    );
-
-            mCompositeDisposable.add(disposable);
-        }else {
-            mView.apresentarCartela(mCartelasSorteaveis.get(
-                    new Random().nextInt(mCartelasSorteaveis.size())));
-        }
+        mView.apresentarCartela(mCartelasSorteaveis.get(
+                new Random().nextInt(mCartelasSorteaveis.size())));
     }
 
     @Override
@@ -106,23 +89,39 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
         recuperarCartelasSorteaveis();
     }
 
-    private void preencherCartelasSorteaveis(int maxId) {
-        for (int i = 1; i <= maxId; i++) {
-            mCartelasSorteaveis.add(String.format(
-                    Locale.ENGLISH,
-                    Constant.FORMAT_CARTELA,
-                    i));
-        }
-    }
-
     private void recuperarCartelasSorteaveis() {
         Disposable disposable = mAppDataSource
                 .getCartelasSorteaveis()
                 .subscribeOn(mScheduleProvider.io())
                 .observeOn(mScheduleProvider.ui())
                 .subscribe(
-                        cartelasSorteaveis -> mView.preencherCartelasSorteaveis(cartelasSorteaveis)
+                        cartelasSorteaveis -> {
+                            mView.preencherCartelasSorteaveis(cartelasSorteaveis);
+                            preencherCartelasSorteaveis(cartelasSorteaveis);
+                        }
                 );
         mCompositeDisposable.add(disposable);
+    }
+
+    private void preencherCartelasSorteaveis(List<Integer> cartelasSorteaveis) {
+        if (mCartelasSorteaveis == null) mCartelasSorteaveis = new ArrayList<>();
+        else mCartelasSorteaveis.clear();
+
+        if (cartelasSorteaveis.isEmpty() || cartelasSorteaveis.get(0) == -1) {
+            Disposable disposable = mAppDataSource
+                    .getCartelaUltimoId()
+                    .subscribeOn(mScheduleProvider.io())
+                    .observeOn(mScheduleProvider.ui())
+                    .subscribe(this::preencherCartelasSorteaveis);
+            mCompositeDisposable.add(disposable);
+        } else {
+            mCartelasSorteaveis.addAll(cartelasSorteaveis);
+        }
+    }
+
+    private void preencherCartelasSorteaveis(int maxId) {
+        for (int i = 1; i <= maxId; i++) {
+            mCartelasSorteaveis.add(i);
+        }
     }
 }

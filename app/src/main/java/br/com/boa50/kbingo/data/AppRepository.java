@@ -23,7 +23,6 @@ public class AppRepository implements AppDataSource {
     private AppDatabase db;
     private List<CartelaDTO> cartelas;
     private List<CartelaFiltroDTO> cartelasFiltro;
-    private List<Integer> cartelasSorteaveis;
     private Integer tipoSorteioId;
 
     @Inject
@@ -124,18 +123,12 @@ public class AppRepository implements AppDataSource {
 
     @Override
     public Flowable<List<Integer>> getCartelasSorteaveis() {
-        if (cartelasSorteaveis == null) cartelasSorteaveis = new ArrayList<>();
-        else cartelasSorteaveis.clear();
-
-        Flowable<List<Integer>> cartelasSorteaveisFlowable = getCartelasFiltro()
+        return getCartelasFiltro()
                 .flatMap(cartelasFiltro -> Flowable.fromIterable(cartelasFiltro)
                         .filter(CartelaFiltroDTO::isSelecionada)
                         .map(CartelaFiltroDTO::getCartelaId)
-                        .doOnNext(cartelaId -> cartelasSorteaveis.add(cartelaId))
                         .toList()
                         .toFlowable());
-
-        return Flowable.concat(cartelasSorteaveisFlowable, Flowable.just(cartelasSorteaveis));
     }
 
     @Override

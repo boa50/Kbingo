@@ -9,7 +9,7 @@ import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
 public interface SorteioCartelaContract {
 
     interface View extends BaseView {
-        void apresentarCartela(String numeroCartela);
+        void apresentarCartela(int numeroCartela);
         void preencherCartelasFiltro(List<CartelaFiltroDTO> cartelasFiltro);
         void preencherCartelasSorteaveis(List<Integer> cartelasSorteaveis);
     }
