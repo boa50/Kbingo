@@ -51,8 +51,8 @@ public class SorteioCartelaPresenterTest {
 
         cartelasFiltro = Lists.newArrayList(
                 new CartelaFiltroDTO(1, false, false),
-                new CartelaFiltroDTO(2, false, false),
-                new CartelaFiltroDTO(3, false, false)
+                new CartelaFiltroDTO(2, true, false),
+                new CartelaFiltroDTO(3, true, false)
         );
 
         cartelasSorteaveis = Lists.newArrayList();
@@ -115,5 +115,35 @@ public class SorteioCartelaPresenterTest {
         verify(view).preencherCartelasFiltro(cartelasFiltroCaptor.capture());
         assertThat(cartelasFiltroCaptor.getValue().get(0), equalTo(cartelasFiltro.get(1)));
         assertThat(cartelasFiltroCaptor.getValue().size(), equalTo(1));
+    }
+
+    @Test
+    public void carregarCartelasFiltroGanhadoras_retornarDadosCorretos() {
+        presenter.carregarFiltroCartelasSorteaveis("", true);
+        verify(view).preencherCartelasFiltro(cartelasFiltroCaptor.capture());
+        assertThat(cartelasFiltroCaptor.getValue().get(0), equalTo(cartelasFiltro.get(1)));
+        assertThat(cartelasFiltroCaptor.getValue().get(1), equalTo(cartelasFiltro.get(2)));
+        assertThat(cartelasFiltroCaptor.getValue().size(), equalTo(2));
+    }
+
+    @Test
+    public void carregarCartelasFiltroGanhadorasBusca_retornarDadosCorretos() {
+        presenter.carregarFiltroCartelasSorteaveis("2", true);
+        verify(view).preencherCartelasFiltro(cartelasFiltroCaptor.capture());
+        assertThat(cartelasFiltroCaptor.getValue().get(0), equalTo(cartelasFiltro.get(1)));
+        assertThat(cartelasFiltroCaptor.getValue().size(), equalTo(1));
+    }
+
+    @Test
+    public void atualizarCartelasGanhadoras_retornarDadosCorretos() {
+        presenter.carregarFiltroCartelasSorteaveis("", true);
+        verify(view).preencherCartelasFiltro(cartelasFiltroCaptor.capture());
+        assertThat(cartelasFiltroCaptor.getValue().size(), equalTo(2));
+
+        cartelasFiltro.get(0).setGanhadora(true);
+
+        presenter.carregarFiltroCartelasSorteaveis("", true);
+        verify(view, times(2)).preencherCartelasFiltro(cartelasFiltroCaptor.capture());
+        assertThat(cartelasFiltroCaptor.getValue().size(), equalTo(3));
     }
 }
