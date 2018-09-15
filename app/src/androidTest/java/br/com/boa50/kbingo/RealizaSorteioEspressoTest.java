@@ -266,13 +266,7 @@ public class RealizaSorteioEspressoTest {
 
         String textoUltimaPedraSorteada = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
 
-        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
-        onView(withText(R.string.item_alterar_tipo_sorteio))
-                .perform(click());
-        onView(withText(TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS).getNome()))
-                .perform(click());
-        onView(withText(R.string.dialog_confirmative))
-                .perform(click());
+        CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS);
 
         onView(withText(R.string.dialog_novo_sorteio_tipo_sorteio_message))
                 .check(matches(isDisplayed()));
@@ -290,13 +284,7 @@ public class RealizaSorteioEspressoTest {
 
         String textoUltimaPedraSorteada = getButtonText(withId(R.id.bt_sortear_pedra)).substring(1);
 
-        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
-        onView(withText(R.string.item_alterar_tipo_sorteio))
-                .perform(click());
-        onView(withText(TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS).getNome()))
-                .perform(click());
-        onView(withText(R.string.dialog_confirmative))
-                .perform(click());
+        CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS);
 
         onView(withText(R.string.dialog_novo_sorteio_tipo_sorteio_message))
                 .check(matches(isDisplayed()));
@@ -310,25 +298,8 @@ public class RealizaSorteioEspressoTest {
 
     @Test
     public void sortearPedras_verificarCartelasGanhadoras_retornar_checarNovamente() {
-        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
-        onView(withText(R.string.item_alterar_tipo_sorteio))
-                .perform(click());
-        onView(withText(R.string.dialog_tipo_sorteio_title))
-                .check(matches(isDisplayed()));
-        onView(withText(TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS).getNome()))
-                .perform(click());
-        onView(withText(R.string.dialog_confirmative))
-                .perform(click());
-
-        for (int i = 0; i < 7; i++) {
-            onView(withId(R.id.bt_sortear_pedra))
-                    .perform(click());
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS);
+        CustomProcedures.sortearPedras(7);
 
         onView(withId(R.id.item_confere_cartelas))
                 .perform(click());
@@ -377,16 +348,7 @@ public class RealizaSorteioEspressoTest {
     }
 
     private void setTipoSorteioDefault() {
-        String textoTipoSorteioDefault =
-                TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA).getNome();
-
-        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
-        onView(withText(R.string.item_alterar_tipo_sorteio))
-                .perform(click());
-        onView(withText(textoTipoSorteioDefault))
-                .perform(click());
-        onView(withText(R.string.dialog_confirmative))
-                .perform(click());
+        CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CARTELA_CHEIA);
     }
 
     private void verificarTituloTipoSorteio(int tipoSorteio) {

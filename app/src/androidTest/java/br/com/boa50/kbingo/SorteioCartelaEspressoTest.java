@@ -27,6 +27,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -83,9 +84,10 @@ public class SorteioCartelaEspressoTest {
         onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
                 .perform(click());
 
+        onView(withId(R.id.cb_filtro_cartelas_ganhadoras))
+                .check(matches(not(isChecked())));
         onView(withId(R.id.et_sorteio_cartela_numero))
                 .check(matches(not(hasFocus())));
-
         onView(withId(R.id.rv_sorteio_cartela_filtro))
                 .check(matches(isDisplayed()));
     }
@@ -155,25 +157,8 @@ public class SorteioCartelaEspressoTest {
     @Test
     public void filtrarFiltroGanhadoras_aparecerApenasGanhadoras() {
         CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
-        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
-        onView(withText(R.string.item_alterar_tipo_sorteio))
-                .perform(click());
-        onView(withText(R.string.dialog_tipo_sorteio_title))
-                .check(matches(isDisplayed()));
-        onView(withText(TipoSorteioDTO.getTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS).getNome()))
-                .perform(click());
-        onView(withText(R.string.dialog_confirmative))
-                .perform(click());
-
-        for (int i = 0; i < 7; i++) {
-            onView(withId(R.id.bt_sortear_pedra))
-                    .perform(click());
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS);
+        CustomProcedures.sortearPedras(7);
 
         onView(withId(R.id.item_confere_cartelas))
                 .perform(click());
@@ -209,6 +194,47 @@ public class SorteioCartelaEspressoTest {
 
     @Test
     public void trocarFragments_manterInformacoes() {
+        CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
+        CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS);
+        CustomProcedures.sortearPedras(7);
 
+        CustomProcedures.changeNavigation(R.id.item_sorteio_cartela);
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        onView(withId(R.id.cb_filtro_cartelas_ganhadoras))
+                .perform(click());
+
+        int rvOldSize = getRecyclerViewSize(withId(R.id.rv_sorteio_cartela_filtro));
+        View vhFiltro = getRecyclerViewChild(withId(R.id.rv_sorteio_cartela_filtro), 0);
+        String vhFiltroText = ((CheckBox) vhFiltro.findViewById(R.id.cb_cartela_selecao)).getText().toString();
+
+        onView(withId(R.id.rv_sorteio_cartela_filtro))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        Espresso.closeSoftKeyboard();
+        pressBack();
+
+        CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
+        CustomProcedures.changeNavigation(R.id.item_sorteio_cartela);
+
+        View vhSorteaveis = getRecyclerViewChild(withId(R.id.rv_sorteio_cartela_sorteaveis), 0);
+        String vhSorteaveisText = ((TextView) vhSorteaveis.findViewById(R.id.tv_cartela_numero)).getText().toString();
+
+        assertThat(vhSorteaveisText, equalTo(vhFiltroText));
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        int rvNewSize = getRecyclerViewSize(withId(R.id.rv_sorteio_cartela_filtro));
+
+        onView(withId(R.id.cb_filtro_cartelas_ganhadoras))
+                .check(matches(isChecked()));
+        assertThat(rvNewSize, equalTo(rvOldSize));
+        onView(withText(vhFiltroText))
+                .check(matches(isChecked()));
     }
 }

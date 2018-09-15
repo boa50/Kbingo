@@ -53,6 +53,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     RecyclerView rvCartelaFiltro;
 
     private Unbinder unbinder;
+    private boolean mCbCartelasGanhadoras;
 
     @Inject
     public SorteioCartelaFragment() {}
@@ -158,14 +159,19 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
             public void afterTextChanged(Editable editable) {}
         });
 
-        cbFiltroCartelasGanhadoras.setOnCheckedChangeListener((buttonView, isChecked) ->
-                mPresenter.carregarFiltroCartelasSorteaveis(
-                        etFiltroCartelas.getText().toString(), isChecked));
+        cbFiltroCartelasGanhadoras.setChecked(mCbCartelasGanhadoras);
+
+        cbFiltroCartelasGanhadoras.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    mPresenter.carregarFiltroCartelasSorteaveis(
+                            etFiltroCartelas.getText().toString(), isChecked);
+                    mCbCartelasGanhadoras = isChecked;
+                });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setTitle(R.string.dialog_filtrar_cartelas_title)
                 .setView(view);
-        mPresenter.carregarFiltroCartelasSorteaveis();
+        if (mCbCartelasGanhadoras) mPresenter.carregarFiltroCartelasSorteaveis("", true);
+        else mPresenter.carregarFiltroCartelasSorteaveis();
         builder.create().show();
     }
 
