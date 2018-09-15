@@ -23,6 +23,7 @@ public interface AppDataSource {
     Single<List<Pedra>> getPedras();
     Single<Integer> getCartelaUltimoId();
     Single<List<CartelaPedra>> getPedrasByCartelaId(int id);
+    Single<CartelaDTO> getCartela(int id);
 
     Flowable<List<CartelaDTO>> getCartelas();
     Flowable<List<CartelaDTO>> getCartelasGanhadoras();

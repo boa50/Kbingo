@@ -70,6 +70,14 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
+    public Single<CartelaDTO> getCartela(int id) {
+        return getCartelas()
+                .flatMap(cartelas -> Flowable.fromIterable(cartelas)
+                .filter(cartela -> cartela.getCartelaId() == id))
+                .firstOrError();
+    }
+
+    @Override
     public Flowable<List<CartelaDTO>> getCartelas() {
         if (cartelas != null) {
             return Flowable.fromIterable(cartelas).toList().toFlowable();
@@ -105,10 +113,13 @@ public class AppRepository implements AppDataSource {
 
         return getCartelaUltimoId().toFlowable()
                 .flatMap(maxId -> Flowable.range(1, maxId)
-                        .flatMap(id -> Flowable.just(new CartelaFiltroDTO(id, false, false))
+                        .flatMap(id -> getCartela(id).toFlowable()
+                        .flatMap(cartela -> Flowable.just(new CartelaFiltroDTO(id,
+                                        cartela.isGanhadora(),
+                                        false))
                                 .doOnNext(cartelaFiltroDTO -> cartelasFiltro.add(cartelaFiltroDTO))
                                 .toList()
-                                .toFlowable()));
+                                .toFlowable())));
     }
 
     @Override
@@ -138,6 +149,9 @@ public class AppRepository implements AppDataSource {
 
                 if (cartela.getQtdPedrasSorteadas() >= qtdePedrasSorteio) {
                     cartela.setGanhadora(true);
+                    if (cartelasFiltro != null) {
+                        cartelasFiltro.get(cartela.getCartelaId() - 1).setGanhadora(true);
+                    }
                 }
             }
         }
