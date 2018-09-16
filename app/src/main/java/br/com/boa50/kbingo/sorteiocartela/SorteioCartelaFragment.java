@@ -180,6 +180,8 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
             cartelasFiltroAdapter.submitList(cartelasFiltro);
             rvCartelaFiltro.setAdapter(cartelasFiltroAdapter);
         }
+
+        rvCartelaFiltro.postDelayed(() -> rvCartelaFiltro.scrollToPosition(0), 50);
     }
 
     @Override
@@ -238,9 +240,8 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
                     mCbCartelasGanhadoras = isChecked;
                 });
 
-        if (mCbCartelasGanhadoras) mPresenter.carregarFiltroCartelasSorteaveis(
-                etFiltroCartelas.getText().toString(), true);
-        else mPresenter.carregarFiltroCartelasSorteaveis();
+        mPresenter.carregarFiltroCartelasSorteaveis(
+                etFiltroCartelas.getText().toString(), mCbCartelasGanhadoras);
         mDialogFiltroSorteio = builder.create();
         mDialogFiltroSorteio.show();
     }
