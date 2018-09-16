@@ -107,8 +107,6 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
 
         if (savedInstanceState != null) {
             mUltimaSorteada = savedInstanceState.getInt(ARGS_ULTIMA_SORTEADA);
-            if (mUltimaSorteada > 0) apresentarCartela(mUltimaSorteada);
-
             mCbCartelasGanhadoras = savedInstanceState.getBoolean(ARGS_FILTRO_CB_CARTELAS_GANHADORAS);
             mFiltroCartelasTexto = savedInstanceState.getString(ARGS_FILTRO_TEXTO);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_FILTRO_SORTEIO)) {
@@ -118,9 +116,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
                 abrirDialogLimparFiltro();
             }
         } else {
-            mCbCartelasGanhadoras = false;
             mFiltroCartelasTexto = "";
-            mUltimaSorteada = 0;
         }
     }
 
@@ -154,6 +150,8 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         } else {
             mGridCartelasSorteaveisColunas = 2;
         }
+
+        if (mUltimaSorteada > 0) apresentarCartela(mUltimaSorteada);
     }
 
     @Override

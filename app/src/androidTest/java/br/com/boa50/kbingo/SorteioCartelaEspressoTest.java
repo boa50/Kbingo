@@ -224,7 +224,7 @@ public class SorteioCartelaEspressoTest {
     }
 
     @Test
-    public void trocarFragments_manterInformacoesFiltro() {
+    public void trocarFragments_manterInformacoes() {
         CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
         CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS);
         CustomProcedures.sortearPedras(7);
@@ -248,8 +248,16 @@ public class SorteioCartelaEspressoTest {
         Espresso.closeSoftKeyboard();
         pressBack();
 
+        onView(withId(R.id.bt_sorteio_cartela))
+                .perform(click());
+
+        String buttonText = getButtonText(withId(R.id.bt_sorteio_cartela));
+
         CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
         CustomProcedures.changeNavigation(R.id.item_sorteio_cartela);
+
+        onView(withId(R.id.bt_sorteio_cartela))
+                .check(matches(withText(buttonText)));
 
         View vhSorteaveis = getRecyclerViewChild(withId(R.id.rv_sorteio_cartela_sorteaveis), 0);
         String vhSorteaveisText = ((TextView) vhSorteaveis.findViewById(R.id.tv_cartela_numero)).getText().toString();
@@ -394,5 +402,22 @@ public class SorteioCartelaEspressoTest {
 
         assertThat(getRecyclerViewSize(withId(R.id.rv_sorteio_cartela_sorteaveis)), equalTo(rvSize));
         assertThat(getButtonText(withId(R.id.bt_sorteio_cartela)), equalTo(buttonText));
+    }
+
+    @Test
+    public void sortearCartela_mudarFiltro_resetarCartelaSorteada() {
+        onView(withId(R.id.bt_sorteio_cartela))
+                .perform(click());
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+        onView(withId(R.id.rv_sorteio_cartela_filtro))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        pressBack();
+
+        onView(withId(R.id.bt_sorteio_cartela))
+                .check(matches(withText(R.string.bt_sorteio_cartela)));
     }
 }

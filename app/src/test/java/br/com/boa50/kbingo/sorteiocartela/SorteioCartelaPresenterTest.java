@@ -20,6 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
@@ -176,6 +177,12 @@ public class SorteioCartelaPresenterTest {
     @Test
     public void limparFiltro_retornarPadraoTela() {
         presenter.limparCartelasSorteaveis();
+        verify(view).retornarPadraoTela();
+    }
+
+    @Test
+    public void atualizarCartelasSorteaveis_retornarTelaPadrao() {
+        presenter.atualizarCartelasSorteaveis(anyInt(), anyBoolean());
         verify(view).retornarPadraoTela();
     }
 }
