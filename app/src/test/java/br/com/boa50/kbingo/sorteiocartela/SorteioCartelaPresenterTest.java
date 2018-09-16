@@ -172,4 +172,10 @@ public class SorteioCartelaPresenterTest {
             assertThat(numCartela.getValue(), lessThanOrEqualTo(maxId));
         }
     }
+
+    @Test
+    public void limparFiltro_retornarPadraoTela() {
+        presenter.limparCartelasSorteaveis();
+        verify(view).retornarPadraoTela();
+    }
 }

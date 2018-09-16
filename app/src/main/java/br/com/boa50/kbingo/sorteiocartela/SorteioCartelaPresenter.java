@@ -93,6 +93,7 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
     public void limparCartelasSorteaveis() {
         mAppDataSource.cleanCartelasFiltro();
         recuperarCartelasSorteaveis();
+        mView.retornarPadraoTela();
     }
 
     private void recuperarCartelasSorteaveis() {
