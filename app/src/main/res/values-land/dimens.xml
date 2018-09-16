@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Divisoria Linha-->
+    <dimen name="divisoria_linha_width">1dp</dimen>
+    <dimen name="divisoria_linha_height">0dp</dimen>
+
     <!--Realizar sorteio-->
     <dimen name="pedra_pequena_margin">8dp</dimen>
     <dimen name="pedras_pager_width">700dp</dimen>
+
+    <!--Sorteio Cartela-->
+    <dimen name="sc_cartelas_sorteaveis_width">400dp</dimen>
 
     <!--Visualizar cartela-->
     <dimen name="input_layout_width">300dp</dimen>

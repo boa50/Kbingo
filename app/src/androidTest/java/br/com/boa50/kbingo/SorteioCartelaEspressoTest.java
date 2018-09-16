@@ -1,5 +1,6 @@
 package br.com.boa50.kbingo;
 
+import android.content.pm.ActivityInfo;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.RecyclerViewActions;
@@ -19,6 +20,7 @@ import org.junit.runner.RunWith;
 import br.com.boa50.kbingo.data.AppDatabase;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 
+import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -313,5 +315,75 @@ public class SorteioCartelaEspressoTest {
                 .perform(RecyclerViewActions.scrollToPosition(Integer.valueOf(vhFiltroText) - 1));
         onView(withText(vhFiltroText))
                 .check(matches(not(isChecked())));
+    }
+
+    @Test
+    public void mudarOrientacao_manterInformacoes() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        for (int i = 0; i < 5; i++) {
+            onView(withId(R.id.rv_sorteio_cartela_filtro))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(i, click()));
+        }
+
+        onView(withId(R.id.cb_filtro_cartelas_ganhadoras))
+                .perform(click());
+
+        onView(withId(R.id.et_sorteio_cartela_numero))
+                .perform(replaceText("0050"));
+
+        CustomProcedures.mudarOrientacaoTela(mActivityRule);
+
+        onView(withText(R.string.dialog_filtrar_cartelas_title))
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.cb_filtro_cartelas_ganhadoras))
+                .check(matches(isChecked()));
+
+        onView(withId(R.id.cb_filtro_cartelas_ganhadoras))
+                .perform(click());
+
+        onView(withId(R.id.et_sorteio_cartela_numero))
+                .check(matches(withText("0050")));
+
+        int rvSize = getRecyclerViewSize(withId(R.id.rv_sorteio_cartela_filtro));
+        assertThat(rvSize, equalTo(1));
+
+        onView(withId(R.id.et_sorteio_cartela_numero))
+                .perform(replaceText(""));
+
+
+        for (int i = 1; i <= 5; i++) {
+            onView(withText("000" + String.valueOf(i)))
+                    .check(matches(isChecked()));
+        }
+
+        closeSoftKeyboard();
+        pressBack();
+
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_limpar_filtro_cartelas))
+                .perform(click());
+
+        CustomProcedures.mudarOrientacaoTela(mActivityRule);
+
+        onView(withText(R.string.dialog_limpar_filtro_cartelas_title))
+                .check(matches(isDisplayed()));
+        onView(withText(R.string.dialog_negative))
+                .perform(click());
+
+
+        rvSize = getRecyclerViewSize(withId(R.id.rv_sorteio_cartela_sorteaveis));
+
+        onView(withId(R.id.bt_sorteio_cartela))
+                .perform(click());
+        String buttonText = getButtonText(withId(R.id.bt_sorteio_cartela));
+
+        CustomProcedures.mudarOrientacaoTela(mActivityRule);
+
+        assertThat(getRecyclerViewSize(withId(R.id.rv_sorteio_cartela_sorteaveis)), equalTo(rvSize));
+        assertThat(getButtonText(withId(R.id.bt_sorteio_cartela)), equalTo(buttonText));
     }
 }
