@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ll_cartelas_sorteaveis"
+        android:layout_width="@dimen/sc_cartelas_sorteaveis_width"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:baselineAligned="false"
+        android:paddingStart="@dimen/sc_container_layout_padding"
+        android:paddingLeft="@dimen/sc_container_layout_padding"
+        android:paddingEnd="@dimen/sc_container_layout_padding"
+        android:paddingRight="@dimen/sc_container_layout_padding"
+        android:paddingTop="@dimen/sc_container_layout_padding"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Base.TextAppearance.AppCompat.SearchResult.Subtitle"
+            android:text="@string/titulo_cartelas_sorteaveis" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_sorteio_cartela_sorteaveis"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        style="@style/DivisoriaLinha"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ll_cartelas_sorteaveis"  />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_sorteio_cartela"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/PedraSorteioCartelaCard"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ll_cartelas_sorteaveis"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/bt_sorteio_cartela"
+            android:layout_width="@dimen/sc_pedra_lado"
+            android:layout_height="@dimen/sc_pedra_lado"
+            style="@style/PedraSorteioCartela"
+            android:text="@string/bt_sorteio_cartela" />
+    </android.support.v7.widget.CardView>
+
+</android.support.constraint.ConstraintLayout>

@@ -2,6 +2,7 @@ package br.com.boa50.kbingo.sorteiocartela;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,6 +39,10 @@ import dagger.android.support.DaggerFragment;
 
 @ActivityScoped
 public class SorteioCartelaFragment extends DaggerFragment implements SorteioCartelaContract.View {
+    private static final String ARGS_DIALOG_FILTRO_SORTEIO = "dialogFiltroSorteio";
+    private static final String ARGS_DIALOG_LIMPA_FILTRO = "dialogLimpaFiltro";
+    private static final String ARGS_FILTRO_CB_CARTELAS_GANHADORAS = "filtroCartelasGanhadoras";
+    private static final String ARGS_FILTRO_TEXTO = "filtroTexto";
 
     @Inject
     Context mContext;
@@ -56,6 +61,10 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
 
     private Unbinder unbinder;
     private boolean mCbCartelasGanhadoras;
+    private int mGridCartelasSorteaveisColunas;
+    private Dialog mDialogFiltroSorteio;
+    private Dialog mDialogLimpaFiltro;
+    private String mFiltroCartelasTexto;
 
     @Inject
     public SorteioCartelaFragment() {}
@@ -78,9 +87,34 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(ARGS_DIALOG_FILTRO_SORTEIO,
+                mDialogFiltroSorteio != null && mDialogFiltroSorteio.isShowing());
+        outState.putBoolean(ARGS_DIALOG_LIMPA_FILTRO,
+                mDialogLimpaFiltro != null && mDialogLimpaFiltro.isShowing());
+        outState.putBoolean(ARGS_FILTRO_CB_CARTELAS_GANHADORAS, mCbCartelasGanhadoras);
+        outState.putString(ARGS_FILTRO_TEXTO, mFiltroCartelasTexto);
+    }
+
+    @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         mPresenter.subscribe(this);
+
+        if (savedInstanceState != null) {
+            mCbCartelasGanhadoras = savedInstanceState.getBoolean(ARGS_FILTRO_CB_CARTELAS_GANHADORAS);
+            mFiltroCartelasTexto = savedInstanceState.getString(ARGS_FILTRO_TEXTO);
+            if (savedInstanceState.getBoolean(ARGS_DIALOG_FILTRO_SORTEIO)) {
+                abrirDialogFiltroCartelas();
+            }
+            if (savedInstanceState.getBoolean(ARGS_DIALOG_LIMPA_FILTRO)) {
+                abrirDialogLimparFiltro();
+            }
+        } else {
+            mCbCartelasGanhadoras = false;
+            mFiltroCartelasTexto = "";
+        }
     }
 
     @Override
@@ -101,6 +135,17 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mGridCartelasSorteaveisColunas = 3;
+        } else {
+            mGridCartelasSorteaveisColunas = 2;
         }
     }
 
@@ -138,7 +183,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         if (rvCartelasSorteaveis.getAdapter() != null) {
             cartelasSorteaveisAdapter.submitList(cartelasSorteaveis);
         } else {
-            estilizarRecyclerView(rvCartelasSorteaveis, 3);
+            estilizarRecyclerView(rvCartelasSorteaveis, mGridCartelasSorteaveisColunas);
             cartelasSorteaveisAdapter.submitList(cartelasSorteaveis);
             rvCartelasSorteaveis.setAdapter(cartelasSorteaveisAdapter);
         }
@@ -151,6 +196,11 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         EditText etFiltroCartelas = view.findViewById(R.id.et_sorteio_cartela_numero);
         CheckBox cbFiltroCartelasGanhadoras = view.findViewById(R.id.cb_filtro_cartelas_ganhadoras);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        builder.setTitle(R.string.dialog_filtrar_cartelas_title)
+                .setView(view);
+
+        etFiltroCartelas.setText(mFiltroCartelasTexto);
         etFiltroCartelas.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -159,6 +209,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mPresenter.carregarFiltroCartelasSorteaveis(
                         charSequence.toString(), cbFiltroCartelasGanhadoras.isChecked());
+                mFiltroCartelasTexto = charSequence.toString();
             }
 
             @Override
@@ -166,19 +217,17 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         });
 
         cbFiltroCartelasGanhadoras.setChecked(mCbCartelasGanhadoras);
-
         cbFiltroCartelasGanhadoras.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     mPresenter.carregarFiltroCartelasSorteaveis(
                             etFiltroCartelas.getText().toString(), isChecked);
                     mCbCartelasGanhadoras = isChecked;
                 });
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-        builder.setTitle(R.string.dialog_filtrar_cartelas_title)
-                .setView(view);
-        if (mCbCartelasGanhadoras) mPresenter.carregarFiltroCartelasSorteaveis("", true);
+        if (mCbCartelasGanhadoras) mPresenter.carregarFiltroCartelasSorteaveis(
+                etFiltroCartelas.getText().toString(), true);
         else mPresenter.carregarFiltroCartelasSorteaveis();
-        builder.create().show();
+        mDialogFiltroSorteio = builder.create();
+        mDialogFiltroSorteio.show();
     }
 
     private void estilizarRecyclerView(RecyclerView recyclerView, int colunasNumero) {
@@ -199,8 +248,8 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
                             mCbCartelasGanhadoras = false;
                         });
 
-        Dialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+        mDialogLimpaFiltro = builder.create();
+        mDialogLimpaFiltro.setCanceledOnTouchOutside(false);
+        mDialogLimpaFiltro.show();
     }
 }
