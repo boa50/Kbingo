@@ -43,6 +43,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     private static final String ARGS_DIALOG_LIMPA_FILTRO = "dialogLimpaFiltro";
     private static final String ARGS_FILTRO_CB_CARTELAS_GANHADORAS = "filtroCartelasGanhadoras";
     private static final String ARGS_FILTRO_TEXTO = "filtroTexto";
+    private static final String ARGS_ULTIMA_SORTEADA = "ultimaSorteada";
 
     @Inject
     Context mContext;
@@ -65,6 +66,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     private Dialog mDialogFiltroSorteio;
     private Dialog mDialogLimpaFiltro;
     private String mFiltroCartelasTexto;
+    private int mUltimaSorteada;
 
     @Inject
     public SorteioCartelaFragment() {}
@@ -89,12 +91,13 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt(ARGS_ULTIMA_SORTEADA, mUltimaSorteada);
+        outState.putBoolean(ARGS_FILTRO_CB_CARTELAS_GANHADORAS, mCbCartelasGanhadoras);
+        outState.putString(ARGS_FILTRO_TEXTO, mFiltroCartelasTexto);
         outState.putBoolean(ARGS_DIALOG_FILTRO_SORTEIO,
                 mDialogFiltroSorteio != null && mDialogFiltroSorteio.isShowing());
         outState.putBoolean(ARGS_DIALOG_LIMPA_FILTRO,
                 mDialogLimpaFiltro != null && mDialogLimpaFiltro.isShowing());
-        outState.putBoolean(ARGS_FILTRO_CB_CARTELAS_GANHADORAS, mCbCartelasGanhadoras);
-        outState.putString(ARGS_FILTRO_TEXTO, mFiltroCartelasTexto);
     }
 
     @Override
@@ -103,6 +106,9 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         mPresenter.subscribe(this);
 
         if (savedInstanceState != null) {
+            mUltimaSorteada = savedInstanceState.getInt(ARGS_ULTIMA_SORTEADA);
+            if (mUltimaSorteada > 0) apresentarCartela(mUltimaSorteada);
+
             mCbCartelasGanhadoras = savedInstanceState.getBoolean(ARGS_FILTRO_CB_CARTELAS_GANHADORAS);
             mFiltroCartelasTexto = savedInstanceState.getString(ARGS_FILTRO_TEXTO);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_FILTRO_SORTEIO)) {
@@ -114,6 +120,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         } else {
             mCbCartelasGanhadoras = false;
             mFiltroCartelasTexto = "";
+            mUltimaSorteada = 0;
         }
     }
 
@@ -163,6 +170,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
                 getResources().getDimension(R.dimen.sc_pedra_sorteada_texto)
         );
         btSorteioCartela.setText(CartelaUtils.formatarNumeroCartela(numeroCartela));
+        mUltimaSorteada = numeroCartela;
     }
 
     @Override
@@ -187,6 +195,15 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
             cartelasSorteaveisAdapter.submitList(cartelasSorteaveis);
             rvCartelasSorteaveis.setAdapter(cartelasSorteaveisAdapter);
         }
+    }
+
+    @Override
+    public void retornarPadraoTela() {
+        btSorteioCartela.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimension(R.dimen.sc_pedra_texto)
+        );
+        btSorteioCartela.setText(R.string.bt_sorteio_cartela);
     }
 
     private void abrirDialogFiltroCartelas() {

@@ -1,6 +1,5 @@
 package br.com.boa50.kbingo;
 
-import android.content.pm.ActivityInfo;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.RecyclerViewActions;
@@ -293,6 +292,9 @@ public class SorteioCartelaEspressoTest {
 
         pressBack();
 
+        onView(withId(R.id.bt_sorteio_cartela))
+                .perform(click());
+
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_limpar_filtro_cartelas))
                 .perform(click());
@@ -303,6 +305,8 @@ public class SorteioCartelaEspressoTest {
 
         onView(withText(R.string.todas_cartelas_sorteaveis))
                 .check(matches(isDisplayed()));
+        onView(withId(R.id.bt_sorteio_cartela))
+                .check(matches(withText(R.string.bt_sorteio_cartela)));
 
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
@@ -353,6 +357,11 @@ public class SorteioCartelaEspressoTest {
         onView(withId(R.id.et_sorteio_cartela_numero))
                 .perform(replaceText(""));
 
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         for (int i = 1; i <= 5; i++) {
             onView(withText("000" + String.valueOf(i)))

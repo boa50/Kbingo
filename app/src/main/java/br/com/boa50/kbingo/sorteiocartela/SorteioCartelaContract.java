@@ -12,6 +12,7 @@ public interface SorteioCartelaContract {
         void apresentarCartela(int numeroCartela);
         void preencherCartelasFiltro(List<CartelaFiltroDTO> cartelasFiltro);
         void preencherCartelasSorteaveis(List<Integer> cartelasSorteaveis);
+        void retornarPadraoTela();
     }
 
     interface Presenter extends BasePresenter<View> {
