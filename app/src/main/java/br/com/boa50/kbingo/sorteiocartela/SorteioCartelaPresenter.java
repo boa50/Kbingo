@@ -87,6 +87,7 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
     public void atualizarCartelasSorteaveis(int id, boolean selecionada) {
         mAppDataSource.updateCartelasFiltro(id, selecionada);
         recuperarCartelasSorteaveis();
+        mView.retornarPadraoTela();
     }
 
     @Override
