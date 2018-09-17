@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Kbingo</string>
-    <string name="realizar_sorteio_title">Realizar Sorteio</string>
+    <string name="realizar_sorteio_submenu_title">Realizar Sorteio</string>
+    <string name="realizar_sorteio_title">Sortear Pedras</string>
+    <string name="sorteio_cartela_title">Sortear Cartela</string>
     <string name="visualizar_cartelas_title">Visualizar Cartela</string>
     <string name="conferir_cartelas_title">Conferir Cartela</string>
     <string name="cartelas_ganhadoras_title">Cartelas Ganhadoras</string>
@@ -9,9 +11,6 @@
 
     <string name="dialog_sair_app_title">Deseja realmente sair do Kbingo?</string>
     <string name="dialog_sair_app_positive">Sair</string>
-
-    <!--Shared Preferences-->
-    <string name="pref_tipo_sorteio">prefTipoSorteio</string>
 
     <!--Realizar sorteio-->
     <string name="bt_sortear_pedra">Sortear\nPedra</string>
@@ -24,6 +23,18 @@
     <string name="dialog_tipo_sorteio_title">Escolha o tipo de sorteio</string>
     <string name="item_confere_cartelas_content_description">Imagem de cartela</string>
     <string name="item_confere_cartelas_badge_texto_plus">+9</string>
+
+    <!--Sorteio Cartela-->
+    <string name="bt_sorteio_cartela">Sortear\nCartela</string>
+    <string name="filtro_cartelas_ganhadoras">Filtrar por cartelas ganhadoras</string>
+    <string name="et_sorteio_cartela_numero_hint">Número da cartela</string>
+    <string name="titulo_cartelas_sorteaveis">Cartelas Sorteáveis:</string>
+    <string name="todas_cartelas_sorteaveis">Todas as cartelas</string>
+    <string name="item_filtrar_cartelas_sorteaveis">Filtrar cartelas sorteáveis</string>
+    <string name="item_limpar_filtro_cartelas">Limpar filtro de cartelas</string>
+    <string name="dialog_filtrar_cartelas_title">Filtrar cartelas sorteáveis</string>
+    <string name="dialog_limpar_filtro_cartelas_title">Limpar filtro de cartelas sorteáveis?</string>
+    <string name="dialog_limpar_filtro_cartelas_positive">Limpar Filtro</string>
 
     <!--Conferir cartela-->
     <string name="toast_sem_cartela_ganhadora">Ainda não há nenhuma cartela ganhadora</string>

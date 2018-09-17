@@ -17,7 +17,16 @@
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
-    <!--Realizar Sorteio-->
+    <style name="PedraEnabledTheme">
+        <item name="pedra_cor_primaria">@color/pedraPrimariaEnabled</item>
+        <item name="pedra_cor_secundaria">@color/pedraSecundariaEnabled</item>
+    </style>
+
+    <style name="PedraEnabled">
+        <item name="android:background">@drawable/pedragrande</item>
+        <item name="android:theme">@style/PedraEnabledTheme</item>
+    </style>
+
     <style name="BaseButtonColored" parent="Widget.AppCompat.Button.Colored">
         <item name="android:paddingLeft">@dimen/button_padding_left_right</item>
         <item name="android:paddingRight">@dimen/button_padding_left_right</item>
@@ -29,11 +38,31 @@
         <item name="background">@color/colorSecondary</item>
     </style>
 
-    <style name="PedraEnabled">
-        <item name="pedra_cor_primaria">@color/pedraPrimariaEnabled</item>
-        <item name="pedra_cor_secundaria">@color/pedraSecundariaEnabled</item>
+    <style name="BaseListItem">
+        <item name="android:textAppearance">?android:attr/textAppearanceListItemSmall</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">?android:attr/listPreferredItemHeightSmall</item>
     </style>
 
+    <style name="ListItem" parent="BaseListItem">
+        <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingLeft</item>
+        <item name="android:paddingRight">?android:attr/listPreferredItemPaddingRight</item>
+    </style>
+
+    <style name="BaseDivisoriaLinha">
+        <item name="android:layout_width">@dimen/divisoria_linha_width</item>
+        <item name="android:layout_height">@dimen/divisoria_linha_height</item>
+        <item name="android:background">@color/divisoriaLinha</item>
+    </style>
+
+    <style name="DivisoriaLinha" parent="BaseDivisoriaLinha" />
+
+    <style name="CheckBox">
+        <item name="android:paddingLeft">@dimen/checkbox_padding_left</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+
+    <!--Realizar Sorteio-->
     <style name="PedraGrandeCard">
         <item name="android:layout_marginTop">@dimen/pedra_grande_margin_top</item>
         <item name="android:layout_marginLeft">@dimen/pedra_grande_margin_start_end</item>
@@ -42,9 +71,7 @@
         <item name="cardElevation">@dimen/pedra_grande_card_elevation</item>
     </style>
 
-    <style name="PedraGrande">
-        <item name="android:background">@drawable/pedragrande</item>
-        <item name="android:theme">@style/PedraEnabled</item>
+    <style name="PedraGrande" parent="PedraEnabled">
         <item name="android:textSize">@dimen/pedra_grande_texto</item>
     </style>
 
@@ -64,8 +91,25 @@
 
     <style name="TabLetras" parent="BaseTabLetras" />
 
+    <!--Sorteio Cartela-->
+    <style name="PedraSorteioCartelaCard">
+        <item name="android:layout_marginTop">@dimen/sc_pedra_margin_top</item>
+        <item name="android:layout_marginLeft">@dimen/sc_pedra_margin_start_end</item>
+        <item name="android:layout_marginRight">@dimen/sc_pedra_margin_start_end</item>
+        <item name="cardCornerRadius">@dimen/sc_pedra_card_radius</item>
+        <item name="cardElevation">@dimen/sc_pedra_card_elevation</item>
+    </style>
+
+    <style name="PedraSorteioCartela" parent="PedraEnabled">
+        <item name="android:textSize">@dimen/sc_pedra_texto</item>
+    </style>
+
+    <style name="SorteioCartelaInputLayoutHint" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">@dimen/sc_input_layout_hint</item>
+    </style>
+
     <!--Visualizar cartelas-->
-    <style name="InputLayoutHint" parent="TextAppearance.Design.Hint">
-        <item name="android:textSize">@dimen/input_layout_hint_size</item>
+    <style name="VisualizaCartelasInputLayoutHint" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">@dimen/input_layout_hint</item>
     </style>
 </resources>

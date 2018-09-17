@@ -15,7 +15,7 @@ public final class PedraUtils {
     public static Drawable getPedraDrawable(Context context, boolean enabled) {
         Resources.Theme theme;
         if (enabled)
-            theme = new ContextThemeWrapper(context, R.style.PedraEnabled).getTheme();
+            theme = new ContextThemeWrapper(context, R.style.PedraEnabledTheme).getTheme();
         else
             theme = context.getTheme();
 

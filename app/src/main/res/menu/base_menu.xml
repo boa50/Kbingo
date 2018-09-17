@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/item_novo_sorteio"
-        android:title="@string/item_novo_sorteio"
-        android:orderInCategory="2"
-        android:visible="false"/>
+    <!--Realizar Sorteio-->
     <item android:id="@+id/item_alterar_tipo_sorteio"
         android:title="@string/item_alterar_tipo_sorteio"
         android:orderInCategory="1"
+        android:visible="false"/>
+    <item android:id="@+id/item_novo_sorteio"
+        android:title="@string/item_novo_sorteio"
+        android:orderInCategory="2"
         android:visible="false"/>
     <item android:id="@+id/item_confere_cartelas"
         android:title="@string/conferir_cartelas_title"
         android:icon="@drawable/ic_cartela"
         app:showAsAction="ifRoom"
         app:actionLayout="@layout/conferecartelas_action_layout"
+        android:visible="false"/>
+
+    <!--Sorteio Cartela-->
+    <item android:id="@+id/item_filtrar_cartelas_sorteaveis"
+        android:title="@string/item_filtrar_cartelas_sorteaveis"
+        android:orderInCategory="1"
+        android:visible="false"/>
+    <item android:id="@+id/item_limpar_filtro_cartelas"
+        android:title="@string/item_limpar_filtro_cartelas"
+        android:orderInCategory="2"
         android:visible="false"/>
 </menu>
