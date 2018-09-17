@@ -123,6 +123,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
         preencherPosicoesSorteio();
         mUltimaPedraSorteada = null;
+        mAppDataSource.cleanCartelasGanhadoras();
         atualizarCartelasGanhadoras();
 
         mView.reiniciarSorteio();

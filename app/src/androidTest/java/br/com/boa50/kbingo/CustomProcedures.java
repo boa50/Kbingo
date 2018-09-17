@@ -19,7 +19,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.contrib.NavigationViewActions.navigateTo;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -60,8 +59,6 @@ final class CustomProcedures {
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_alterar_tipo_sorteio))
                 .perform(click());
-        onView(withText(R.string.dialog_tipo_sorteio_title))
-                .check(matches(isDisplayed()));
         onView(withText(TipoSorteioDTO.getTipoSorteio(tipoSorteioId).getNome()))
                 .perform(click());
         onView(withText(R.string.dialog_confirmative))

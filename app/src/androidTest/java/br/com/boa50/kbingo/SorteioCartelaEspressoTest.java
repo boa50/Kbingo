@@ -58,6 +58,12 @@ public class SorteioCartelaEspressoTest {
                     .perform(click());
         } catch (Exception ignored){}
         CustomProcedures.changeNavigation(R.id.item_sorteio_cartela);
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_limpar_filtro_cartelas))
+                .perform(click());
+        onView(withText(R.string.dialog_limpar_filtro_cartelas_positive))
+                .perform(click());
     }
 
     @AfterClass
@@ -189,6 +195,11 @@ public class SorteioCartelaEspressoTest {
     public void filtrarFiltroGanhadoras_aparecerApenasGanhadoras() {
         CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
         CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS);
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_novo_sorteio))
+                .perform(click());
+        onView(withText(R.string.dialog_novo_sorteio_positive))
+                .perform(click());
         CustomProcedures.sortearPedras(7);
 
         onView(withId(R.id.item_confere_cartelas))
@@ -419,5 +430,52 @@ public class SorteioCartelaEspressoTest {
 
         onView(withId(R.id.bt_sorteio_cartela))
                 .check(matches(withText(R.string.bt_sorteio_cartela)));
+    }
+
+    @Test
+    public void sortearGanhadoras_novoSorteio_limparGanhadoras() {
+        CustomProcedures.changeNavigation(R.id.item_realizar_sorteio);
+        CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS);
+        CustomProcedures.sortearPedras(7);
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_novo_sorteio))
+                .perform(click());
+        onView(withText(R.string.dialog_novo_sorteio_positive))
+                .perform(click());
+
+        CustomProcedures.changeNavigation(R.id.item_sorteio_cartela);
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+        onView(withId(R.id.cb_filtro_cartelas_ganhadoras))
+                .perform(click());
+
+        int rvSize = getRecyclerViewSize(withId(R.id.rv_sorteio_cartela_filtro));
+        assertThat(rvSize, equalTo(0));
+    }
+
+    @Test
+    public void editarTextoFiltro_fecharAbrirFiltro_manterInformacoesCorretas() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        onView(withId(R.id.et_sorteio_cartela_numero))
+                .perform(replaceText("50"));
+
+        closeSoftKeyboard();
+        pressBack();
+
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_filtrar_cartelas_sorteaveis))
+                .perform(click());
+
+        onView(withId(R.id.et_sorteio_cartela_numero))
+                .check(matches(withText("50")));
+
+        int rvSize = CustomGets.getRecyclerViewSize(withId(R.id.rv_sorteio_cartela_filtro));
+        assertThat(rvSize, equalTo(2));
     }
 }
