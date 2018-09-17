@@ -41,6 +41,10 @@ public class VisualizaCartelasEspressoTest {
 
     @Before
     public void setupTest() {
+        try {
+            onView(withText(R.string.dialog_negative))
+                    .perform(click());
+        } catch (Exception ignored){}
         CustomProcedures.changeNavigation(R.id.item_visualizar_cartelas);
     }
 

@@ -163,7 +163,9 @@ public class AppRepository implements AppDataSource {
             for (CartelaDTO cartela : cartelas) {
                 cartela.setQtdPedrasSorteadas(0);
                 cartela.setGanhadora(false);
-                cartelasFiltro.get(cartela.getCartelaId() - 1).setGanhadora(false);
+                if (cartelasFiltro != null) {
+                    cartelasFiltro.get(cartela.getCartelaId() - 1).setGanhadora(false);
+                }
             }
         }
     }
