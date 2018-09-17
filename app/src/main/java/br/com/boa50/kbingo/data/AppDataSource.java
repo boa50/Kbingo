@@ -33,6 +33,7 @@ public interface AppDataSource {
     void updateCartelas(Pedra ultimaPedraSorteada);
     void updateCartelasFiltro(int id, boolean selecionada);
 
+    void cleanCartelasGanhadoras();
     void cleanCartelasFiltro();
 
     void initializeDatabase();

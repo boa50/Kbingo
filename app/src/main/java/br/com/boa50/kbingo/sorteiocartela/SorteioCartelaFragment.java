@@ -180,7 +180,6 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
             cartelasFiltroAdapter.submitList(cartelasFiltro);
             rvCartelaFiltro.setAdapter(cartelasFiltroAdapter);
         }
-
         rvCartelaFiltro.postDelayed(() -> rvCartelaFiltro.scrollToPosition(0), 50);
     }
 
