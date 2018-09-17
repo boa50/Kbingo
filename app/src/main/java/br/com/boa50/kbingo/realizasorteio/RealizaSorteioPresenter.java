@@ -15,7 +15,6 @@ import br.com.boa50.kbingo.data.dto.CartelaDTO;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
-import br.com.boa50.kbingo.util.CartelaUtils;
 import br.com.boa50.kbingo.util.PedraUtils;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -33,10 +32,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private ArrayList<Pedra> mPedras;
     private Pedra mUltimaPedraSorteada;
-    private int mTipoSorteio;
     private ArrayList<CartelaDTO> mCartelas;
-    private int mQtdCartelasGanhadoras;
-
 
     @Inject
     RealizaSorteioPresenter(
@@ -45,7 +41,6 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         mAppDataSource = appDataSource;
         mScheduleProvider = schedulerProvider;
         mCompositeDisposable = new CompositeDisposable();
-        mTipoSorteio = TipoSorteioDTO.CARTELA_CHEIA;
     }
 
     @Override
@@ -60,15 +55,11 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         if (state != null) {
             mPedras = state.getPedras();
             mUltimaPedraSorteada = state.getUltimaPedraSorteada();
-            mTipoSorteio = state.getTipoSorteio();
             mCartelas = state.getCartelas();
-            mQtdCartelasGanhadoras = state.getQtdCartelasGanhadoras();
         } else {
             mPedras = null;
             mUltimaPedraSorteada = null;
-            mTipoSorteio = TipoSorteioDTO.CARTELA_CHEIA;
             mCartelas = null;
-            mQtdCartelasGanhadoras = 0;
         }
 
         carregarPedras();
@@ -78,8 +69,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     @NonNull
     @Override
     public RealizaSorteioContract.State getState() {
-        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada, mTipoSorteio, mCartelas,
-                mQtdCartelasGanhadoras);
+        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada, mCartelas);
     }
 
     @Override
@@ -97,11 +87,23 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
             mUltimaPedraSorteada.setSorteada(true);
             mView.apresentarPedra(mUltimaPedraSorteada);
 
-            atualizarCartelasSorteadas();
+            mAppDataSource.updateCartelas(mUltimaPedraSorteada);
+            atualizarCartelasGanhadoras();
 
             mView.atualizarPedra(mPosicoes.get(0));
             mPosicoes.remove(0);
         }
+    }
+
+    @Override
+    public void atualizarCartelasGanhadoras() {
+        Disposable disposable = mAppDataSource
+                .getCartelasGanhadoras()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui())
+                .subscribe(cartelas -> mView.atualizarCartelasGanhadorasBadge(cartelas.size()));
+
+        mCompositeDisposable.add(disposable);
     }
 
     private void apresentarUltimaPedraSorteada() {
@@ -121,16 +123,25 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
         preencherPosicoesSorteio();
         mUltimaPedraSorteada = null;
-        mQtdCartelasGanhadoras = 0;
-        mView.atualizarCartelasGanhadorasBadge();
+        mAppDataSource.cleanCartelasGanhadoras();
+        atualizarCartelasGanhadoras();
 
         mView.reiniciarSorteio();
     }
 
     @Override
-    public void alterarTipoSorteio(int tipoSorteio) {
-        mTipoSorteio = tipoSorteio;
+    public TipoSorteioDTO getTipoSorteio() {
+        return mAppDataSource.getTipoSorteio();
+    }
 
+    @Override
+    public int getTipoSorteioId() {
+        return mAppDataSource.getTipoSorteioId();
+    }
+
+    @Override
+    public void alterarTipoSorteio(int tipoSorteio) {
+        mAppDataSource.setTipoSorteioId(tipoSorteio);
         mView.apresentarTipoSorteio(true);
     }
 
@@ -162,49 +173,14 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private void carregarCartelas() {
         if (mCartelas == null) {
+            mCartelas = new ArrayList<>();
             Disposable disposable = mAppDataSource
-                    .getCartelaUltimoId()
+                    .getCartelas()
                     .subscribeOn(mScheduleProvider.io())
                     .observeOn(mScheduleProvider.ui())
-                    .subscribe(
-                            this::carregarCartelas
-                    );
+                    .subscribe(cartelas -> mCartelas.addAll(cartelas));
 
             mCompositeDisposable.add(disposable);
-        }
-    }
-
-    private void carregarCartelas(int maxId) {
-        mCartelas = new ArrayList<>();
-        for (int i = 1; i <= maxId; i++) {
-            int cartelaId = i;
-            Disposable disposable = mAppDataSource
-                    .getPedrasByCartelaId(cartelaId)
-                    .subscribeOn(mScheduleProvider.io())
-                    .observeOn(mScheduleProvider.ui())
-                    .subscribe(
-                            cartelaPedras -> mCartelas.add(
-                                    new CartelaDTO(cartelaId, cartelaPedras))
-                    );
-
-            mCompositeDisposable.add(disposable);
-        }
-    }
-
-    private void atualizarCartelasSorteadas() {
-        for (CartelaDTO cartela : mCartelas) {
-            int qtdePedrasSorteio = TipoSorteioDTO.getTipoSorteio(mTipoSorteio).getQuantidadePedras();
-            if (cartela.getQtdPedrasSorteadas() < qtdePedrasSorteio &&
-                    CartelaUtils.hasCartelaPedra(cartela.getCartelaPedras(), mUltimaPedraSorteada)) {
-
-                cartela.setQtdPedrasSorteadas(cartela.getQtdPedrasSorteadas() + 1);
-
-                if (cartela.getQtdPedrasSorteadas() >= qtdePedrasSorteio) {
-                    cartela.setGanhadora(true);
-                    mQtdCartelasGanhadoras++;
-                    mView.atualizarCartelasGanhadorasBadge();
-                }
-            }
         }
     }
 

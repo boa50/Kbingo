@@ -16,7 +16,7 @@
         android:layout_marginLeft="@dimen/input_layout_margin_start_end"
         android:layout_marginEnd="@dimen/input_layout_margin_start_end"
         android:layout_marginRight="@dimen/input_layout_margin_start_end"
-        app:hintTextAppearance="@style/InputLayoutHint"
+        app:hintTextAppearance="@style/VisualizaCartelasInputLayoutHint"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/gl_cartela"
         app:layout_constraintStart_toStartOf="parent"

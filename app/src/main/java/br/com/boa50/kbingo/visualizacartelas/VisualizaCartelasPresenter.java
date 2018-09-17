@@ -14,23 +14,19 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
     private VisualizaCartelasContract.View mView;
 
     private final AppDataSource mAppDataSource;
-
     private final BaseSchedulerProvider mScheduleProvider;
-
     private CompositeDisposable mCompositeDisposable;
 
     @Inject
-    VisualizaCartelasPresenter(
-            @NonNull AppDataSource appDataSource,
+    VisualizaCartelasPresenter(@NonNull AppDataSource appDataSource,
             @NonNull BaseSchedulerProvider schedulerProvider) {
         mAppDataSource = appDataSource;
         mScheduleProvider = schedulerProvider;
-
         mCompositeDisposable = new CompositeDisposable();
     }
 
     @Override
-    public void subscribe(VisualizaCartelasContract.View view) {
+    public void subscribe(@NonNull VisualizaCartelasContract.View view) {
         mView = view;
         iniciarLayout();
     }

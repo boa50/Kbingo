@@ -17,6 +17,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.realizasorteio.RealizaSorteioFragment;
+import br.com.boa50.kbingo.sorteiocartela.SorteioCartelaFragment;
 import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasFragment;
 import butterknife.BindView;
@@ -35,6 +36,8 @@ public class BaseActivity extends DaggerAppCompatActivity {
 
     @Inject
     RealizaSorteioFragment mRealizaSorteioFragment;
+    @Inject
+    SorteioCartelaFragment mSorteioCartelaFragment;
     @Inject
     VisualizaCartelasFragment mVisualizaCartelasFragment;
 
@@ -119,6 +122,10 @@ public class BaseActivity extends DaggerAppCompatActivity {
             case R.id.item_realizar_sorteio:
                 setTitle(R.string.realizar_sorteio_title);
                 fragment = mRealizaSorteioFragment;
+                break;
+            case R.id.item_sorteio_cartela:
+                setTitle(R.string.sorteio_cartela_title);
+                fragment = mSorteioCartelaFragment;
                 break;
             case R.id.item_visualizar_cartelas:
                 setTitle(R.string.visualizar_cartelas_title);

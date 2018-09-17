@@ -15,6 +15,7 @@
     <color name="colorAccent">@color/colorSecondary</color>
     <color name="rippleBlack">#40000000</color>
     <color name="vermelhoDestaque">#D50000</color>
+    <color name="divisoriaLinha">@color/rippleBlack</color>
 
     <color name="textoPadrao">@color/textSecondary</color>
     <color name="backgroundPadrao">#FAFAFA</color>

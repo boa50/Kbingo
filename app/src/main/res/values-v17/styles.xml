@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ListItem" parent="BaseListItem">
+        <item name="android:paddingStart">?android:attr/listPreferredItemPaddingStart</item>
+        <item name="android:paddingEnd">?android:attr/listPreferredItemPaddingEnd</item>
+    </style>
+
+    <style name="CheckBox">
+        <item name="android:paddingStart">@dimen/checkbox_padding_left</item>
+        <item name="android:paddingEnd">0dp</item>
+    </style>
+</resources>

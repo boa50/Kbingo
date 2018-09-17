@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -73,5 +74,49 @@ final class CustomGets {
             }
         });
         return stringHolder[0];
+    }
+
+    static int getRecyclerViewSize(final Matcher<View> matcher) {
+        final int[] intHolder = {0};
+        onView(matcher).perform(new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isAssignableFrom(RecyclerView.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "getting size from a RecyclerView";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                RecyclerView rv = (RecyclerView) view;
+                intHolder[0] = rv.getChildCount();
+            }
+        });
+        return intHolder[0];
+    }
+
+    static View getRecyclerViewChild(final Matcher<View> matcher, int position) {
+        final View[] viewHolder = {null};
+        onView(matcher).perform(new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isAssignableFrom(RecyclerView.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "getting child view from a RecyclerView";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                RecyclerView rv = (RecyclerView) view;
+                viewHolder[0] = rv.getChildAt(position);
+            }
+        });
+        return viewHolder[0];
     }
 }
