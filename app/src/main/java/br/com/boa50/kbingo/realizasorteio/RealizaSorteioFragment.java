@@ -42,6 +42,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import br.com.boa50.kbingo.BuildConfig;
 import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
@@ -280,7 +281,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
     @OnClick(R.id.bt_sortear_pedra)
     void sortearPedra() {
-        if (SystemClock.elapsedRealtime() - mLastClickTime > 1000) {
+        if (SystemClock.elapsedRealtime() - mLastClickTime > BuildConfig.DELAY_CLICK) {
             mPresenter.sortearPedra();
             mLastClickTime = SystemClock.elapsedRealtime();
         }

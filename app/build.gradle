@@ -38,9 +38,11 @@ android {
         mock {
             dimension "default"
             applicationIdSuffix = ".mock"
+            buildConfigField "int", "DELAY_CLICK", "0"
         }
         prod {
             dimension "default"
+            buildConfigField "int", "DELAY_CLICK", "1000"
         }
     }
     compileOptions {
