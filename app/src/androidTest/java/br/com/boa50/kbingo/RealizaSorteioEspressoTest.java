@@ -78,20 +78,6 @@ public class RealizaSorteioEspressoTest {
     }
 
     @Test
-    public void clickarDuasVezesSimultaneamente_sortearUmaPedra() {
-        onView(withId(R.id.bt_sortear_pedra))
-                .perform(click());
-
-        String text = getButtonText(withId(R.id.bt_sortear_pedra));
-
-        onView(withId(R.id.bt_sortear_pedra))
-                .perform(click());
-
-        onView(withId(R.id.bt_sortear_pedra))
-                .check(matches(withText(text)));
-    }
-
-    @Test
     public void sortearPedra_scrollDistante_mantemCorMudada() {
         onView(withId(R.id.bt_sortear_pedra))
                 .perform(click());

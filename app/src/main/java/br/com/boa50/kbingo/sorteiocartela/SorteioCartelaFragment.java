@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +28,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import br.com.boa50.kbingo.BuildConfig;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
 import br.com.boa50.kbingo.di.ActivityScoped;
@@ -61,6 +63,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
     RecyclerView rvCartelaFiltro;
 
     private Unbinder unbinder;
+    private long mLastClickTime;
     private boolean mCbCartelasGanhadoras;
     private int mGridCartelasSorteaveisColunas;
     private Dialog mDialogFiltroSorteio;
@@ -79,13 +82,17 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
         View view = inflater.inflate(R.layout.sorteiocartela_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
+        mLastClickTime = 0;
 
         return view;
     }
 
     @OnClick(R.id.bt_sorteio_cartela)
     void sortearCartela() {
-        mPresenter.sortearCartela();
+        if (SystemClock.elapsedRealtime() - mLastClickTime > BuildConfig.DELAY_CLICK) {
+            mPresenter.sortearCartela();
+            mLastClickTime = SystemClock.elapsedRealtime();
+        }
     }
 
     @Override

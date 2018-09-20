@@ -48,7 +48,7 @@ final class CustomProcedures {
                     .perform(click());
 
             try {
-                if (i < (quantidade - 1))Thread.sleep(1000);
+                if (i < (quantidade - 1))Thread.sleep(BuildConfig.DELAY_CLICK);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
