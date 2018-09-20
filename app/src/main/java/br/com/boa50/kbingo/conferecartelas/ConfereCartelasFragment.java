@@ -173,7 +173,8 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
 
     @Override
     public void apresentarCartelasFiltradas() {
-        rvCartelasGanhadoras.getAdapter().notifyDataSetChanged();
+        ((CartelasGanhadorasAdapter) rvCartelasGanhadoras.getAdapter())
+                .submitList(new ArrayList<>(mPresenter.getCartelasGanhadoras()));
     }
 }
 
