@@ -2,6 +2,8 @@ package br.com.boa50.kbingo;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -20,6 +22,7 @@ import java.util.Locale;
 
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
 import br.com.boa50.kbingo.data.AppDatabase;
+import br.com.boa50.kbingo.data.FakeAppRepository;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
@@ -37,14 +40,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
 import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
+import static br.com.boa50.kbingo.CustomGets.getButtonText;
 import static br.com.boa50.kbingo.CustomMatchers.isFocused;
 import static br.com.boa50.kbingo.CustomMatchers.withBackgroundDrawable;
 
 @RunWith(AndroidJUnit4.class)
 public class ConfereCartelasEspressoTest {
-    private static AppDatabase db;
+    private static FakeAppRepository repository;
     private static ArrayList<Pedra> pedrasMock;
-//    private static ArrayList<String> cartelasGanhadorasMock;
+    private static ArrayList<Integer> cartelasGanhadorasMock;
 
 
     @Rule
@@ -53,7 +57,7 @@ public class ConfereCartelasEspressoTest {
 
     @BeforeClass
     public static void setup() {
-        db = CustomProcedures.initializeDatabase();
+        repository = CustomProcedures.initializeFakeDatabase();
         Letra[] letras = new Letra[] {
                 new Letra(1, "K"),
                 new Letra(2, "I"),
@@ -75,38 +79,37 @@ public class ConfereCartelasEspressoTest {
 
         pedrasMock.get(14 - 1).setSorteada(true);
 
-//        cartelasGanhadorasMock = Lists.newArrayList(
-//                "0001",
-//                "0002",
-//                "0005"
-//        );
+        cartelasGanhadorasMock = repository.getIdsCartelasGanhadoras();
     }
 
     @Before
     public void setupTest() {
         Intent intent = new Intent();
         intent.putExtra(Constant.EXTRA_PEDRAS, pedrasMock);
-//        intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS, cartelasGanhadorasMock);
+        intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS, true);
         mActivityRule.launchActivity(intent);
     }
 
     @AfterClass
     public static void tearDown() {
-        db.close();
+        repository.getDb().close();
     }
 
     @Test
     public void pedraSorteada_aparecerFundoVerde() {
-//        CustomProcedures.alterarTipoSorteio(TipoSorteioDTO.CINCO_PEDRAS);
-//        CustomProcedures.sortearPedras(7);
-//
-//        onView(withId(R.id.rv_cartelas_ganhadoras))
-//                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.rv_cartelas_ganhadoras))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         onView(withId(R.id.et_numero_cartela))
                 .perform(replaceText("0001"));
         onView(withId(R.id.et_numero_cartela))
                 .perform(pressImeActionButton());
+
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         onView(withText("14"))
                 .check(matches(withBackgroundDrawable(

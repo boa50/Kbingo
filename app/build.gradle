@@ -50,6 +50,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
     }
     buildToolsVersion '27.0.3'
+    sourceSets {
+        main { java.srcDirs = ['src/main/java', 'src/androidTestMock/java'] } 
+        mock {java.srcDirs = ['src/mock/java', 'src/mock/java/'] }
+        prod { java.srcDirs = ['src/prod/java', 'src/prod/java/'] }
+    }
 }
 
 dependencies {
