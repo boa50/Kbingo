@@ -140,7 +140,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 Intent intent = new Intent(getActivity(), ConfereCartelasActivity.class);
                 intent.putExtra(Constant.EXTRA_PEDRAS, mPresenter.getState().getPedras());
                 intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS,
-                        CartelaUtils.getCartelasGanhadoras(mPresenter.getState().getCartelas()));
+                        mTextoCartelasBadge.getVisibility() == View.VISIBLE);
+//                intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS,
+//                        CartelaUtils.getCartelasGanhadoras(mPresenter.getState().getCartelas()));
                 startActivity(intent);
                 return true;
             default:

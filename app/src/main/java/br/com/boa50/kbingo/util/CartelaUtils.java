@@ -19,17 +19,17 @@ public final class CartelaUtils {
         return false;
     }
 
-    public static ArrayList<String> getCartelasGanhadoras(List<CartelaDTO> cartelas) {
-        ArrayList<String> cartelasGanhadoras = new ArrayList<>();
-        for (CartelaDTO cartela : cartelas) {
-            if (cartela.isGanhadora()) {
-                cartelasGanhadoras.add(formatarNumeroCartela(cartela.getCartelaId()));
-            }
-        }
-
-        Collections.sort(cartelasGanhadoras, (o1, o2) -> new BigDecimal(o1).compareTo(new BigDecimal(o2)));
-        return cartelasGanhadoras;
-    }
+//    public static ArrayList<String> getCartelasGanhadoras(List<CartelaDTO> cartelas) {
+//        ArrayList<String> cartelasGanhadoras = new ArrayList<>();
+//        for (CartelaDTO cartela : cartelas) {
+//            if (cartela.isGanhadora()) {
+//                cartelasGanhadoras.add(formatarNumeroCartela(cartela.getCartelaId()));
+//            }
+//        }
+//
+//        Collections.sort(cartelasGanhadoras, (o1, o2) -> new BigDecimal(o1).compareTo(new BigDecimal(o2)));
+//        return cartelasGanhadoras;
+//    }
 
     public static String formatarNumeroCartela(int cartelaId) {
         return String.format(
