@@ -120,11 +120,13 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
         super.onViewStateRestored(savedInstanceState);
         ActivityUtils.hideSoftKeyboardFrom(mContext, Objects.requireNonNull(getView()));
 
-        if (getArguments() != null) {
-            mPresenter.subscribe(this,
-                    getArguments().getStringArrayList(Constant.EXTRA_CARTELAS_GANHADORAS),
-                    getString(R.string.list_item_confere_outra_cartela));
-        }
+//        if (getArguments() != null) {
+//            mPresenter.subscribe(this,
+//                    getArguments().getStringArrayList(Constant.EXTRA_CARTELAS_GANHADORAS),
+//                    getString(R.string.list_item_confere_outra_cartela));
+//        }
+//        mPresenter.subscribe(this, getString(R.string.list_item_confere_outra_cartela));
+        mPresenter.subscribe(this);
 
         if (savedInstanceState != null) {
             mTextoBusca = savedInstanceState.getString(ARGS_TEXTO_BUSCA);
@@ -157,24 +159,32 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
     }
 
     @Override
-    public void apresentarCartelas() {
+    public void apresentarCartelas(ArrayList<String> cartelas) {
         Objects.requireNonNull(getActivity())
                 .setTitle(getString(R.string.cartelas_ganhadoras_title) + " - " +
-                        mPresenter.getCartelasGanhadorasSize() + " Cartelas");
+                        cartelas.size() + " Cartelas");
 
         assert getArguments() != null;
         CartelasGanhadorasAdapter adapter =
                 new CartelasGanhadorasAdapter(getActivity(),
                         mVisualizaCartelasFragment,
                         getArguments().getParcelableArrayList(Constant.EXTRA_PEDRAS));
-        adapter.submitList(mPresenter.getCartelasGanhadoras());
+        adapter.submitList(tratarCartelas(cartelas));
         rvCartelasGanhadoras.setAdapter(adapter);
     }
 
     @Override
-    public void apresentarCartelasFiltradas() {
+    public void apresentarCartelasFiltradas(ArrayList<String> cartelas) {
         ((CartelasGanhadorasAdapter) rvCartelasGanhadoras.getAdapter())
-                .submitList(new ArrayList<>(mPresenter.getCartelasGanhadoras()));
+                .submitList(tratarCartelas(cartelas));
+    }
+
+    private ArrayList<String> tratarCartelas(ArrayList<String> cartelas) {
+        String textoPadrao = getString(R.string.list_item_confere_outra_cartela);
+        if (cartelas.isEmpty() || !cartelas.get(0).equalsIgnoreCase(textoPadrao)) {
+            cartelas.add(0, textoPadrao);
+        }
+        return cartelas;
     }
 }
 
