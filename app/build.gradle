@@ -45,14 +45,21 @@ android {
             buildConfigField "int", "DELAY_CLICK", "1000"
         }
     }
+
+    android.variantFilter { variant ->
+        if (variant.buildType.name == 'release'
+                && variant.flavors[0].name == 'mock') {
+            variant.ignore = true
+        }
+    }
+
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
     buildToolsVersion '27.0.3'
     sourceSets {
-        main { java.srcDirs = ['src/main/java', 'src/androidTestMock/java'] } 
-        mock {java.srcDirs = ['src/mock/java', 'src/mock/java/'] }
+        mock { java.srcDirs = ['src/mock/java', 'src/mock/java/'] }
         prod { java.srcDirs = ['src/prod/java', 'src/prod/java/'] }
     }
 }
