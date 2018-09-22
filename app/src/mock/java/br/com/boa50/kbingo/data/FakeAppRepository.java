@@ -38,10 +38,15 @@ public class FakeAppRepository extends AppRepository {
     }
 
     @Override
-    public Flowable<List<CartelaDTO>> getCartelasGanhadoras() {
+    public Flowable<List<CartelaDTO>> getCartelas() {
         return super.getCartelas()
                 .flatMap(cartelas -> Flowable.fromIterable(cartelas)
-                .filter(cartela -> mIdsCartelasGanhadoras.contains(cartela.getCartelaId())))
+                .map(cartela -> {
+                    if (mIdsCartelasGanhadoras.contains(cartela.getCartelaId())) {
+                        cartela.setGanhadora(true);
+                    }
+                    return cartela;
+                }))
                 .toList()
                 .toFlowable();
     }
