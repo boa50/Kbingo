@@ -9,12 +9,9 @@ import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.view.Gravity;
 
-import com.google.common.collect.Lists;
-
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.AppDatabase;
 import br.com.boa50.kbingo.data.AppRepository;
-import br.com.boa50.kbingo.data.FakeAppRepository;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -33,15 +30,6 @@ final class CustomProcedures {
         AppDataSource appDataSource = new AppRepository(db);
         appDataSource.initializeDatabase();
         return db;
-    }
-
-    static FakeAppRepository initializeFakeDatabase() {
-        Context context = InstrumentationRegistry.getTargetContext();
-        AppDatabase db = Room.databaseBuilder(context.getApplicationContext(),
-                AppDatabase.class, "Test.db").build();
-        FakeAppRepository repository = new FakeAppRepository(db);
-        repository.initializeDatabase();
-        return repository;
     }
 
     static void changeNavigation(int viewId) {

@@ -23,9 +23,6 @@ public class ConfereCartelasPresenter implements ConfereCartelasContract.Present
     private final AppDataSource mAppDataSource;
     private final BaseSchedulerProvider mScheduleProvider;
     private CompositeDisposable mCompositeDisposable;
-//    private ArrayList<String> mCartelasGanhadorasBackup;
-//    private ArrayList<String> mCartelasGanhadoras;
-//    private String mTextoPadrao;
 
     @Inject
     ConfereCartelasPresenter(
@@ -36,44 +33,8 @@ public class ConfereCartelasPresenter implements ConfereCartelasContract.Present
         mCompositeDisposable = new CompositeDisposable();
     }
 
-//    @Override
-//    public void subscribe(@NonNull ConfereCartelasContract.View view,
-//                          @NonNull ArrayList<String> cartelasGanhadoras,
-//                          @NonNull String textoPadrao) {
-//        mView  = view;
-//        mCartelasGanhadorasBackup = cartelasGanhadoras;
-//        mTextoPadrao = textoPadrao;
-//        organizarCartelas();
-//    }
-
-//    @Override
-//    public void subscribe(@NonNull ConfereCartelasContract.View view
-////                          @NonNull ArrayList<String> cartelasGanhadoras,
-//                          /*@NonNull String textoPadrao*/) {
-//        mView  = view;
-////        mCartelasGanhadorasBackup = cartelasGanhadoras;
-////        mTextoPadrao = textoPadrao;
-//        organizarCartelas();
-//    }
-
-//    @Override
-//    public ArrayList<String> getCartelasGanhadoras() {
-//        return mCartelasGanhadoras;
-//    }
-//
-//    @Override
-//    public int getCartelasGanhadorasSize() {
-//        if (mCartelasGanhadorasBackup.get(0).equalsIgnoreCase(mTextoPadrao)) {
-//            return mCartelasGanhadorasBackup.size() - 1;
-//        }
-//
-//        return mCartelasGanhadorasBackup.size();
-//    }
-
     @Override
     public void subscribe(@NonNull ConfereCartelasContract.View view) {
-//        subscribe(view, new ArrayList<>(), "");
-//        subscribe(view, /*new ArrayList<>(),*/ "");
         mView  = view;
         apresentarCartelas();
     }
@@ -86,11 +47,6 @@ public class ConfereCartelasPresenter implements ConfereCartelasContract.Present
 
     @Override
     public void filtrarCartelas(String filtro) {
-//        mCartelasGanhadoras.clear();
-//        if (mCartelasGanhadoras.isEmpty() || !mCartelasGanhadoras.get(0).equalsIgnoreCase(mTextoPadrao)) {
-//            mCartelasGanhadoras.add(0, mTextoPadrao);
-//        }
-
         Disposable disposable = mAppDataSource
                 .getCartelasGanhadoras()
                 .flatMap(cartelas -> Flowable.fromIterable(cartelas)
@@ -102,15 +58,9 @@ public class ConfereCartelasPresenter implements ConfereCartelasContract.Present
                 .subscribe(cartelas -> mView.apresentarCartelasFiltradas(obterIdsCartelas(cartelas)));
 
         mCompositeDisposable.add(disposable);
-
-//        mView.apresentarCartelasFiltradas();
     }
 
     private void apresentarCartelas() {
-//        if (!mCartelasGanhadorasBackup.get(0).equalsIgnoreCase(mTextoPadrao)) {
-//            mCartelasGanhadorasBackup.add(0, mTextoPadrao);
-//        }
-//        mCartelasGanhadoras = new ArrayList<>(mCartelasGanhadorasBackup);
         Disposable disposable = mAppDataSource
                 .getCartelasGanhadoras()
                 .subscribeOn(mScheduleProvider.io())
@@ -118,7 +68,6 @@ public class ConfereCartelasPresenter implements ConfereCartelasContract.Present
                 .subscribe(cartelas -> mView.apresentarCartelas(obterIdsCartelas(cartelas)));
 
         mCompositeDisposable.add(disposable);
-//        mView.apresentarCartelas();
     }
 
     private ArrayList<String> obterIdsCartelas(List<CartelaDTO> cartelas) {
@@ -128,11 +77,4 @@ public class ConfereCartelasPresenter implements ConfereCartelasContract.Present
         }
         return idsCartelas;
     }
-
-//    private ArrayList<String> tratarCartelasGanhadoras(ArrayList<String> cartelasGanhadoras) {
-//        if (!cartelasGanhadoras.get(0).equalsIgnoreCase(mTextoPadrao)) {
-//            cartelasGanhadoras.add(0, mTextoPadrao);
-//        }
-//        return cartelasGanhadoras;
-//    }
 }

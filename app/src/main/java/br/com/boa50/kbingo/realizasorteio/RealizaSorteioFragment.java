@@ -51,7 +51,6 @@ import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.ActivityUtils;
-import br.com.boa50.kbingo.util.CartelaUtils;
 import br.com.boa50.kbingo.util.PedraUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -141,8 +140,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 intent.putExtra(Constant.EXTRA_PEDRAS, mPresenter.getState().getPedras());
                 intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS,
                         mTextoCartelasBadge.getVisibility() == View.VISIBLE);
-//                intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS,
-//                        CartelaUtils.getCartelasGanhadoras(mPresenter.getState().getCartelas()));
                 startActivity(intent);
                 return true;
             default:

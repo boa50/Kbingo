@@ -51,7 +51,7 @@ public class ConfereCartelasEspressoTest {
 
     @BeforeClass
     public static void setup() {
-        repository = CustomProcedures.initializeFakeDatabase();
+        repository = CustomProceduresMock.initializeFakeDatabase();
         Letra[] letras = new Letra[] {
                 new Letra(1, "K"),
                 new Letra(2, "I"),
