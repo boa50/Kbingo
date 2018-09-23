@@ -35,6 +35,11 @@ android {
     }
     flavorDimensions "default"
     productFlavors {
+        prodSpeed {
+            dimension "default"
+            applicationIdSuffix = ".prodSpeed"
+            buildConfigField "int", "DELAY_CLICK", "0"
+        }
         mock {
             dimension "default"
             applicationIdSuffix = ".mock"
@@ -48,7 +53,8 @@ android {
 
     android.variantFilter { variant ->
         if (variant.buildType.name == 'release'
-                && variant.flavors[0].name == 'mock') {
+                && (variant.flavors[0].name == 'mock'
+                || variant.flavors[0].name == 'prodSpeed')) {
             variant.ignore = true
         }
     }
@@ -61,6 +67,7 @@ android {
     sourceSets {
         mock { java.srcDirs = ['src/mock/java', 'src/mock/java/'] }
         prod { java.srcDirs = ['src/prod/java', 'src/prod/java/'] }
+        prodSpeed { java.srcDirs = ['src/prod/java', 'src/prodSpeed/java/'] }
     }
 }
 
