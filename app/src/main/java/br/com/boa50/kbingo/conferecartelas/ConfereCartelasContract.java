@@ -12,10 +12,6 @@ public interface ConfereCartelasContract {
     }
 
     interface Presenter extends BasePresenter<View> {
-//        void subscribe(View view, ArrayList<String> cartelasGanhadoras, String textoPadrao);
-//        void subscribe(View view, String textoPadrao);
-//        ArrayList<String> getCartelasGanhadoras();
-//        int getCartelasGanhadorasSize();
         void filtrarCartelas(String filtro);
     }
 
