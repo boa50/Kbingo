@@ -36,6 +36,5 @@ public interface RealizaSorteioContract {
     interface State extends BaseState {
         ArrayList<Pedra> getPedras();
         Pedra getUltimaPedraSorteada();
-        ArrayList<CartelaDTO> getCartelas();
     }
 }

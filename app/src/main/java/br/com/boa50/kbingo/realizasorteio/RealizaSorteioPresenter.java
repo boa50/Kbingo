@@ -11,7 +11,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.data.AppDataSource;
-import br.com.boa50.kbingo.data.dto.CartelaDTO;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
@@ -32,7 +31,6 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private ArrayList<Pedra> mPedras;
     private Pedra mUltimaPedraSorteada;
-    private ArrayList<CartelaDTO> mCartelas;
 
     @Inject
     RealizaSorteioPresenter(
@@ -55,11 +53,9 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         if (state != null) {
             mPedras = state.getPedras();
             mUltimaPedraSorteada = state.getUltimaPedraSorteada();
-            mCartelas = state.getCartelas();
         } else {
             mPedras = null;
             mUltimaPedraSorteada = null;
-            mCartelas = null;
         }
 
         carregarPedras();
@@ -69,7 +65,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     @NonNull
     @Override
     public RealizaSorteioContract.State getState() {
-        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada, mCartelas);
+        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada/*, mCartelas*/);
     }
 
     @Override
@@ -115,10 +111,6 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     public void resetarPedras() {
         for (Pedra pedra : mPedras) {
             pedra.setSorteada(false);
-        }
-        for (CartelaDTO cartela : mCartelas) {
-            cartela.setQtdPedrasSorteadas(0);
-            cartela.setGanhadora(false);
         }
 
         preencherPosicoesSorteio();
@@ -172,16 +164,13 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     }
 
     private void carregarCartelas() {
-        if (mCartelas == null) {
-            mCartelas = new ArrayList<>();
-            Disposable disposable = mAppDataSource
-                    .getCartelas()
-                    .subscribeOn(mScheduleProvider.io())
-                    .observeOn(mScheduleProvider.ui())
-                    .subscribe(cartelas -> mCartelas.addAll(cartelas));
+        Disposable disposable = mAppDataSource
+                .getCartelas()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui())
+                .subscribe();
 
-            mCompositeDisposable.add(disposable);
-        }
+        mCompositeDisposable.add(disposable);
     }
 
     private void iniciarLayout() {
