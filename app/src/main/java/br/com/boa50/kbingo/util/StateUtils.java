@@ -9,18 +9,15 @@ import br.com.boa50.kbingo.realizasorteio.RealizaSorteioState;
 public final class StateUtils {
     private static final String ARGS_PEDRAS = "pedras";
     private static final String ARGS_PEDRA_ULTIMA = "ultimaPedra";
-    private static final String ARGS_CARTELAS = "cartelas";
 
     public static void writeStateToBundle(@NonNull Bundle outState, RealizaSorteioContract.State state) {
         outState.putParcelableArrayList(ARGS_PEDRAS, state.getPedras());
         outState.putParcelable(ARGS_PEDRA_ULTIMA, state.getUltimaPedraSorteada());
-        outState.putParcelableArrayList(ARGS_CARTELAS, state.getCartelas());
     }
 
     public static RealizaSorteioContract.State readStateFromBundle(@NonNull Bundle outState) {
         return new RealizaSorteioState(
                 outState.getParcelableArrayList(ARGS_PEDRAS),
-                outState.getParcelable(ARGS_PEDRA_ULTIMA),
-                outState.getParcelableArrayList(ARGS_CARTELAS));
+                outState.getParcelable(ARGS_PEDRA_ULTIMA));
     }
 }

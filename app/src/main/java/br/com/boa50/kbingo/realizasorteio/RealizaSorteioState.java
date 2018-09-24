@@ -8,14 +8,11 @@ import br.com.boa50.kbingo.data.entity.Pedra;
 public class RealizaSorteioState implements RealizaSorteioContract.State {
     private final ArrayList<Pedra> mPedras;
     private final Pedra mUltimaPedraSorteada;
-    private final ArrayList<CartelaDTO> mCartelas;
 
     public RealizaSorteioState(ArrayList<Pedra> pedras,
-                               Pedra ultimaPedraSorteada,
-                               ArrayList<CartelaDTO> cartelas) {
+                               Pedra ultimaPedraSorteada) {
         mPedras = pedras;
         mUltimaPedraSorteada = ultimaPedraSorteada;
-        mCartelas = cartelas;
     }
 
     @Override
@@ -26,10 +23,5 @@ public class RealizaSorteioState implements RealizaSorteioContract.State {
     @Override
     public Pedra getUltimaPedraSorteada() {
         return mUltimaPedraSorteada;
-    }
-
-    @Override
-    public ArrayList<CartelaDTO> getCartelas() {
-        return mCartelas;
     }
 }

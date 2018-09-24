@@ -35,7 +35,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
 
     private Unbinder unbinder;
     private ArrayList<Pedra> mPedras;
-    private boolean mCartelasGanhadoras;
+    private boolean hasCartelasGanhadoras;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         mPedras = getIntent().getParcelableArrayListExtra(Constant.EXTRA_PEDRAS);
-        mCartelasGanhadoras = getIntent().getBooleanExtra(Constant.EXTRA_CARTELAS_GANHADORAS, false);
+        hasCartelasGanhadoras = getIntent().getBooleanExtra(Constant.EXTRA_CARTELAS_GANHADORAS, false);
 
         if (savedInstanceState == null) direcionarFragment();
     }
@@ -79,7 +79,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         Fragment fragment;
         bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS, mPedras);
 
-        if (mCartelasGanhadoras) {
+        if (hasCartelasGanhadoras) {
             fragment = mConfereCartelasFragment;
         } else {
             fragment = mVisualizaCartelasFragment;
