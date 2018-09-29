@@ -1,12 +1,12 @@
 package br.com.boa50.kbingo;
 
+import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.DrawerActions;
-import android.support.test.rule.ActivityTestRule;
 import android.view.Gravity;
 
 import br.com.boa50.kbingo.data.AppDataSource;
@@ -65,14 +65,11 @@ final class CustomProcedures {
                 .perform(click());
     }
 
-    static void mudarOrientacaoTela(ActivityTestRule<BaseActivity> activityTestRule) {
-        if (activityTestRule.getActivity().getRequestedOrientation()
-                == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            activityTestRule.getActivity()
-                    .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    static void mudarOrientacaoTela(Activity activity) {
+        if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } else {
-            activityTestRule.getActivity()
-                    .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }
 }

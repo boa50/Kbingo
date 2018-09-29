@@ -1,6 +1,5 @@
 package br.com.boa50.kbingo;
 
-import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.test.InstrumentationRegistry;
@@ -105,7 +104,7 @@ public class RealizaSorteioEspressoTest {
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_novo_sorteio))
                 .perform(click());
-        mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        CustomProcedures.mudarOrientacaoTela(mActivityRule.getActivity());
         onView(withText(R.string.dialog_novo_sorteio_title))
                 .check(matches(isDisplayed()));
         onView(withText(R.string.dialog_negative))
@@ -114,7 +113,7 @@ public class RealizaSorteioEspressoTest {
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_alterar_tipo_sorteio))
                 .perform(click());
-        mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        CustomProcedures.mudarOrientacaoTela(mActivityRule.getActivity());
         onView(withText(R.string.dialog_tipo_sorteio_title))
                 .check(matches(isDisplayed()));
         onView(withText(R.string.dialog_negative))
@@ -129,7 +128,7 @@ public class RealizaSorteioEspressoTest {
                 .perform(click());
         onView(withText(R.string.dialog_confirmative))
                 .perform(click());
-        mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        CustomProcedures.mudarOrientacaoTela(mActivityRule.getActivity());
         onView(withText(R.string.dialog_novo_sorteio_tipo_sorteio_message))
                 .check(matches(isDisplayed()));
         onView(withText(R.string.dialog_negative))
