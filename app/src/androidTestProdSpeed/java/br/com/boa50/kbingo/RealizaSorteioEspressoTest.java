@@ -28,7 +28,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static br.com.boa50.kbingo.Constant.QTDE_LETRAS;
 import static br.com.boa50.kbingo.CustomGets.getButtonText;
 import static br.com.boa50.kbingo.CustomMatchers.indexChildOf;
 import static br.com.boa50.kbingo.CustomMatchers.withBackgroundDrawable;
@@ -38,6 +37,7 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 public class RealizaSorteioEspressoTest {
     private static AppDatabase db;
+    private final int QTDE_LETRAS = 5;
 
     @Rule
     public ActivityTestRule<BaseActivity> mActivityRule =
