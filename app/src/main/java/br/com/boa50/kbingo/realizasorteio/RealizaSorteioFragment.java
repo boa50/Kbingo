@@ -44,8 +44,6 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
 import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
-import static br.com.boa50.kbingo.util.StateUtils.readStateFromBundle;
-import static br.com.boa50.kbingo.util.StateUtils.writeStateToBundle;
 
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
@@ -77,7 +75,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     private int mTabLetrasSelecionada;
     private boolean mTipoSorteioSetado;
     private int mTipoSorteioAlterado;
-    private RealizaSorteioContract.State mState;
     private TextView mTextoCartelasBadge;
 
     @Inject
@@ -201,14 +198,12 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         outState.putInt(ARGS_TIPO_SORTEIO_ALTERADO, mTipoSorteioAlterado);
         outState.putBoolean(ARGS_TIPO_SORTEIO_SETADO, mTipoSorteioSetado);
         outState.putInt(ARGS_TAB_LETRAS_SELECIONADA, vpPedrasSorteadas.getCurrentItem());
-        writeStateToBundle(outState, mPresenter.getState());
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mTabLetrasSelecionada = vpPedrasSorteadas.getCurrentItem();
-        mState = mPresenter.getState();
 
         FragmentManager manager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -230,7 +225,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             mGridColunas = Constant.QTDE_PEDRAS_LINHA_LANDSCAPE;
         }
 
-        mPresenter.subscribe(this, mState);
+        mPresenter.subscribe(this);
     }
 
     @Override
@@ -245,7 +240,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         super.onViewStateRestored(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mState = readStateFromBundle(savedInstanceState);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_NOVO_SORTEIO)) {
                 abrirDialogNovoSorteio(savedInstanceState.getInt(ARGS_TIPO_SORTEIO_ALTERADO));
             }

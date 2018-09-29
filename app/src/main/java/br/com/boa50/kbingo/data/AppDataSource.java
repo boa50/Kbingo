@@ -16,6 +16,7 @@ import io.reactivex.Single;
 @Singleton
 public interface AppDataSource {
     boolean hasPedraSorteada();
+    Pedra getUltimaPedraSorteada();
     TipoSorteioDTO getTipoSorteio();
     int getTipoSorteioId();
     void setTipoSorteioId(int tipoSorteioId);

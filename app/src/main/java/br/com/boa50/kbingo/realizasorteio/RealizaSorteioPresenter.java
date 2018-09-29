@@ -1,7 +1,6 @@
 package br.com.boa50.kbingo.realizasorteio;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     private CompositeDisposable mCompositeDisposable;
 
     private List<Integer> mIdsSorteio;
-    private Pedra mUltimaPedraSorteada;
 
     @Inject
     RealizaSorteioPresenter(
@@ -42,26 +40,8 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Override
     public void subscribe(@NonNull RealizaSorteioContract.View view) {
-        subscribe(view, null);
-    }
-
-    @Override
-    public void subscribe(@NonNull RealizaSorteioContract.View view, @Nullable RealizaSorteioContract.State state) {
         mView = view;
-
-        if (state != null) {
-            mUltimaPedraSorteada = state.getUltimaPedraSorteada();
-        } else {
-            mUltimaPedraSorteada = null;
-        }
-
         iniciarLayout();
-    }
-
-    @NonNull
-    @Override
-    public RealizaSorteioContract.State getState() {
-        return new RealizaSorteioState(mUltimaPedraSorteada);
     }
 
     @Override
@@ -82,8 +62,6 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                     .subscribe(pedra -> {
                         mAppDataSource.updatePedraSorteada(pedra.getId());
                         mAppDataSource.updateCartelas(pedra);
-
-                        mUltimaPedraSorteada = pedra;
 
                         mView.apresentarPedra(pedra);
                         mView.atualizarPedra(pedra.getId());
@@ -108,7 +86,9 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     private void apresentarUltimaPedraSorteada() {
         if (mIdsSorteio.isEmpty())  mView.apresentarFimSorteio();
-        else if (mUltimaPedraSorteada != null) mView.apresentarPedra(mUltimaPedraSorteada);
+        else if (mAppDataSource.getUltimaPedraSorteada() != null) {
+            mView.apresentarPedra(mAppDataSource.getUltimaPedraSorteada());
+        }
     }
 
     @Override
@@ -117,7 +97,6 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         mAppDataSource.cleanCartelasGanhadoras();
 
         preencherIdsSorteio();
-        mUltimaPedraSorteada = null;
         atualizarCartelasGanhadoras();
 
         mView.reiniciarSorteio();

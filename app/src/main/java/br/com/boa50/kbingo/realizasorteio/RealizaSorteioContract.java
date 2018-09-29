@@ -3,8 +3,7 @@ package br.com.boa50.kbingo.realizasorteio;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.boa50.kbingo.BaseState;
-import br.com.boa50.kbingo.BaseStatefulPresenter;
+import br.com.boa50.kbingo.BasePresenter;
 import br.com.boa50.kbingo.BaseView;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.Letra;
@@ -22,7 +21,7 @@ public interface RealizaSorteioContract {
         void atualizarCartelasGanhadorasBadge(int qtdCartelasGanhadoras);
     }
 
-    interface Presenter extends BaseStatefulPresenter<View, State> {
+    interface Presenter extends BasePresenter<View> {
         void sortearPedra();
         void atualizarCartelasGanhadoras();
         void resetarPedras();
@@ -30,9 +29,5 @@ public interface RealizaSorteioContract {
         int getTipoSorteioId();
         void alterarTipoSorteio(int tipoSorteio);
         boolean hasPedraSorteada();
-    }
-
-    interface State extends BaseState {
-        Pedra getUltimaPedraSorteada();
     }
 }
