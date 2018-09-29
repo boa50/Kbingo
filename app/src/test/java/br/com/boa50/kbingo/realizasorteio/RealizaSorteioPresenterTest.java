@@ -180,16 +180,6 @@ public class RealizaSorteioPresenterTest {
     }
 
     @Test
-    public void sortearPedra_atualizarCartelas() {
-        ArgumentCaptor<Pedra> pedra = ArgumentCaptor.forClass(Pedra.class);
-
-        realizaSorteioPresenter.sortearPedra();
-        verify(realizaSorteioView).apresentarPedra(pedra.capture());
-
-        verify(appDataSource).updateCartelas(pedra.getValue());
-    }
-
-    @Test
     public void sortearPedras_atualizarCartelasGanhadorasBadge() {
         for (int i = 0; i < QUANTIDADE_PEDRAS_SORTEAVEIS; i++) {
             realizaSorteioPresenter.sortearPedra();

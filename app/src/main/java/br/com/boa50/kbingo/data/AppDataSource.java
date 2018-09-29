@@ -34,7 +34,6 @@ public interface AppDataSource {
     Flowable<List<Integer>> getCartelasSorteaveis();
 
     void updatePedraSorteada(int id);
-    void updateCartelas(Pedra ultimaPedraSorteada);
     void updateCartelasFiltro(int id, boolean selecionada);
 
     void cleanPedrasSorteadas();

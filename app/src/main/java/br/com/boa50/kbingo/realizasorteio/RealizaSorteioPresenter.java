@@ -61,7 +61,6 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                     .observeOn(mScheduleProvider.ui())
                     .subscribe(pedra -> {
                         mAppDataSource.updatePedraSorteada(pedra.getId());
-                        mAppDataSource.updateCartelas(pedra);
 
                         mView.apresentarPedra(pedra);
                         mView.atualizarPedra(pedra.getId());

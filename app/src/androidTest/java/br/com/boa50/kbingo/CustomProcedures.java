@@ -32,6 +32,15 @@ final class CustomProcedures {
         return db;
     }
 
+    static AppRepository initializeRepositoryDatabase() {
+        Context context = InstrumentationRegistry.getTargetContext();
+        AppDatabase db = Room.databaseBuilder(context.getApplicationContext(),
+                AppDatabase.class, "Test.db").build();
+        AppRepository repository = new AppRepository(db);
+        repository.initializeDatabase();
+        return repository;
+    }
+
     static void changeNavigation(int viewId) {
         onView(withId(R.id.drawer_layout))
                 .check(matches(isClosed(Gravity.START)))
