@@ -21,6 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class AppRepository implements AppDataSource {
 
     private AppDatabase db;
+    private List<Pedra> pedras;
     private List<CartelaDTO> cartelas;
     private List<CartelaFiltroDTO> cartelasFiltro;
     private Integer tipoSorteioId;
@@ -28,6 +29,16 @@ public class AppRepository implements AppDataSource {
     @Inject
     public AppRepository(AppDatabase db) {
         this.db = db;
+    }
+
+    @Override
+    public boolean hasPedraSorteada() {
+        if (pedras != null) {
+            for (Pedra pedra : pedras) {
+                if (pedra.isSorteada()) return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -49,13 +60,16 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
-    public Single<List<Letra>> getLetras() {
-        return db.letraDao().loadLetras();
+    public Single<Pedra> getPedra(int id) {
+        return getPedras()
+                .flatMap(pedras -> Flowable.fromIterable(pedras)
+                .filter(pedra -> pedra.getId() == id))
+                .firstOrError();
     }
 
     @Override
-    public Single<List<Pedra>> getPedras() {
-        return db.pedraDao().loadPedras();
+    public Single<List<Letra>> getLetras() {
+        return db.letraDao().loadLetras();
     }
 
     @Override
@@ -74,6 +88,21 @@ public class AppRepository implements AppDataSource {
                 .flatMap(cartelas -> Flowable.fromIterable(cartelas)
                 .filter(cartela -> cartela.getCartelaId() == id))
                 .firstOrError();
+    }
+
+    @Override
+    public Flowable<List<Pedra>> getPedras() {
+        if (pedras != null) {
+            return Flowable.fromIterable(pedras).toList().toFlowable();
+        } else {
+            pedras = new ArrayList<>();
+        }
+
+        return db.pedraDao().loadPedras()
+                .flatMap(pedras -> Flowable.fromIterable(pedras)
+                .doOnNext(pedra -> this.pedras.add(pedra))
+                .toList()
+                .toFlowable());
     }
 
     @Override
@@ -132,6 +161,13 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
+    public void updatePedraSorteada(int id) {
+        if (pedras != null) {
+            pedras.get(id - 1).setSorteada(true);
+        }
+    }
+
+    @Override
     public void updateCartelas(Pedra ultimaPedraSorteada) {
         if (cartelas == null) return;
         int qtdePedrasSorteio = getTipoSorteio().getQuantidadePedras();
@@ -154,6 +190,15 @@ public class AppRepository implements AppDataSource {
     public void updateCartelasFiltro(int id, boolean selecionada) {
         if (cartelasFiltro != null) {
             cartelasFiltro.get(id - 1).setSelecionada(selecionada);
+        }
+    }
+
+    @Override
+    public void cleanPedrasSorteadas() {
+        if (pedras != null) {
+            for (Pedra pedra : pedras) {
+                pedra.setSorteada(false);
+            }
         }
     }
 

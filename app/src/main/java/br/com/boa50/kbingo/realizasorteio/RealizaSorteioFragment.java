@@ -137,7 +137,6 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 return true;
             case R.id.item_confere_cartelas:
                 Intent intent = new Intent(getActivity(), ConfereCartelasActivity.class);
-                intent.putExtra(Constant.EXTRA_PEDRAS, mPresenter.getState().getPedras());
                 intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS,
                         mTextoCartelasBadge.getVisibility() == View.VISIBLE);
                 startActivity(intent);
@@ -309,11 +308,11 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     @Override
-    public void iniciarLayout(List<Letra> letras) {
+    public void iniciarLayout(List<Letra> letras, ArrayList<Pedra> pedras) {
         mLetras = letras;
 
         mPageAdapter = new PedrasSorteadasPageAdapter(
-                Objects.requireNonNull(getActivity()).getSupportFragmentManager());
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager(), pedras);
 
         vpPedrasSorteadas.setAdapter(mPageAdapter);
         vpPedrasSorteadas.setOffscreenPageLimit(4);
@@ -322,12 +321,13 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
     }
 
     @Override
-    public void atualizarPedra(int position) {
+    public void atualizarPedra(int pedraId) {
+        int position = pedraId - 1;
         vpPedrasSorteadas.setCurrentItem(position/QTDE_PEDRAS_LETRA);
 
         PedrasSorteadasFragment fragment =
                 (PedrasSorteadasFragment) mPageAdapter.getFragment(position/QTDE_PEDRAS_LETRA);
-        fragment.transitarTextViewPedra(mPresenter.getState().getPedras().get(position).getId());
+        fragment.transitarTextViewPedra(pedraId);
 
     }
 
@@ -367,16 +367,18 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
 
         private SparseArray<String> mSparseFragment;
         private FragmentManager mFragmentManager;
+        private ArrayList<Pedra> mPedras;
 
-        PedrasSorteadasPageAdapter(FragmentManager fm) {
+        PedrasSorteadasPageAdapter(FragmentManager fm, ArrayList<Pedra> pedras) {
             super(fm);
             mFragmentManager = fm;
             mSparseFragment = new SparseArray<>();
+            mPedras = pedras;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return PedrasSorteadasFragment.newInstance(mGridColunas, position, mPresenter.getState().getPedras());
+            return PedrasSorteadasFragment.newInstance(mGridColunas, position, mPedras);
         }
 
         @Override

@@ -1,24 +1,21 @@
 package br.com.boa50.kbingo.realizasorteio;
 
-import java.util.ArrayList;
-
-import br.com.boa50.kbingo.data.dto.CartelaDTO;
 import br.com.boa50.kbingo.data.entity.Pedra;
 
 public class RealizaSorteioState implements RealizaSorteioContract.State {
-    private final ArrayList<Pedra> mPedras;
+//    private final ArrayList<Pedra> mPedras;
     private final Pedra mUltimaPedraSorteada;
 
-    public RealizaSorteioState(ArrayList<Pedra> pedras,
+    public RealizaSorteioState(/*ArrayList<Pedra> pedras,*/
                                Pedra ultimaPedraSorteada) {
-        mPedras = pedras;
+//        mPedras = pedras;
         mUltimaPedraSorteada = ultimaPedraSorteada;
     }
 
-    @Override
-    public ArrayList<Pedra> getPedras() {
-        return mPedras;
-    }
+//    @Override
+//    public ArrayList<Pedra> getPedras() {
+//        return mPedras;
+//    }
 
     @Override
     public Pedra getUltimaPedraSorteada() {

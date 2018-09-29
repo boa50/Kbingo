@@ -12,10 +12,11 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
+import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
-import br.com.boa50.kbingo.util.PedraUtils;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
+import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -27,9 +28,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     private final BaseSchedulerProvider mScheduleProvider;
     private CompositeDisposable mCompositeDisposable;
 
-    private List<Integer> mPosicoes;
-
-    private ArrayList<Pedra> mPedras;
+    private List<Integer> mIdsSorteio;
     private Pedra mUltimaPedraSorteada;
 
     @Inject
@@ -51,21 +50,18 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
         mView = view;
 
         if (state != null) {
-            mPedras = state.getPedras();
             mUltimaPedraSorteada = state.getUltimaPedraSorteada();
         } else {
-            mPedras = null;
             mUltimaPedraSorteada = null;
         }
 
-        carregarPedras();
-        carregarCartelas();
+        iniciarLayout();
     }
 
     @NonNull
     @Override
     public RealizaSorteioContract.State getState() {
-        return new RealizaSorteioState(mPedras, mUltimaPedraSorteada/*, mCartelas*/);
+        return new RealizaSorteioState(mUltimaPedraSorteada);
     }
 
     @Override
@@ -76,18 +72,26 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Override
     public void sortearPedra() {
-        if (mPosicoes.isEmpty()) {
+        if (mIdsSorteio.isEmpty()) {
             mView.apresentarFimSorteio();
         } else {
-            mUltimaPedraSorteada = mPedras.get(mPosicoes.get(0));
-            mUltimaPedraSorteada.setSorteada(true);
-            mView.apresentarPedra(mUltimaPedraSorteada);
+            Disposable disposable = mAppDataSource
+                    .getPedra(mIdsSorteio.get(0))
+                    .subscribeOn(mScheduleProvider.io())
+                    .observeOn(mScheduleProvider.ui())
+                    .subscribe(pedra -> {
+                        mAppDataSource.updatePedraSorteada(pedra.getId());
+                        mAppDataSource.updateCartelas(pedra);
 
-            mAppDataSource.updateCartelas(mUltimaPedraSorteada);
-            atualizarCartelasGanhadoras();
+                        mUltimaPedraSorteada = pedra;
 
-            mView.atualizarPedra(mPosicoes.get(0));
-            mPosicoes.remove(0);
+                        mView.apresentarPedra(pedra);
+                        mView.atualizarPedra(pedra.getId());
+                        atualizarCartelasGanhadoras();
+
+                        mIdsSorteio.remove(0);
+                    });
+            mCompositeDisposable.add(disposable);
         }
     }
 
@@ -103,19 +107,17 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     }
 
     private void apresentarUltimaPedraSorteada() {
-        if (mPosicoes.isEmpty())  mView.apresentarFimSorteio();
+        if (mIdsSorteio.isEmpty())  mView.apresentarFimSorteio();
         else if (mUltimaPedraSorteada != null) mView.apresentarPedra(mUltimaPedraSorteada);
     }
 
     @Override
     public void resetarPedras() {
-        for (Pedra pedra : mPedras) {
-            pedra.setSorteada(false);
-        }
-
-        preencherPosicoesSorteio();
-        mUltimaPedraSorteada = null;
+        mAppDataSource.cleanPedrasSorteadas();
         mAppDataSource.cleanCartelasGanhadoras();
+
+        preencherIdsSorteio();
+        mUltimaPedraSorteada = null;
         atualizarCartelasGanhadoras();
 
         mView.reiniciarSorteio();
@@ -139,28 +141,7 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
 
     @Override
     public boolean hasPedraSorteada() {
-        return mPedras != null && PedraUtils.hasPedraSorteda(mPedras);
-    }
-
-    private void carregarPedras(){
-        if (mPedras == null) {
-            Disposable disposable = mAppDataSource
-                    .getPedras()
-                    .subscribeOn(mScheduleProvider.io())
-                    .observeOn(mScheduleProvider.ui())
-                    .subscribe(
-                            pedras -> {
-                                mPedras = new ArrayList<>();
-                                mPedras.addAll(pedras);
-                                iniciarLayout();
-                            },
-                            throwable -> mPedras = null
-                    );
-
-            mCompositeDisposable.add(disposable);
-        } else {
-            iniciarLayout();
-        }
+        return mAppDataSource.hasPedraSorteada();
     }
 
     private void carregarCartelas() {
@@ -174,7 +155,8 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     }
 
     private void iniciarLayout() {
-        preencherPosicoesSorteio();
+        final List<Letra> outLetras = new ArrayList<>();
+        final ArrayList<Pedra> outPedras = new ArrayList<>();
 
         Disposable disposable = mAppDataSource
                 .getLetras()
@@ -182,30 +164,60 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                 .observeOn(mScheduleProvider.ui())
                 .subscribe(
                         letras -> {
-                            mView.iniciarLayout(letras);
-                            apresentarUltimaPedraSorteada();
+                            outLetras.addAll(letras);
+                            if (!outPedras.isEmpty()) {
+                                iniciarLayout(outLetras, outPedras);
+                            }
                         }
                 );
+        mCompositeDisposable.add(disposable);
 
+        Disposable disposable2 = mAppDataSource
+                .getPedras()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui())
+                .subscribe(
+                        pedras -> {
+                            outPedras.addAll(pedras);
+                            if (!outLetras.isEmpty()) {
+                                iniciarLayout(outLetras, outPedras);
+                                preencherIdsSorteio();
+                            } else {
+                                iniciarLayout();
+                            }
+                        }
+                );
+        mCompositeDisposable.add(disposable2);
+    }
+
+    private void iniciarLayout(List<Letra> letras, ArrayList<Pedra> pedras) {
+        mView.iniciarLayout(letras, pedras);
+    }
+
+    private void preencherIdsSorteio() {
+        if (mIdsSorteio == null)
+            mIdsSorteio = new ArrayList<>();
+        else
+            mIdsSorteio.clear();
+
+        Disposable disposable = mAppDataSource
+                .getPedras()
+                .flatMap(pedras -> Flowable.fromIterable(pedras)
+                    .filter(pedra -> !pedra.isSorteada()))
+                    .doOnNext(pedra -> mIdsSorteio.add(pedra.getId()))
+                    .toList()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui())
+                .subscribe(pedras -> {
+                    Collections.shuffle(mIdsSorteio);
+                    apresentarUltimaPedraSorteada();
+                    carregarCartelas();
+                });
         mCompositeDisposable.add(disposable);
     }
 
-    private void preencherPosicoesSorteio() {
-        if (mPosicoes == null)
-            mPosicoes = new ArrayList<>();
-        else
-            mPosicoes.clear();
-
-        for (int i = 0; i < mPedras.size(); i++) {
-            if (!mPedras.get(i).isSorteada())
-                mPosicoes.add(i);
-        }
-
-        Collections.shuffle(mPosicoes);
-    }
-
     @VisibleForTesting
-    List<Integer> getmPosicoes() {
-        return mPosicoes;
+    List<Integer> getIdsSorteio() {
+        return mIdsSorteio;
     }
 }
