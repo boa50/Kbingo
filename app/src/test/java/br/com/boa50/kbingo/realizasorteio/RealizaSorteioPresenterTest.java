@@ -32,7 +32,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RealizaSorteioPresenterTest {
-
     private int QUANTIDADE_PEDRAS_SORTEAVEIS;
 
     @Mock
@@ -84,7 +83,10 @@ public class RealizaSorteioPresenterTest {
             CARTELAS.add(new CartelaDTO(cartelaPedras.get(0).getCartelaId(), cartelaPedras));
         }
 
-        when(appDataSource.getPedras()).thenReturn(Single.just(PEDRAS));
+        for (int i = 1; i <= 6; i++) {
+            when(appDataSource.getPedra(i)).thenReturn(Single.just(PEDRAS.get(i - 1)));
+        }
+        when(appDataSource.getPedras()).thenReturn(Flowable.just(PEDRAS));
         when(appDataSource.getLetras()).thenReturn(Single.just(LETRAS));
         when(appDataSource.getCartelaUltimoId()).thenReturn(Single.just(CARTELAS_PEDRAS.size()));
         when(appDataSource.getCartelas()).thenReturn(Flowable.just(CARTELAS));
@@ -97,12 +99,13 @@ public class RealizaSorteioPresenterTest {
         QUANTIDADE_PEDRAS_SORTEAVEIS = PEDRAS.size();
 
         realizaSorteioPresenter.subscribe(realizaSorteioView,
-                new RealizaSorteioState(null, null/*, null*/));
+                new RealizaSorteioState(null));
     }
 
     @Test
     public void verificarCarregamentoPedrasCartelas() {
-        verify(appDataSource).getPedras();
+        verify(appDataSource).getLetras();
+        verify(appDataSource, times(2)).getPedras();
         verify(appDataSource).getCartelas();
     }
 
@@ -110,7 +113,7 @@ public class RealizaSorteioPresenterTest {
     public void sortearPedra_apresentarPedra() {
         realizaSorteioPresenter.sortearPedra();
 
-        assertThat(realizaSorteioPresenter.getmPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS - 1));
+        assertThat(realizaSorteioPresenter.getIdsSorteio().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS - 1));
         verify(realizaSorteioView).apresentarPedra(any(Pedra.class));
     }
 
@@ -121,9 +124,8 @@ public class RealizaSorteioPresenterTest {
         realizaSorteioPresenter.sortearPedra();
 
         verify(realizaSorteioView).apresentarPedra(pedra.capture());
-
-        assertThat(pedra.getValue().isSorteada(), equalTo(true));
-        verify(realizaSorteioView).atualizarPedra(anyInt());
+        verify(appDataSource).updatePedraSorteada(pedra.getValue().getId());
+        verify(realizaSorteioView).atualizarPedra(pedra.getValue().getId());
     }
 
     @Test
@@ -145,7 +147,7 @@ public class RealizaSorteioPresenterTest {
             realizaSorteioPresenter.sortearPedra();
         }
 
-        assertThat(realizaSorteioPresenter.getmPosicoes().isEmpty(), equalTo(true));
+        assertThat(realizaSorteioPresenter.getIdsSorteio().isEmpty(), equalTo(true));
         verify(realizaSorteioView).apresentarFimSorteio();
     }
 
@@ -158,7 +160,7 @@ public class RealizaSorteioPresenterTest {
 
         realizaSorteioPresenter.resetarPedras();
 
-        assertThat(realizaSorteioPresenter.getmPosicoes().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS));
+        assertThat(realizaSorteioPresenter.getIdsSorteio().size(), equalTo(QUANTIDADE_PEDRAS_SORTEAVEIS));
 
         assertThat(pedra.getValue().isSorteada(), equalTo(false));
         verify(realizaSorteioView).reiniciarSorteio();
@@ -172,8 +174,20 @@ public class RealizaSorteioPresenterTest {
 
     @Test
     public void alterarTipoSorteio_apresentarTipoSorteio() {
-        realizaSorteioPresenter.alterarTipoSorteio(anyInt());
+        realizaSorteioPresenter.alterarTipoSorteio(1);
+
+        verify(appDataSource).setTipoSorteioId(1);
         verify(realizaSorteioView).apresentarTipoSorteio(true);
+    }
+
+    @Test
+    public void sortearPedra_atualizarCartelas() {
+        ArgumentCaptor<Pedra> pedra = ArgumentCaptor.forClass(Pedra.class);
+
+        realizaSorteioPresenter.sortearPedra();
+        verify(realizaSorteioView).apresentarPedra(pedra.capture());
+
+        verify(appDataSource).updateCartelas(pedra.getValue());
     }
 
     @Test

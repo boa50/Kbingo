@@ -15,24 +15,28 @@ import io.reactivex.Single;
 
 @Singleton
 public interface AppDataSource {
+    boolean hasPedraSorteada();
     TipoSorteioDTO getTipoSorteio();
     int getTipoSorteioId();
     void setTipoSorteioId(int tipoSorteioId);
 
+    Single<Pedra> getPedra(int id);
     Single<List<Letra>> getLetras();
-    Single<List<Pedra>> getPedras();
     Single<Integer> getCartelaUltimoId();
     Single<List<CartelaPedra>> getPedrasByCartelaId(int id);
     Single<CartelaDTO> getCartela(int id);
 
+    Flowable<List<Pedra>> getPedras();
     Flowable<List<CartelaDTO>> getCartelas();
     Flowable<List<CartelaDTO>> getCartelasGanhadoras();
     Flowable<List<CartelaFiltroDTO>> getCartelasFiltro();
     Flowable<List<Integer>> getCartelasSorteaveis();
 
+    void updatePedraSorteada(int id);
     void updateCartelas(Pedra ultimaPedraSorteada);
     void updateCartelasFiltro(int id, boolean selecionada);
 
+    void cleanPedrasSorteadas();
     void cleanCartelasGanhadoras();
     void cleanCartelasFiltro();
 
