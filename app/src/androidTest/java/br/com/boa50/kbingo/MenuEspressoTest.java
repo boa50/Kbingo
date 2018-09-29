@@ -1,6 +1,5 @@
 package br.com.boa50.kbingo;
 
-import android.content.pm.ActivityInfo;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -72,7 +71,7 @@ public class MenuEspressoTest {
     public void mudarFragment_rotacionarTela_manterFragment() {
         CustomProcedures.changeNavigation(R.id.item_visualizar_cartelas);
 
-        mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        CustomProcedures.mudarOrientacaoTela(mActivityRule.getActivity());
 
         onView(withId(R.id.et_numero_cartela))
                 .check(matches(isDisplayed()));

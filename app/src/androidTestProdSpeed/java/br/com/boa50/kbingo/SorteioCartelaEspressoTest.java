@@ -357,7 +357,7 @@ public class SorteioCartelaEspressoTest {
         onView(withId(R.id.et_sorteio_cartela_numero))
                 .perform(replaceText("0050"));
 
-        CustomProcedures.mudarOrientacaoTela(mActivityRule);
+        CustomProcedures.mudarOrientacaoTela(mActivityRule.getActivity());
 
         onView(withText(R.string.dialog_filtrar_cartelas_title))
                 .check(matches(isDisplayed()));
@@ -395,7 +395,7 @@ public class SorteioCartelaEspressoTest {
         onView(withText(R.string.item_limpar_filtro_cartelas))
                 .perform(click());
 
-        CustomProcedures.mudarOrientacaoTela(mActivityRule);
+        CustomProcedures.mudarOrientacaoTela(mActivityRule.getActivity());
 
         onView(withText(R.string.dialog_limpar_filtro_cartelas_title))
                 .check(matches(isDisplayed()));
@@ -409,7 +409,7 @@ public class SorteioCartelaEspressoTest {
                 .perform(click());
         String buttonText = getButtonText(withId(R.id.bt_sorteio_cartela));
 
-        CustomProcedures.mudarOrientacaoTela(mActivityRule);
+        CustomProcedures.mudarOrientacaoTela(mActivityRule.getActivity());
 
         assertThat(getRecyclerViewSize(withId(R.id.rv_sorteio_cartela_sorteaveis)), equalTo(rvSize));
         assertThat(getButtonText(withId(R.id.bt_sorteio_cartela)), equalTo(buttonText));
