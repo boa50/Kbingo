@@ -32,7 +32,6 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
     Toolbar mToolbar;
 
     private Unbinder unbinder;
-//    private ArrayList<Pedra> mPedras;
     private boolean hasCartelasGanhadoras;
 
     @Override
@@ -44,7 +43,6 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-//        mPedras = getIntent().getParcelableArrayListExtra(Constant.EXTRA_PEDRAS);
         hasCartelasGanhadoras = getIntent().getBooleanExtra(Constant.EXTRA_CARTELAS_GANHADORAS, false);
 
         if (savedInstanceState == null) direcionarFragment();
@@ -73,9 +71,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
     }
 
     private void direcionarFragment() {
-//        Bundle bundle = new Bundle();
         Fragment fragment;
-//        bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS, mPedras);
 
         if (hasCartelasGanhadoras) {
             fragment = mConfereCartelasFragment;
@@ -89,8 +85,6 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
                     R.string.toast_sem_cartela_ganhadora, Toast.LENGTH_SHORT);
             fragment.setArguments(bundle);
         }
-
-//        fragment.setArguments(bundle);
 
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),

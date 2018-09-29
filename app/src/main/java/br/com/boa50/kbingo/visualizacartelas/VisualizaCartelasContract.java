@@ -1,6 +1,5 @@
 package br.com.boa50.kbingo.visualizacartelas;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.boa50.kbingo.BasePresenter;

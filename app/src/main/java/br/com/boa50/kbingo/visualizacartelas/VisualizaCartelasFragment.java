@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -54,7 +53,6 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     private Unbinder unbinder;
     private String mUltimaCartelaNumero;
-//    private ArrayList<Pedra> mPedras;
     private boolean mConfereCartela;
 
     @Inject
@@ -72,7 +70,6 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         Bundle bundle = getArguments();
         if (bundle != null) {
             mUltimaCartelaNumero = bundle.getString(Constant.EXTRA_ULTIMA_CARTELA);
-//            mPedras = bundle.getParcelableArrayList(Constant.EXTRA_PEDRAS);
             mConfereCartela = bundle.getBoolean(Constant.EXTRA_CONFERE_CARTELA);
         }
 

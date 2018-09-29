@@ -14,12 +14,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
 import br.com.boa50.kbingo.data.FakeAppRepository;
-import br.com.boa50.kbingo.data.entity.Letra;
-import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.util.CartelaUtils;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -33,15 +30,12 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
-import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
 import static br.com.boa50.kbingo.CustomMatchers.isFocused;
 import static br.com.boa50.kbingo.CustomMatchers.withBackgroundDrawable;
 
 @RunWith(AndroidJUnit4.class)
 public class ConfereCartelasEspressoTest {
     private static FakeAppRepository repository;
-    private static ArrayList<Pedra> pedrasMock;
     private static ArrayList<String> cartelasGanhadorasMock;
 
 
@@ -52,26 +46,6 @@ public class ConfereCartelasEspressoTest {
     @BeforeClass
     public static void setup() {
         repository = CustomProceduresMock.initializeFakeDatabase();
-        Letra[] letras = new Letra[] {
-                new Letra(1, "K"),
-                new Letra(2, "I"),
-                new Letra(3, "N"),
-                new Letra(4, "K"),
-                new Letra(5, "A")
-        };
-
-        pedrasMock = new ArrayList<>();
-        for (int i = 1; i <= QTDE_PEDRAS_LETRA*letras.length; i++) {
-            int letraId = letras[(i-1)/ QTDE_PEDRAS_LETRA].getId();
-
-            pedrasMock.add(new Pedra(
-                    i,
-                    letraId,
-                    String.format(Locale.ENGLISH, FORMAT_PEDRA, i)
-            ));
-        }
-
-        pedrasMock.get(14 - 1).setSorteada(true);
 
         cartelasGanhadorasMock = new ArrayList<>();
         for (int i : repository.getIdsCartelasGanhadoras()) {
@@ -82,7 +56,6 @@ public class ConfereCartelasEspressoTest {
     @Before
     public void setupTest() {
         Intent intent = new Intent();
-        intent.putExtra(Constant.EXTRA_PEDRAS, pedrasMock);
         intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS, true);
         mActivityRule.launchActivity(intent);
     }

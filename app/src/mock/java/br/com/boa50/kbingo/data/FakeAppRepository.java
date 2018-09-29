@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import br.com.boa50.kbingo.data.dto.CartelaDTO;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import io.reactivex.Flowable;
-import io.reactivex.Single;
 
 public class FakeAppRepository extends AppRepository {
 
@@ -25,16 +24,17 @@ public class FakeAppRepository extends AppRepository {
     }
 
     @Override
-    public Single<List<Pedra>> getPedras() {
-        return super.getPedras().toFlowable()
+    public Flowable<List<Pedra>> getPedras() {
+        return super.getPedras()
                 .flatMap(pedras -> Flowable.fromIterable(pedras)
                 .map(pedra -> {
                     if (pedra.getNumero().equalsIgnoreCase("14")) {
                         pedra.setSorteada(true);
                     }
                     return pedra;
-                }))
-                .toList();
+                })
+                .toList()
+                .toFlowable());
     }
 
     @Override
