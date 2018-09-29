@@ -54,7 +54,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     private Unbinder unbinder;
     private String mUltimaCartelaNumero;
-    private ArrayList<Pedra> mPedras;
+//    private ArrayList<Pedra> mPedras;
+    private boolean mConfereCartela;
 
     @Inject
     public VisualizaCartelasFragment() {}
@@ -71,7 +72,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         Bundle bundle = getArguments();
         if (bundle != null) {
             mUltimaCartelaNumero = bundle.getString(Constant.EXTRA_ULTIMA_CARTELA);
-            mPedras = bundle.getParcelableArrayList(Constant.EXTRA_PEDRAS);
+//            mPedras = bundle.getParcelableArrayList(Constant.EXTRA_PEDRAS);
+            mConfereCartela = bundle.getBoolean(Constant.EXTRA_CONFERE_CARTELA);
         }
 
         if (savedInstanceState == null && mUltimaCartelaNumero == null) {
@@ -87,7 +89,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                         v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 Objects.requireNonNull(imm).hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                mPresenter.carregarCartela(Integer.parseInt(etNumeroCartela.getText().toString()));
+                mPresenter.carregarCartela(Integer.parseInt(etNumeroCartela.getText().toString()),
+                        mConfereCartela);
             }
             return false;
         });
@@ -120,7 +123,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         etNumeroCartela.setText(mUltimaCartelaNumero);
 
         if (!"".equals(mUltimaCartelaNumero)) {
-            mPresenter.carregarCartela(Integer.parseInt(mUltimaCartelaNumero));
+            mPresenter.carregarCartela(Integer.parseInt(mUltimaCartelaNumero), mConfereCartela);
         }
 
         for (int i = 0; i <= letras.size() - 1; i++) {
@@ -136,7 +139,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     }
 
     @Override
-    public void apresentarCartela(List<CartelaPedra> cartelaPedras) {
+    public void apresentarCartela(List<CartelaPedra> cartelaPedras, List<Pedra> pedras) {
         etNumeroCartela.setText(cartelaPedras.get(0).getCartelaIdFormatado());
 
         if (glCartela.getChildCount() > 5) {
@@ -154,9 +157,9 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                     FORMAT_PEDRA,
                     cartelaPedra.getPedraId()));
 
-            if (mPedras != null) {
+            if (pedras != null) {
                 estilizarCelulaCartela(textView, false,
-                        mPedras.get(cartelaPedra.getPedraId()-1).isSorteada());
+                        pedras.get(cartelaPedra.getPedraId()-1).isSorteada());
             } else {
                 estilizarCelulaCartela(textView, false, false);
             }

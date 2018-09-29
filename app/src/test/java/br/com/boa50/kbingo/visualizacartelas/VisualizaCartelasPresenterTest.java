@@ -18,7 +18,9 @@ import br.com.boa50.kbingo.util.schedulers.ImmediateScheduleProvider;
 import io.reactivex.Single;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -64,17 +66,17 @@ public class VisualizaCartelasPresenterTest {
 
     @Test
     public void carregarCartela_apresentarCartela() {
-        visualizaCartelasPresenter.carregarCartela(1);
+        visualizaCartelasPresenter.carregarCartela(1, false);
 
-        verify(visualizarCartelasView).apresentarCartela(cartelaPedras.capture());
+        verify(visualizarCartelasView).apresentarCartela(cartelaPedras.capture(), anyList());
         assertThat(cartelaPedras.getValue().get(0).getCartelaId(), equalTo(1));
     }
 
     @Test
     public void carregarCartelaMaiorQueMaximo_apresentarUltimaCartela() {
-        visualizaCartelasPresenter.carregarCartela(2);
+        visualizaCartelasPresenter.carregarCartela(2, false);
 
-        verify(visualizarCartelasView).apresentarCartela(cartelaPedras.capture());
+        verify(visualizarCartelasView).apresentarCartela(cartelaPedras.capture(), anyList());
         assertThat(cartelaPedras.getValue().get(0).getCartelaId(), equalTo(CARTELA_MAX_ID));
         verify(visualizarCartelasView).apresentarMaximoIdCartela(CARTELA_MAX_ID);
     }
