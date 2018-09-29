@@ -1,5 +1,7 @@
 package br.com.boa50.kbingo.data;
 
+import android.support.annotation.VisibleForTesting;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -123,9 +125,9 @@ public class AppRepository implements AppDataSource {
                 .flatMap(maxId -> Flowable.range(1, maxId)
                         .flatMap(id -> getPedrasByCartelaId(id).toFlowable()
                                 .flatMap(cartelaPedras -> Flowable.just(new CartelaDTO(id, cartelaPedras))
-                                        .doOnNext(cartela -> cartelas.add(cartela))
+                                        .doOnNext(cartela -> cartelas.add(cartela)))))
                                         .toList()
-                                        .toFlowable())));
+                                        .toFlowable();
     }
 
     @Override
@@ -171,11 +173,11 @@ public class AppRepository implements AppDataSource {
         if (pedras != null) {
             pedras.get(id - 1).setSorteada(true);
             ultimaPedraSorteada = pedras.get(id - 1);
+            updateCartelas(ultimaPedraSorteada);
         }
     }
 
-    @Override
-    public void updateCartelas(Pedra ultimaPedraSorteada) {
+    private void updateCartelas(Pedra ultimaPedraSorteada) {
         if (cartelas == null) return;
         int qtdePedrasSorteio = getTipoSorteio().getQuantidadePedras();
 
@@ -244,5 +246,10 @@ public class AppRepository implements AppDataSource {
                             }
                     ));
         });
+    }
+
+    @VisibleForTesting
+    public AppDatabase getDb() {
+        return db;
     }
 }
