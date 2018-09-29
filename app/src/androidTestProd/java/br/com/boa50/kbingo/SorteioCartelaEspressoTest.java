@@ -22,7 +22,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.boa50.kbingo.CustomGets.getButtonText;
 
 @RunWith(AndroidJUnit4.class)
-public class SorteioCartelaEspressoTestDebug {
+public class SorteioCartelaEspressoTest {
     private static AppDatabase db;
 
     @Rule
