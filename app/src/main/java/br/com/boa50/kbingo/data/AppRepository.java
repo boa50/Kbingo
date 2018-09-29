@@ -22,6 +22,7 @@ public class AppRepository implements AppDataSource {
 
     private AppDatabase db;
     private List<Pedra> pedras;
+    private Pedra ultimaPedraSorteada;
     private List<CartelaDTO> cartelas;
     private List<CartelaFiltroDTO> cartelasFiltro;
     private Integer tipoSorteioId;
@@ -39,6 +40,11 @@ public class AppRepository implements AppDataSource {
             }
         }
         return false;
+    }
+
+    @Override
+    public Pedra getUltimaPedraSorteada() {
+        return ultimaPedraSorteada;
     }
 
     @Override
@@ -164,6 +170,7 @@ public class AppRepository implements AppDataSource {
     public void updatePedraSorteada(int id) {
         if (pedras != null) {
             pedras.get(id - 1).setSorteada(true);
+            ultimaPedraSorteada = pedras.get(id - 1);
         }
     }
 
@@ -200,6 +207,7 @@ public class AppRepository implements AppDataSource {
                 pedra.setSorteada(false);
             }
         }
+        ultimaPedraSorteada = null;
     }
 
     @Override

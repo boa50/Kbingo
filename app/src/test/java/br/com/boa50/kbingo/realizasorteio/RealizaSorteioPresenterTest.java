@@ -98,8 +98,7 @@ public class RealizaSorteioPresenterTest {
 
         QUANTIDADE_PEDRAS_SORTEAVEIS = PEDRAS.size();
 
-        realizaSorteioPresenter.subscribe(realizaSorteioView,
-                new RealizaSorteioState(null));
+        realizaSorteioPresenter.subscribe(realizaSorteioView);
     }
 
     @Test
