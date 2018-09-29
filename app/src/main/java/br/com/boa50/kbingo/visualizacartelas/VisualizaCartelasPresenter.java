@@ -50,7 +50,7 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
     }
 
     @Override
-    public void carregarCartela(int id) {
+    public void carregarCartela(int id, boolean confereCartela) {
         Disposable disposable = mAppDataSource
                 .getPedrasByCartelaId(id)
                 .subscribeOn(mScheduleProvider.io())
@@ -58,7 +58,19 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
                 .subscribe(
                         cartelaPedras -> {
                             if (cartelaPedras.size() > 0) {
-                                mView.apresentarCartela(cartelaPedras);
+                                if (confereCartela) {
+                                    Disposable disposable2 = mAppDataSource
+                                            .getPedras()
+                                            .subscribeOn(mScheduleProvider.io())
+                                            .observeOn(mScheduleProvider.ui())
+                                            .subscribe(
+                                                    pedras -> mView.apresentarCartela(cartelaPedras, pedras)
+                                            );
+
+                                    mCompositeDisposable.add(disposable2);
+                                } else {
+                                    mView.apresentarCartela(cartelaPedras, null);
+                                }
                             } else {
                                 Disposable disposable2 = mAppDataSource
                                         .getCartelaUltimoId()
@@ -66,7 +78,7 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
                                         .observeOn(mScheduleProvider.ui())
                                         .subscribe(
                                                 cartelaId ->{
-                                                    carregarCartela(cartelaId);
+                                                    carregarCartela(cartelaId, confereCartela);
                                                     mView.apresentarMaximoIdCartela(cartelaId);
                                                 }
                                         );

@@ -158,11 +158,11 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
                 .setTitle(getString(R.string.cartelas_ganhadoras_title) + " - " +
                         cartelas.size() + " Cartelas");
 
-        assert getArguments() != null;
+//        assert getArguments() != null;
         CartelasGanhadorasAdapter adapter =
                 new CartelasGanhadorasAdapter(getActivity(),
-                        mVisualizaCartelasFragment,
-                        getArguments().getParcelableArrayList(Constant.EXTRA_PEDRAS));
+                        mVisualizaCartelasFragment/*,
+                        getArguments().getParcelableArrayList(Constant.EXTRA_PEDRAS)*/);
         adapter.submitList(tratarCartelas(cartelas));
         rvCartelasGanhadoras.setAdapter(adapter);
     }
@@ -185,18 +185,18 @@ public class ConfereCartelasFragment extends DaggerFragment implements ConfereCa
 class CartelasGanhadorasAdapter extends ListAdapter<String, CartelasGanhadorasAdapter.ViewHolder> {
     private FragmentActivity mFragmentActivity;
     private Fragment mFragment;
-    private ArrayList<Pedra> mPedras;
+//    private ArrayList<Pedra> mPedras;
 
     private class VIEW_TYPES {
         static final int Header = 1;
         static final int Normal = 2;
     }
 
-    CartelasGanhadorasAdapter(FragmentActivity fragmentActivity, Fragment fragment, ArrayList<Pedra> pedras) {
+    CartelasGanhadorasAdapter(FragmentActivity fragmentActivity, Fragment fragment/*, ArrayList<Pedra> pedras*/) {
         super(DIFF_CALLBACK);
         mFragmentActivity = fragmentActivity;
         mFragment = fragment;
-        mPedras = pedras;
+//        mPedras = pedras;
     }
 
     @Override
@@ -256,8 +256,9 @@ class CartelasGanhadorasAdapter extends ListAdapter<String, CartelasGanhadorasAd
                 textoCartela = "";
             }
             bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, textoCartela);
+            bundle.putBoolean(Constant.EXTRA_CONFERE_CARTELA, true);
 
-            bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS, mPedras);
+//            bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS, mPedras);
             mFragment.setArguments(bundle);
 
             mFragmentActivity.setTitle(R.string.conferir_cartelas_title);

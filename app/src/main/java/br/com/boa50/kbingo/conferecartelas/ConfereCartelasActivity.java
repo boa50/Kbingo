@@ -8,14 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
-import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasFragment;
 import butterknife.BindView;
@@ -34,7 +32,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
     Toolbar mToolbar;
 
     private Unbinder unbinder;
-    private ArrayList<Pedra> mPedras;
+//    private ArrayList<Pedra> mPedras;
     private boolean hasCartelasGanhadoras;
 
     @Override
@@ -46,7 +44,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        mPedras = getIntent().getParcelableArrayListExtra(Constant.EXTRA_PEDRAS);
+//        mPedras = getIntent().getParcelableArrayListExtra(Constant.EXTRA_PEDRAS);
         hasCartelasGanhadoras = getIntent().getBooleanExtra(Constant.EXTRA_CARTELAS_GANHADORAS, false);
 
         if (savedInstanceState == null) direcionarFragment();
@@ -75,21 +73,24 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
     }
 
     private void direcionarFragment() {
-        Bundle bundle = new Bundle();
+//        Bundle bundle = new Bundle();
         Fragment fragment;
-        bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS, mPedras);
+//        bundle.putParcelableArrayList(Constant.EXTRA_PEDRAS, mPedras);
 
         if (hasCartelasGanhadoras) {
             fragment = mConfereCartelasFragment;
         } else {
+            Bundle bundle = new Bundle();
             fragment = mVisualizaCartelasFragment;
             bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
+            bundle.putBoolean(Constant.EXTRA_CONFERE_CARTELA, true);
             setTitle(R.string.conferir_cartelas_title);
             ActivityUtils.showToastEstilizado(getApplicationContext(),
                     R.string.toast_sem_cartela_ganhadora, Toast.LENGTH_SHORT);
+            fragment.setArguments(bundle);
         }
 
-        fragment.setArguments(bundle);
+//        fragment.setArguments(bundle);
 
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
