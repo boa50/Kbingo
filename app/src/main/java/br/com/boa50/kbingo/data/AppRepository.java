@@ -153,9 +153,9 @@ public class AppRepository implements AppDataSource {
                         .flatMap(cartela -> Flowable.just(new CartelaFiltroDTO(id,
                                         cartela.isGanhadora(),
                                         false))
-                                .doOnNext(cartelaFiltroDTO -> cartelasFiltro.add(cartelaFiltroDTO))
+                                .doOnNext(cartelaFiltroDTO -> cartelasFiltro.add(cartelaFiltroDTO)))))
                                 .toList()
-                                .toFlowable())));
+                                .toFlowable();
     }
 
     @Override
