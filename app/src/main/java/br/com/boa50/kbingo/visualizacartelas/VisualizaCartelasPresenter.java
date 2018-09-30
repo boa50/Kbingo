@@ -90,4 +90,9 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
 
         mCompositeDisposable.add(disposable);
     }
+
+    @Override
+    public void exportarCartelas(int idInicial, int idFinal) {
+        //TODO implementar a lógica da exportação de cartelas
+    }
 }

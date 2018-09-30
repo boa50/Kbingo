@@ -1,5 +1,7 @@
 package br.com.boa50.kbingo;
 
+import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -92,5 +94,15 @@ public class VisualizaCartelasEspressoTest {
 
         onView(withId(R.id.et_numero_cartela)).check(matches(withText("0001")));
         onView(indexChildOf(withId(R.id.gl_cartela),5)).check(matches(withText(text)));
+    }
+
+    @Test
+    public void abrirDialogExportarCartelas_mudarOrientacao_manterInformacoes() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_exportar_cartelas))
+                .perform(click());
+
+        CustomProcedures.mudarOrientacaoTela(mActivityRule.getActivity());
+        onView(withText(R.string.dialog_negative)).check(matches(isDisplayed()));
     }
 }
