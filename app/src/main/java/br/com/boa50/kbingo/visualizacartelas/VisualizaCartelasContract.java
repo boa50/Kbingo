@@ -18,5 +18,6 @@ public interface VisualizaCartelasContract {
 
     interface Presenter extends BasePresenter<View> {
         void carregarCartela(int id, boolean confereCartela);
+        void exportarCartelas(int idInicial, int idFinal);
     }
 }

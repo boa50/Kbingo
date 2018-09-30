@@ -1,9 +1,11 @@
 package br.com.boa50.kbingo.visualizacartelas;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayout;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -40,6 +42,7 @@ import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
 
 public class VisualizaCartelasFragment extends DaggerFragment implements VisualizaCartelasContract.View {
     private static final String ARGS_CARTELA_ULTIMA = "ultimaCartela";
+    private static final String ARGS_DIALOG_EXPORTAR_CARTELAS = "exportarCartelas";
 
     @Inject
     VisualizaCartelasContract.Presenter mPresenter;
@@ -56,6 +59,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     private Unbinder unbinder;
     private String mUltimaCartelaNumero;
     private boolean mConfereCartela;
+    private Dialog mDialogExportarCartelas;
 
     @Inject
     public VisualizaCartelasFragment() {}
@@ -80,6 +84,9 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             mUltimaCartelaNumero = "0001";
         } else if (savedInstanceState != null) {
             mUltimaCartelaNumero = savedInstanceState.getString(ARGS_CARTELA_ULTIMA);
+            if (savedInstanceState.getBoolean(ARGS_DIALOG_EXPORTAR_CARTELAS)) {
+                abrirDialogExportarCartelas();
+            }
         }
 
         etNumeroCartela.setOnEditorActionListener((v, actionId, event) -> {
@@ -108,6 +115,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_exportar_cartelas:
+                abrirDialogExportarCartelas();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -118,6 +126,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(ARGS_CARTELA_ULTIMA, etNumeroCartela.getText().toString());
+        outState.putBoolean(ARGS_DIALOG_EXPORTAR_CARTELAS,
+                mDialogExportarCartelas != null && mDialogExportarCartelas.isShowing());
     }
 
     @Override
@@ -223,5 +233,22 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                 mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_left_right),
                 mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_top_bottom));
         textView.setGravity(Gravity.CENTER);
+    }
+
+    private void abrirDialogExportarCartelas() {
+        View view = Objects.requireNonNull(getActivity()).getLayoutInflater()
+                .inflate(R.layout.dialog_exportar_cartelas, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        builder.setTitle(R.string.dialog_exportar_cartelas_title)
+                .setView(view)
+                .setNegativeButton(R.string.dialog_negative, (dialogInterface, i) -> {})
+                .setPositiveButton(R.string.dialog_exportar_cartelas_positive, (dialogInterface, i) -> {
+                    mPresenter.exportarCartelas(0,0);
+                });
+
+        mDialogExportarCartelas = builder.create();
+        mDialogExportarCartelas.setCanceledOnTouchOutside(false);
+        mDialogExportarCartelas.show();
     }
 }
