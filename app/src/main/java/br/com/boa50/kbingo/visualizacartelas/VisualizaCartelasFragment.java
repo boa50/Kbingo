@@ -8,6 +8,8 @@ import android.support.v7.widget.GridLayout;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -66,6 +68,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.visualizacartelas_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -93,6 +96,22 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         });
 
         return view;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.item_exportar_cartelas).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_exportar_cartelas:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
