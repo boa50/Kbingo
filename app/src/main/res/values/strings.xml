@@ -30,8 +30,8 @@
     <string name="et_sorteio_cartela_numero_hint">Número da cartela</string>
     <string name="titulo_cartelas_sorteaveis">Cartelas Sorteáveis:</string>
     <string name="todas_cartelas_sorteaveis">Todas as cartelas</string>
-    <string name="item_filtrar_cartelas_sorteaveis">Filtrar cartelas sorteáveis</string>
-    <string name="item_limpar_filtro_cartelas">Limpar filtro de cartelas</string>
+    <string name="item_filtrar_cartelas_sorteaveis">Filtrar Cartelas Sorteáveis</string>
+    <string name="item_limpar_filtro_cartelas">Limpar Filtro de Cartelas</string>
     <string name="dialog_filtrar_cartelas_title">Filtrar cartelas sorteáveis</string>
     <string name="dialog_limpar_filtro_cartelas_title">Limpar filtro de cartelas sorteáveis?</string>
     <string name="dialog_limpar_filtro_cartelas_positive">Limpar Filtro</string>
@@ -44,4 +44,5 @@
     <!--Visualizar cartela-->
     <string name="et_numero_cartela_hint">Número da Cartela</string>
     <string name="toast_cartela_maxima">O maior número de cartela cadastrado é</string>
+    <string name="item_exportar_cartelas">Exportar Cartelas</string>
 </resources>
