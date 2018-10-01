@@ -47,4 +47,8 @@
     <string name="item_exportar_cartelas">Exportar Cartelas</string>
     <string name="dialog_exportar_cartelas_title">Exportar Cartelas</string>
     <string name="dialog_exportar_cartelas_positive">Exportar Cartelas</string>
+    <string name="dialog_exportar_cartelas_content_text">Informe os números das cartelas inicial e final para exportação</string>
+    <string name="dialog_exportar_cartelas_separator_text">-</string>
+    <string name="dialog_exportar_cartelas_et_inicial_hint">Cartela Inicial</string>
+    <string name="dialog_exportar_cartelas_et_final_hint">Cartela Final</string>
 </resources>

@@ -92,6 +92,21 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
     }
 
     @Override
+    public void prepararDialogExportar(int idInicial, int idFinal) {
+        if (idInicial > 0 && idFinal > 0) {
+            mView.abrirDialogExportarCartelas(idInicial, idFinal);
+        } else {
+            mCompositeDisposable.add(mAppDataSource
+                    .getCartelaUltimoId()
+                    .subscribeOn(mScheduleProvider.io())
+                    .observeOn(mScheduleProvider.ui())
+                    .subscribe(
+                            cartelaId -> mView.abrirDialogExportarCartelas(1, cartelaId)
+                    ));
+        }
+    }
+
+    @Override
     public void exportarCartelas(int idInicial, int idFinal) {
         //TODO implementar a lógica da exportação de cartelas
     }
