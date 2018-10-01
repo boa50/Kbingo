@@ -27,7 +27,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class VisualizaCartelasPresenterTest {
 
-    private final int CARTELA_MAX_ID = 1;
+    private final int CARTELA_MAX_ID = 2;
 
     @Mock
     private VisualizaCartelasContract.View visualizarCartelasView;
@@ -62,11 +62,15 @@ public class VisualizaCartelasPresenterTest {
         List<CartelaPedra> cartelaPedras = Lists.newArrayList(
                 new CartelaPedra(1, 1, 1, 1)
         );
+        List<CartelaPedra> cartelaPedras2 = Lists.newArrayList(
+                new CartelaPedra(2, 1, 1, 1)
+        );
 
         when(appDataSource.getLetras()).thenReturn(Single.just(letras));
         when(appDataSource.getPedras()).thenReturn(Flowable.just(PEDRAS));
         when(appDataSource.getPedrasByCartelaId(1)).thenReturn(Single.just(cartelaPedras));
-        when(appDataSource.getPedrasByCartelaId(2)).thenReturn(Single.just(new ArrayList<>()));
+        when(appDataSource.getPedrasByCartelaId(2)).thenReturn(Single.just(cartelaPedras2));
+        when(appDataSource.getPedrasByCartelaId(50)).thenReturn(Single.just(new ArrayList<>()));
         when(appDataSource.getCartelaUltimoId()).thenReturn(Single.just(CARTELA_MAX_ID));
 
         visualizaCartelasPresenter.subscribe(visualizarCartelasView);
@@ -83,7 +87,7 @@ public class VisualizaCartelasPresenterTest {
 
     @Test
     public void carregarCartelaMaiorQueMaximo_apresentarUltimaCartela() {
-        visualizaCartelasPresenter.carregarCartela(2, false);
+        visualizaCartelasPresenter.carregarCartela(50, false);
 
         verify(visualizarCartelasView).apresentarCartela(cartelaPedras.capture(), pedras.capture());
         assertThat(cartelaPedras.getValue().get(0).getCartelaId(), equalTo(CARTELA_MAX_ID));
@@ -99,5 +103,36 @@ public class VisualizaCartelasPresenterTest {
         verify(visualizarCartelasView).apresentarCartela(cartelaPedras.capture(), pedras.capture());
         assertThat(cartelaPedras.getValue().get(0).getCartelaId(), equalTo(1));
         assertThat(pedras.getValue(), equalTo(PEDRAS));
+    }
+
+    @Test
+    public void prepararDialogExportarSemIds_carregarIdsCorretos() {
+        ArgumentCaptor<Integer> idInicial = ArgumentCaptor.forClass(Integer.class);
+        ArgumentCaptor<Integer> idFinal = ArgumentCaptor.forClass(Integer.class);
+
+        visualizaCartelasPresenter.prepararDialogExportar(0,0);
+
+        verify(visualizarCartelasView).abrirDialogExportarCartelas(idInicial.capture(), idFinal.capture());
+        assertThat(idInicial.getValue(), equalTo(1));
+        assertThat(idFinal.getValue(), equalTo(CARTELA_MAX_ID));
+    }
+
+    @Test
+    public void prepararDialogExportarComIds_carregarIdsCorretos() {
+        ArgumentCaptor<Integer> idInicial = ArgumentCaptor.forClass(Integer.class);
+        ArgumentCaptor<Integer> idFinal = ArgumentCaptor.forClass(Integer.class);
+
+        visualizaCartelasPresenter.prepararDialogExportar(1,1);
+
+        verify(visualizarCartelasView).abrirDialogExportarCartelas(idInicial.capture(), idFinal.capture());
+        assertThat(idInicial.getValue(), equalTo(1));
+        assertThat(idFinal.getValue(), equalTo(1));
+    }
+
+    @Test
+    public void exportarCartelasIdsIncompativeis_mostrarMensagemCorreta() {
+        visualizaCartelasPresenter.exportarCartelas(50, 1);
+
+        verify(visualizarCartelasView).mostrarMensagensIdsIncompativeis();
     }
 }
