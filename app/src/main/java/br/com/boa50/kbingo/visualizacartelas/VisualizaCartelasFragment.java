@@ -5,8 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,6 +36,7 @@ import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.util.ActivityUtils;
+import br.com.boa50.kbingo.util.CartelaUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -43,6 +47,8 @@ import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
 public class VisualizaCartelasFragment extends DaggerFragment implements VisualizaCartelasContract.View {
     private static final String ARGS_CARTELA_ULTIMA = "ultimaCartela";
     private static final String ARGS_DIALOG_EXPORTAR_CARTELAS = "exportarCartelas";
+    private static final String ARGS_EXPORTAR_CARTELAS_ID_INICIAL = "exportarCartelasIdInicial";
+    private static final String ARGS_EXPORTAR_CARTELAS_ID_FINAL = "exportarCartelasIdFinal";
 
     @Inject
     VisualizaCartelasContract.Presenter mPresenter;
@@ -60,6 +66,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     private String mUltimaCartelaNumero;
     private boolean mConfereCartela;
     private Dialog mDialogExportarCartelas;
+    private int mIdInicial;
+    private int mIdFinal;
 
     @Inject
     public VisualizaCartelasFragment() {}
@@ -73,6 +81,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         View view = inflater.inflate(R.layout.visualizacartelas_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
+        mPresenter.subscribe(this);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -80,12 +89,16 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             mConfereCartela = bundle.getBoolean(Constant.EXTRA_CONFERE_CARTELA);
         }
 
-        if (savedInstanceState == null && mUltimaCartelaNumero == null) {
-            mUltimaCartelaNumero = "0001";
-        } else if (savedInstanceState != null) {
+        if (savedInstanceState == null) {
+            if (mUltimaCartelaNumero == null) mUltimaCartelaNumero = "0001";
+            mIdInicial = 0;
+            mIdFinal = 0;
+        } else {
             mUltimaCartelaNumero = savedInstanceState.getString(ARGS_CARTELA_ULTIMA);
+            mIdInicial = savedInstanceState.getInt(ARGS_EXPORTAR_CARTELAS_ID_INICIAL);
+            mIdFinal = savedInstanceState.getInt(ARGS_EXPORTAR_CARTELAS_ID_FINAL);
             if (savedInstanceState.getBoolean(ARGS_DIALOG_EXPORTAR_CARTELAS)) {
-                abrirDialogExportarCartelas();
+                mPresenter.prepararDialogExportar(mIdInicial, mIdFinal);
             }
         }
 
@@ -115,7 +128,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_exportar_cartelas:
-                abrirDialogExportarCartelas();
+                mPresenter.prepararDialogExportar(0,0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -128,6 +141,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         outState.putString(ARGS_CARTELA_ULTIMA, etNumeroCartela.getText().toString());
         outState.putBoolean(ARGS_DIALOG_EXPORTAR_CARTELAS,
                 mDialogExportarCartelas != null && mDialogExportarCartelas.isShowing());
+        outState.putInt(ARGS_EXPORTAR_CARTELAS_ID_INICIAL, mIdInicial);
+        outState.putInt(ARGS_EXPORTAR_CARTELAS_ID_FINAL, mIdFinal);
     }
 
     @Override
@@ -141,7 +156,6 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.subscribe(this);
     }
 
     @Override
@@ -235,17 +249,50 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         textView.setGravity(Gravity.CENTER);
     }
 
-    private void abrirDialogExportarCartelas() {
+    @Override
+    public void abrirDialogExportarCartelas(int idInicial, int idFinal) {
         View view = Objects.requireNonNull(getActivity()).getLayoutInflater()
                 .inflate(R.layout.dialog_exportar_cartelas, null);
+        TextInputEditText etInicial = view.findViewById(R.id.et_dialog_exportar_cartelas_inicial);
+        TextInputEditText etFinal = view.findViewById(R.id.et_dialog_exportar_cartelas_final);
+
+        mIdInicial = idInicial;
+        mIdFinal = idFinal;
+        etInicial.setText(CartelaUtils.formatarNumeroCartela(idInicial));
+        etFinal.setText(CartelaUtils.formatarNumeroCartela(idFinal));
+
+        etInicial.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mIdInicial = Integer.valueOf(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        etFinal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mIdFinal = Integer.valueOf(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setTitle(R.string.dialog_exportar_cartelas_title)
                 .setView(view)
                 .setNegativeButton(R.string.dialog_negative, (dialogInterface, i) -> {})
-                .setPositiveButton(R.string.dialog_exportar_cartelas_positive, (dialogInterface, i) -> {
-                    mPresenter.exportarCartelas(0,0);
-                });
+                .setPositiveButton(R.string.dialog_exportar_cartelas_positive, (dialogInterface, i) ->
+                        mPresenter.exportarCartelas(idInicial, idFinal));
 
         mDialogExportarCartelas = builder.create();
         mDialogExportarCartelas.setCanceledOnTouchOutside(false);

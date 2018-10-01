@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.boa50.kbingo.data.AppDatabase;
+import br.com.boa50.kbingo.util.CartelaUtils;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -97,12 +98,32 @@ public class VisualizaCartelasEspressoTest {
     }
 
     @Test
+    public void abrirDialogExportarCartelas_carregarInformacoesIniciais() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_exportar_cartelas))
+                .perform(click());
+
+        onView(withText(R.string.dialog_exportar_cartelas_content_text)).check(matches(isDisplayed()));
+        onView(withText(CartelaUtils.formatarNumeroCartela(1))).check(matches(isDisplayed()));
+        onView(withText(CartelaUtils.formatarNumeroCartela(200))).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void abrirDialogExportarCartelas_mudarOrientacao_manterInformacoes() {
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_exportar_cartelas))
                 .perform(click());
 
+        String idInicial = CartelaUtils.formatarNumeroCartela(7);
+        String idFinal = CartelaUtils.formatarNumeroCartela(50);
+        onView(withId(R.id.et_dialog_exportar_cartelas_inicial))
+                .perform(replaceText(idInicial));
+        onView(withId(R.id.et_dialog_exportar_cartelas_final))
+                .perform(replaceText(idFinal));
+
         CustomProcedures.mudarOrientacaoTela(mActivityRule.getActivity());
-        onView(withText(R.string.dialog_negative)).check(matches(isDisplayed()));
+        onView(withText(R.string.dialog_exportar_cartelas_content_text)).check(matches(isDisplayed()));
+        onView(withText(idInicial)).check(matches(isDisplayed()));
+        onView(withText(idFinal)).check(matches(isDisplayed()));
     }
 }

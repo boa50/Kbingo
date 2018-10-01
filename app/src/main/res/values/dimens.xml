@@ -13,6 +13,9 @@
     <dimen name="divisoria_linha_height">1dp</dimen>
     <dimen name="divisoria_linha_elevation">1dp</dimen>
 
+    <!--Dialog-->
+    <dimen name="dialog_content_padding">20dp</dimen>
+
     <!--Realizar sorteio-->
     <dimen name="pedra_grande_texto">20sp</dimen>
     <dimen name="pedra_grande_texto_sorteada">40sp</dimen>
@@ -48,7 +51,6 @@
     <dimen name="sc_input_layout_margin_top">16dp</dimen>
     <dimen name="sc_input_layout_margin_bottom">-8dp</dimen>
     <dimen name="sc_dialog_filtro_cartelas_rv_height">300dp</dimen>
-    <dimen name="sc_container_filtro_layout_padding">20dp</dimen>
 
     <!--Visualizar cartela-->
     <dimen name="input_layout_hint">24sp</dimen>
@@ -60,4 +62,7 @@
     <dimen name="toast_text_size">25dp</dimen>
     <dimen name="cartela_border">2dp</dimen>
     <dimen name="dot_padding">24dp</dimen>
+    <dimen name="dialog_exportar_cartelas_content_margin">16dp</dimen>
+    <dimen name="dialog_exportar_cartelas_til_width">150dp</dimen>
+    <dimen name="dialog_exportar_cartelas_separator_size">50sp</dimen>
 </resources>
