@@ -267,7 +267,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mIdInicial = Integer.valueOf(s.toString());
+                mIdInicial = Integer.parseInt(s.toString());
             }
 
             @Override
@@ -280,7 +280,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mIdFinal = Integer.valueOf(s.toString());
+                mIdFinal = Integer.parseInt(s.toString());
             }
 
             @Override
@@ -292,10 +292,18 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                 .setView(view)
                 .setNegativeButton(R.string.dialog_negative, (dialogInterface, i) -> {})
                 .setPositiveButton(R.string.dialog_exportar_cartelas_positive, (dialogInterface, i) ->
-                        mPresenter.exportarCartelas(idInicial, idFinal));
+                        mPresenter.exportarCartelas(
+                                Integer.parseInt(etInicial.getText().toString()),
+                                Integer.parseInt(etFinal.getText().toString())));
 
         mDialogExportarCartelas = builder.create();
         mDialogExportarCartelas.setCanceledOnTouchOutside(false);
         mDialogExportarCartelas.show();
+    }
+
+    @Override
+    public void mostrarMensagensIdsIncompativeis() {
+        String texto = mContext.getResources().getText(R.string.toast_ids_incompativeis).toString();
+        ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
     }
 }
