@@ -131,7 +131,7 @@ public class VisualizaCartelasPresenterTest {
 
     @Test
     public void exportarCartelasIdsIncompativeis_mostrarMensagemCorreta() {
-        visualizaCartelasPresenter.exportarCartelas(50, 1, null);
+        visualizaCartelasPresenter.exportarCartelas(50, 1);
 
         verify(visualizarCartelasView).mostrarMensagensIdsIncompativeis();
     }

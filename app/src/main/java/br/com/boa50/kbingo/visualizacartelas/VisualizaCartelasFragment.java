@@ -1,14 +1,18 @@
 package br.com.boa50.kbingo.visualizacartelas;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayout;
 import android.text.Editable;
@@ -47,12 +51,14 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
 import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
+import static butterknife.internal.Utils.arrayOf;
 
 public class VisualizaCartelasFragment extends DaggerFragment implements VisualizaCartelasContract.View {
     private static final String ARGS_CARTELA_ULTIMA = "ultimaCartela";
     private static final String ARGS_DIALOG_EXPORTAR_CARTELAS = "exportarCartelas";
     private static final String ARGS_EXPORTAR_CARTELAS_ID_INICIAL = "exportarCartelasIdInicial";
     private static final String ARGS_EXPORTAR_CARTELAS_ID_FINAL = "exportarCartelasIdFinal";
+    private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 5050;
 
     @Inject
     VisualizaCartelasContract.Presenter mPresenter;
@@ -88,8 +94,14 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         mPresenter.subscribe(this);
 
 
-//        if (mContext.checkSelfPermission(
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        if (Build.VERSION.SDK_INT >= 23){
+            if (mContext.checkSelfPermission(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        PERMISSION_WRITE_EXTERNAL_STORAGE);
+            }
+        }
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -124,6 +136,23 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         });
 
         return view;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Permission Granted
+                } else {
+                    //Permission Denied
+                }
+                return;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     @Override
@@ -302,8 +331,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                 .setPositiveButton(R.string.dialog_exportar_cartelas_positive, (dialogInterface, i) ->
                         mPresenter.exportarCartelas(
                                 Integer.parseInt(etInicial.getText().toString()),
-                                Integer.parseInt(etFinal.getText().toString()),
-                                mContext.getFilesDir()
+                                Integer.parseInt(etFinal.getText().toString())
                         ));
 
         mDialogExportarCartelas = builder.create();
