@@ -1,7 +1,10 @@
 package br.com.boa50.kbingo.visualizacartelas;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -82,6 +86,10 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         unbinder = ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         mPresenter.subscribe(this);
+
+
+//        if (mContext.checkSelfPermission(
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -294,7 +302,9 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                 .setPositiveButton(R.string.dialog_exportar_cartelas_positive, (dialogInterface, i) ->
                         mPresenter.exportarCartelas(
                                 Integer.parseInt(etInicial.getText().toString()),
-                                Integer.parseInt(etFinal.getText().toString())));
+                                Integer.parseInt(etFinal.getText().toString()),
+                                mContext.getFilesDir()
+                        ));
 
         mDialogExportarCartelas = builder.create();
         mDialogExportarCartelas.setCanceledOnTouchOutside(false);
@@ -305,5 +315,24 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     public void mostrarMensagensIdsIncompativeis() {
         String texto = mContext.getResources().getText(R.string.toast_ids_incompativeis).toString();
         ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void realizarDownload(File file) {
+        if (file.exists()) {
+            Uri path = Uri.fromFile(file);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(path, "application/pdf");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(intent);
+
+            try {
+                startActivity(intent);
+            }
+            catch (ActivityNotFoundException e) {
+                Toast.makeText(mContext, "No Application Available to View PDF",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

@@ -42,4 +42,5 @@ ext {
     rxandroidVersion = '2.0.2'
     hamcrestVersion = '2.0.0.0'
     roomVersion = '1.1.1'
+    iTextVersion = '5.5.13'
 }

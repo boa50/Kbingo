@@ -90,6 +90,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroidVersion}"
     implementation "android.arch.persistence.room:runtime:${roomVersion}"
     implementation "android.arch.persistence.room:rxjava2:${roomVersion}"
+    implementation "com.itextpdf:itextpdf:${iTextVersion}"
     testImplementation "junit:junit:${junitVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.hamcrest:java-hamcrest:${hamcrestVersion}"
