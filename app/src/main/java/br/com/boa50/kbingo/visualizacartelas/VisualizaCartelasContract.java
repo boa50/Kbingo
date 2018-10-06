@@ -23,6 +23,6 @@ public interface VisualizaCartelasContract {
     interface Presenter extends BasePresenter<View> {
         void carregarCartela(int id, boolean confereCartela);
         void prepararDialogExportar(int idInicial, int idFinal);
-        void exportarCartelas(int idInicial, int idFinal, File fileDir);
+        void exportarCartelas(int idInicial, int idFinal);
     }
 }
