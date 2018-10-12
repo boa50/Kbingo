@@ -91,6 +91,11 @@ public class AppRepository implements AppDataSource {
     }
 
     @Override
+    public Single<List<CartelaPedra>> getPedrasByCartelasIds(List<Integer> ids) {
+        return db.cartelaPedraDao().loadCartelaPedras(ids);
+    }
+
+    @Override
     public Single<CartelaDTO> getCartela(int id) {
         return getCartelas()
                 .flatMap(cartelas -> Flowable.fromIterable(cartelas)
