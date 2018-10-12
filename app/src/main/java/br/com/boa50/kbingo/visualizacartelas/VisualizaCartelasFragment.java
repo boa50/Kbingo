@@ -13,10 +13,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -79,6 +82,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     private int mIdInicial;
     private int mIdFinal;
 
+    private boolean mPermissaoEscirta;
+
     @Inject
     public VisualizaCartelasFragment() {}
 
@@ -92,16 +97,6 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
         unbinder = ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         mPresenter.subscribe(this);
-
-
-        if (Build.VERSION.SDK_INT >= 23){
-            if (mContext.checkSelfPermission(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        PERMISSION_WRITE_EXTERNAL_STORAGE);
-            }
-        }
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -145,9 +140,9 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             case PERMISSION_WRITE_EXTERNAL_STORAGE:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //Permission Granted
+                    mPermissaoEscirta = true;
                 } else {
-                    //Permission Denied
+                    mPermissaoEscirta = false;
                 }
                 return;
             default:
@@ -165,7 +160,21 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_exportar_cartelas:
-                mPresenter.prepararDialogExportar(0,0);
+                if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PERMISSION_WRITE_EXTERNAL_STORAGE);
+                }
+
+                if (mPermissaoEscirta) {
+                    mPresenter.prepararDialogExportar(0,0);
+                } else {
+                    String texto = mContext.getResources()
+                            .getText(R.string.toast_permissao_escrita_nao_concedida).toString();
+                    ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

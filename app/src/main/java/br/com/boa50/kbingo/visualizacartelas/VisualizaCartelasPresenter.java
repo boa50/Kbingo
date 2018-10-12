@@ -6,18 +6,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -136,8 +131,11 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
         }
 
         Document document = new Document();
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"cartelas.pdf");
+        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(directory,"cartelas.pdf");
+
         try {
+            if (!directory.exists()) directory.mkdirs();
             if (file.exists()) file.delete();
             file.createNewFile();
 
