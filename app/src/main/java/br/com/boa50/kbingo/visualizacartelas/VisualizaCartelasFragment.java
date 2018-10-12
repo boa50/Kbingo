@@ -165,6 +165,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                     ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             PERMISSION_WRITE_EXTERNAL_STORAGE);
+                } else {
+                    mPermissaoEscirta = true;
                 }
 
                 if (mPermissaoEscirta) {
