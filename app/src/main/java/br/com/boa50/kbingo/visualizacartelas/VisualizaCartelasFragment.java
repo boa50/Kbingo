@@ -7,14 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayout;
 import android.text.Editable;
@@ -54,7 +52,6 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
 import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
-import static butterknife.internal.Utils.arrayOf;
 
 public class VisualizaCartelasFragment extends DaggerFragment implements VisualizaCartelasContract.View {
     private static final String ARGS_CARTELA_ULTIMA = "ultimaCartela";
@@ -138,12 +135,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_WRITE_EXTERNAL_STORAGE:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mPermissaoEscirta = true;
-                } else {
-                    mPermissaoEscirta = false;
-                }
+                mPermissaoEscirta = grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 return;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -341,8 +334,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                 .setNegativeButton(R.string.dialog_negative, (dialogInterface, i) -> {})
                 .setPositiveButton(R.string.dialog_exportar_cartelas_positive, (dialogInterface, i) ->
                         mPresenter.exportarCartelas(
-                                Integer.parseInt(etInicial.getText().toString()),
-                                Integer.parseInt(etFinal.getText().toString())
+                                Integer.parseInt(Objects.requireNonNull(etInicial.getText()).toString()),
+                                Integer.parseInt(Objects.requireNonNull(etFinal.getText()).toString())
                         ));
 
         mDialogExportarCartelas = builder.create();
@@ -352,8 +345,12 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     @Override
     public void mostrarMensagensIdsIncompativeis() {
-        String texto = mContext.getResources().getText(R.string.toast_ids_incompativeis).toString();
-        ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
+        ActivityUtils.showToastEstilizado(mContext, R.string.toast_ids_incompativeis, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void mostrarMensagemInicioExportacao() {
+        ActivityUtils.showToastEstilizado(mContext, R.string.toast_inicio_exportar_cartelas, Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -363,15 +360,14 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(path, "application/pdf");
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            startActivity(intent);
 
             try {
                 startActivity(intent);
-            }
-            catch (ActivityNotFoundException e) {
-                Toast.makeText(mContext, "No Application Available to View PDF",
-                        Toast.LENGTH_SHORT).show();
+            } catch (ActivityNotFoundException e) {
+                Log.i("FALTA_APLICATIVO", "Não há aplicativo para apresentar pdf");
             }
         }
+
+        ActivityUtils.showToastEstilizado(mContext, R.string.toast_fim_exportar_cartelas, Toast.LENGTH_SHORT);
     }
 }

@@ -17,6 +17,7 @@ public interface VisualizaCartelasContract {
         void apresentarMaximoIdCartela(int id);
         void abrirDialogExportarCartelas(int idInicial, int idFinal);
         void mostrarMensagensIdsIncompativeis();
+        void mostrarMensagemInicioExportacao();
         void realizarDownload(File file);
     }
 
