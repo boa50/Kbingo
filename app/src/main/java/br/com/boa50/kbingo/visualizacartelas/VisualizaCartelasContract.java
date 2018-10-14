@@ -16,7 +16,6 @@ public interface VisualizaCartelasContract {
         void apresentarCartela(List<CartelaPedra> cartelaPedras, List<Pedra> pedras);
         void apresentarMaximoIdCartela(int id);
         void abrirDialogExportarCartelas(int idInicial, int idFinal);
-        void mostrarMensagensIdsIncompativeis();
         void mostrarMensagemInicioExportacao();
         void realizarDownload(File file);
     }

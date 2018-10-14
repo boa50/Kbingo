@@ -143,10 +143,9 @@ public class VisualizaCartelasPresenterTest {
     }
 
     @Test
-    public void exportarCartelasIdsIncompativeis_mostrarMensagemCorreta() {
+    public void exportarCartelasIdsIncompativeis_naoCarregar() {
         visualizaCartelasPresenter.exportarCartelas(50, 1);
 
-        verify(visualizarCartelasView).mostrarMensagensIdsIncompativeis();
         verify(visualizarCartelasView, times(0)).mostrarMensagemInicioExportacao();
         verify(visualizarCartelasView, times(0)).realizarDownload(Mockito.any(File.class));
     }
@@ -157,6 +156,5 @@ public class VisualizaCartelasPresenterTest {
 
         verify(visualizarCartelasView).mostrarMensagemInicioExportacao();
         verify(visualizarCartelasView).realizarDownload(Mockito.any(File.class));
-        verify(visualizarCartelasView, times(0)).mostrarMensagensIdsIncompativeis();
     }
 }
