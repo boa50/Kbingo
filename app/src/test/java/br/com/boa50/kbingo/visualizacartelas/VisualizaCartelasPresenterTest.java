@@ -7,7 +7,9 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +17,14 @@ import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
+import br.com.boa50.kbingo.helper.EnviromentHelper;
 import br.com.boa50.kbingo.util.schedulers.ImmediateScheduleProvider;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -31,9 +35,10 @@ public class VisualizaCartelasPresenterTest {
 
     @Mock
     private VisualizaCartelasContract.View visualizarCartelasView;
-
     @Mock
     private AppDataSource appDataSource;
+    @Mock
+    private EnviromentHelper enviroment;
 
     private VisualizaCartelasPresenter visualizaCartelasPresenter;
 
@@ -50,7 +55,8 @@ public class VisualizaCartelasPresenterTest {
 
         visualizaCartelasPresenter = new VisualizaCartelasPresenter(
                 appDataSource,
-                new ImmediateScheduleProvider()
+                new ImmediateScheduleProvider(),
+                enviroment
         );
 
         List<Letra> letras = Lists.newArrayList(
@@ -65,13 +71,20 @@ public class VisualizaCartelasPresenterTest {
         List<CartelaPedra> cartelaPedras2 = Lists.newArrayList(
                 new CartelaPedra(2, 1, 1, 1)
         );
+        List<Integer> cartelasIds = Lists.newArrayList(1, 2);
+        List<CartelaPedra> cartelasPedras = Lists.newArrayList(
+                cartelaPedras.get(0),
+                cartelaPedras2.get(0)
+        );
 
         when(appDataSource.getLetras()).thenReturn(Single.just(letras));
         when(appDataSource.getPedras()).thenReturn(Flowable.just(PEDRAS));
         when(appDataSource.getPedrasByCartelaId(1)).thenReturn(Single.just(cartelaPedras));
         when(appDataSource.getPedrasByCartelaId(2)).thenReturn(Single.just(cartelaPedras2));
         when(appDataSource.getPedrasByCartelaId(50)).thenReturn(Single.just(new ArrayList<>()));
+        when(appDataSource.getPedrasByCartelasIds(cartelasIds)).thenReturn(Single.just(cartelasPedras));
         when(appDataSource.getCartelaUltimoId()).thenReturn(Single.just(CARTELA_MAX_ID));
+        when(enviroment.getDowloadDirectory()).thenReturn(new File(""));
 
         visualizaCartelasPresenter.subscribe(visualizarCartelasView);
     }
@@ -134,5 +147,16 @@ public class VisualizaCartelasPresenterTest {
         visualizaCartelasPresenter.exportarCartelas(50, 1);
 
         verify(visualizarCartelasView).mostrarMensagensIdsIncompativeis();
+        verify(visualizarCartelasView, times(0)).mostrarMensagemInicioExportacao();
+        verify(visualizarCartelasView, times(0)).realizarDownload(Mockito.any(File.class));
+    }
+
+    @Test
+    public void exportarCartelas_realizarDownload() {
+        visualizaCartelasPresenter.exportarCartelas(1, 2);
+
+        verify(visualizarCartelasView).mostrarMensagemInicioExportacao();
+        verify(visualizarCartelasView).realizarDownload(Mockito.any(File.class));
+        verify(visualizarCartelasView, times(0)).mostrarMensagensIdsIncompativeis();
     }
 }
