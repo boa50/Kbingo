@@ -309,6 +309,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mIdInicial = Integer.parseInt(s.toString());
+                validarExprortarCartelas(etInicial, etFinal);
             }
 
             @Override
@@ -322,6 +323,7 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mIdFinal = Integer.parseInt(s.toString());
+                validarExprortarCartelas(etInicial, etFinal);
             }
 
             @Override
@@ -334,18 +336,32 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                 .setNegativeButton(R.string.dialog_negative, (dialogInterface, i) -> {})
                 .setPositiveButton(R.string.dialog_exportar_cartelas_positive, (dialogInterface, i) ->
                         mPresenter.exportarCartelas(
-                                Integer.parseInt(Objects.requireNonNull(etInicial.getText()).toString()),
-                                Integer.parseInt(Objects.requireNonNull(etFinal.getText()).toString())
-                        ));
+                            Integer.parseInt(Objects.requireNonNull(etInicial.getText()).toString()),
+                            Integer.parseInt(Objects.requireNonNull(etFinal.getText()).toString())
+                ));
+
 
         mDialogExportarCartelas = builder.create();
         mDialogExportarCartelas.setCanceledOnTouchOutside(false);
         mDialogExportarCartelas.show();
     }
 
-    @Override
-    public void mostrarMensagensIdsIncompativeis() {
-        ActivityUtils.showToastEstilizado(mContext, R.string.toast_ids_incompativeis, Toast.LENGTH_SHORT);
+    private void validarExprortarCartelas(TextInputEditText etInicial, TextInputEditText etFinal) {
+        String retornoValidacao = CartelaUtils.validarExportarCartelas(
+                Integer.parseInt(Objects.requireNonNull(etInicial.getText()).toString()),
+                Integer.parseInt(Objects.requireNonNull(etFinal.getText()).toString()));
+
+        if (retornoValidacao != null) {
+            etInicial.setError(retornoValidacao);
+            etFinal.setError(retornoValidacao);
+            ((AlertDialog) mDialogExportarCartelas)
+                    .getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        } else {
+            etInicial.setError(null);
+            etFinal.setError(null);
+            ((AlertDialog) mDialogExportarCartelas)
+                    .getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+        }
     }
 
     @Override

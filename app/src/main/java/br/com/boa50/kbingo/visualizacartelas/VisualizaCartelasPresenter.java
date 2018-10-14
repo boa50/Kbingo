@@ -117,9 +117,7 @@ public class VisualizaCartelasPresenter implements VisualizaCartelasContract.Pre
 
     @Override
     public void exportarCartelas(int idInicial, int idFinal) {
-        if (idInicial > idFinal) {
-            mView.mostrarMensagensIdsIncompativeis();
-        } else {
+        if (idInicial <= idFinal) {
             mView.mostrarMensagemInicioExportacao();
 
             List<Integer> cartelasIds = new ArrayList<>();
