@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.di.ActivityScoped;
-import br.com.boa50.kbingo.util.CartelaUtils;
+import br.com.boa50.kbingo.util.StringUtils;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -66,11 +66,11 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
                 .flatMap(cartelasFiltro -> Flowable.fromIterable(cartelasFiltro)
                         .filter(cartelaFiltroDTO -> {
                             if (apenasGanhadoras) {
-                               return  CartelaUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
+                               return  StringUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
                                        .contains(filtro) &&
                                        cartelaFiltroDTO.isGanhadora();
                             } else {
-                                return CartelaUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
+                                return StringUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
                                         .contains(filtro);
                             }
                         })

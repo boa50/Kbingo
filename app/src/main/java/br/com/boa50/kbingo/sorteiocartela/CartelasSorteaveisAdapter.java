@@ -13,7 +13,7 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.R;
-import br.com.boa50.kbingo.util.CartelaUtils;
+import br.com.boa50.kbingo.util.StringUtils;
 
 public class CartelasSorteaveisAdapter extends ListAdapter<Integer, CartelasSorteaveisAdapter.ViewHolder> {
     private Context mContext;
@@ -35,7 +35,7 @@ public class CartelasSorteaveisAdapter extends ListAdapter<Integer, CartelasSort
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (getItem(position) >= 0) {
-            holder.mTextView.setText(CartelaUtils.formatarNumeroCartela(getItem(position)));
+            holder.mTextView.setText(StringUtils.formatarNumeroCartela(getItem(position)));
         } else {
             holder.mTextView.setText(mContext.getText(R.string.todas_cartelas_sorteaveis));
         }
@@ -44,7 +44,7 @@ public class CartelasSorteaveisAdapter extends ListAdapter<Integer, CartelasSort
     private static final DiffUtil.ItemCallback<Integer> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Integer>() {
                 @Override
-                public boolean areItemsTheSame(Integer oldItem, Integer newItem) {
+                public boolean areItemsTheSame(Integer oldItem, @NonNull Integer newItem) {
                     return oldItem.equals(newItem);
                 }
 

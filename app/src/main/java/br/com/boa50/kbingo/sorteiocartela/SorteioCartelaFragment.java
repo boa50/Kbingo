@@ -32,7 +32,7 @@ import br.com.boa50.kbingo.BuildConfig;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
 import br.com.boa50.kbingo.di.ActivityScoped;
-import br.com.boa50.kbingo.util.CartelaUtils;
+import br.com.boa50.kbingo.util.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -174,7 +174,7 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
                 TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimension(R.dimen.sc_pedra_sorteada_texto)
         );
-        btSorteioCartela.setText(CartelaUtils.formatarNumeroCartela(numeroCartela));
+        btSorteioCartela.setText(StringUtils.formatarNumeroCartela(numeroCartela));
         mUltimaSorteada = numeroCartela;
     }
 
