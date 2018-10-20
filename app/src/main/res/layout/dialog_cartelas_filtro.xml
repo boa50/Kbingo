@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:focusableInTouchMode="true"
-    android:padding="@dimen/sc_container_filtro_layout_padding">
+    android:padding="@dimen/dialog_content_padding">
 
     <CheckBox
         android:id="@+id/cb_filtro_cartelas_ganhadoras"

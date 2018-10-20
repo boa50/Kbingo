@@ -1,5 +1,6 @@
 package br.com.boa50.kbingo.visualizacartelas;
 
+import java.io.File;
 import java.util.List;
 
 import br.com.boa50.kbingo.BasePresenter;
@@ -14,9 +15,14 @@ public interface VisualizaCartelasContract {
         void iniciarLayout(List<Letra> letras);
         void apresentarCartela(List<CartelaPedra> cartelaPedras, List<Pedra> pedras);
         void apresentarMaximoIdCartela(int id);
+        void abrirDialogExportarCartelas(int idInicial, int idFinal);
+        void mostrarMensagemInicioExportacao();
+        void realizarDownload(File file);
     }
 
     interface Presenter extends BasePresenter<View> {
         void carregarCartela(int id, boolean confereCartela);
+        void prepararDialogExportar(int idInicial, int idFinal);
+        void exportarCartelas(int idInicial, int idFinal);
     }
 }

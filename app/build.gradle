@@ -63,7 +63,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
     sourceSets {
         mock { java.srcDirs = ['src/mock/java', 'src/mock/java/'] }
         prod { java.srcDirs = ['src/prod/java', 'src/prod/java/'] }
@@ -90,6 +90,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroidVersion}"
     implementation "android.arch.persistence.room:runtime:${roomVersion}"
     implementation "android.arch.persistence.room:rxjava2:${roomVersion}"
+    implementation "com.itextpdf:itextpdf:${iTextVersion}"
     testImplementation "junit:junit:${junitVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.hamcrest:java-hamcrest:${hamcrestVersion}"

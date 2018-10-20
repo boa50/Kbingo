@@ -11,8 +11,11 @@ import io.reactivex.Single;
 
 @Dao
 public interface CartelaPedraDao {
-    @Query("SELECT * FROM CartelaPedra where cartela_id = :cartelaId")
+    @Query("SELECT * FROM CartelaPedra WHERE cartela_id = :cartelaId")
     Single<List<CartelaPedra>> loadCartelaPedras(int cartelaId);
+
+    @Query("SELECT * FROM CartelaPedra WHERE cartela_id IN(:cartelasIds)")
+    Single<List<CartelaPedra>> loadCartelaPedras(List<Integer> cartelasIds);
 
     @Query("SELECT MAX(cartela_id) FROM CartelaPedra")
     Single<Integer> loadCartelaMaxId();

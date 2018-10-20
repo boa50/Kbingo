@@ -1,13 +1,27 @@
 package br.com.boa50.kbingo.visualizacartelas;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -17,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -29,6 +44,7 @@ import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.util.ActivityUtils;
+import br.com.boa50.kbingo.util.CartelaUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -38,6 +54,10 @@ import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
 
 public class VisualizaCartelasFragment extends DaggerFragment implements VisualizaCartelasContract.View {
     private static final String ARGS_CARTELA_ULTIMA = "ultimaCartela";
+    private static final String ARGS_DIALOG_EXPORTAR_CARTELAS = "exportarCartelas";
+    private static final String ARGS_EXPORTAR_CARTELAS_ID_INICIAL = "exportarCartelasIdInicial";
+    private static final String ARGS_EXPORTAR_CARTELAS_ID_FINAL = "exportarCartelasIdFinal";
+    private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 5050;
 
     @Inject
     VisualizaCartelasContract.Presenter mPresenter;
@@ -54,6 +74,9 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     private Unbinder unbinder;
     private String mUltimaCartelaNumero;
     private boolean mConfereCartela;
+    private Dialog mDialogExportarCartelas;
+    private int mIdInicial;
+    private int mIdFinal;
 
     @Inject
     public VisualizaCartelasFragment() {}
@@ -66,6 +89,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.visualizacartelas_frag, container, false);
         unbinder = ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
+        mPresenter.subscribe(this);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -73,10 +98,17 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             mConfereCartela = bundle.getBoolean(Constant.EXTRA_CONFERE_CARTELA);
         }
 
-        if (savedInstanceState == null && mUltimaCartelaNumero == null) {
-            mUltimaCartelaNumero = "0001";
-        } else if (savedInstanceState != null) {
+        if (savedInstanceState == null) {
+            if (mUltimaCartelaNumero == null) mUltimaCartelaNumero = "0001";
+            mIdInicial = 0;
+            mIdFinal = 0;
+        } else {
             mUltimaCartelaNumero = savedInstanceState.getString(ARGS_CARTELA_ULTIMA);
+            mIdInicial = savedInstanceState.getInt(ARGS_EXPORTAR_CARTELAS_ID_INICIAL);
+            mIdFinal = savedInstanceState.getInt(ARGS_EXPORTAR_CARTELAS_ID_FINAL);
+            if (savedInstanceState.getBoolean(ARGS_DIALOG_EXPORTAR_CARTELAS)) {
+                mPresenter.prepararDialogExportar(mIdInicial, mIdFinal);
+            }
         }
 
         etNumeroCartela.setOnEditorActionListener((v, actionId, event) -> {
@@ -96,9 +128,57 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mPresenter.prepararDialogExportar(0,0);
+                } else {
+                    String texto = mContext.getResources()
+                            .getText(R.string.toast_permissao_escrita_nao_concedida).toString();
+                    ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
+                }
+                return;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem itemExportar = menu.findItem(R.id.item_exportar_cartelas);
+        if (itemExportar != null) itemExportar.setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_exportar_cartelas:
+                if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PERMISSION_WRITE_EXTERNAL_STORAGE);
+                } else {
+                    mPresenter.prepararDialogExportar(0,0);
+                }
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(ARGS_CARTELA_ULTIMA, etNumeroCartela.getText().toString());
+        outState.putBoolean(ARGS_DIALOG_EXPORTAR_CARTELAS,
+                mDialogExportarCartelas != null && mDialogExportarCartelas.isShowing());
+        outState.putInt(ARGS_EXPORTAR_CARTELAS_ID_INICIAL, mIdInicial);
+        outState.putInt(ARGS_EXPORTAR_CARTELAS_ID_FINAL, mIdFinal);
     }
 
     @Override
@@ -112,7 +192,6 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.subscribe(this);
     }
 
     @Override
@@ -204,5 +283,106 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                 mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_left_right),
                 mContext.getResources().getDimensionPixelSize(R.dimen.pedra_padding_top_bottom));
         textView.setGravity(Gravity.CENTER);
+    }
+
+    @Override
+    public void abrirDialogExportarCartelas(int idInicial, int idFinal) {
+        View view = Objects.requireNonNull(getActivity()).getLayoutInflater()
+                .inflate(R.layout.dialog_exportar_cartelas, null);
+        TextInputEditText etInicial = view.findViewById(R.id.et_dialog_exportar_cartelas_inicial);
+        TextInputEditText etFinal = view.findViewById(R.id.et_dialog_exportar_cartelas_final);
+
+        mIdInicial = idInicial;
+        mIdFinal = idFinal;
+        etInicial.setText(CartelaUtils.formatarNumeroCartela(idInicial));
+        etFinal.setText(CartelaUtils.formatarNumeroCartela(idFinal));
+
+        etInicial.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mIdInicial = Integer.parseInt(s.toString());
+                validarExprortarCartelas(etInicial, etFinal);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        etFinal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mIdFinal = Integer.parseInt(s.toString());
+                validarExprortarCartelas(etInicial, etFinal);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        builder.setTitle(R.string.dialog_exportar_cartelas_title)
+                .setView(view)
+                .setNegativeButton(R.string.dialog_negative, (dialogInterface, i) -> {})
+                .setPositiveButton(R.string.dialog_exportar_cartelas_positive, (dialogInterface, i) ->
+                        mPresenter.exportarCartelas(
+                            Integer.parseInt(Objects.requireNonNull(etInicial.getText()).toString()),
+                            Integer.parseInt(Objects.requireNonNull(etFinal.getText()).toString())
+                ));
+
+
+        mDialogExportarCartelas = builder.create();
+        mDialogExportarCartelas.setCanceledOnTouchOutside(false);
+        mDialogExportarCartelas.show();
+    }
+
+    private void validarExprortarCartelas(TextInputEditText etInicial, TextInputEditText etFinal) {
+        String retornoValidacao = null;
+
+        if (!CartelaUtils.validarExportarCartelas(
+                Integer.parseInt(Objects.requireNonNull(etInicial.getText()).toString()),
+                Integer.parseInt(Objects.requireNonNull(etFinal.getText()).toString()))) {
+            retornoValidacao = getString(R.string.validar_cartelas_erro);
+        }
+
+        if (retornoValidacao != null) {
+            etInicial.setError(retornoValidacao);
+            etFinal.setError(retornoValidacao);
+            ((AlertDialog) mDialogExportarCartelas)
+                    .getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        } else {
+            etInicial.setError(null);
+            etFinal.setError(null);
+            ((AlertDialog) mDialogExportarCartelas)
+                    .getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+        }
+    }
+
+    @Override
+    public void mostrarMensagemInicioExportacao() {
+        ActivityUtils.showToastEstilizado(mContext, R.string.toast_inicio_exportar_cartelas, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void realizarDownload(File file) {
+        if (file.exists()) {
+            Uri path = Uri.fromFile(file);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(path, "application/pdf");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            try {
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                Log.i("FALTA_APLICATIVO", "Não há aplicativo para apresentar pdf");
+            }
+        }
+
+        ActivityUtils.showToastEstilizado(mContext, R.string.toast_fim_exportar_cartelas, Toast.LENGTH_SHORT);
     }
 }
