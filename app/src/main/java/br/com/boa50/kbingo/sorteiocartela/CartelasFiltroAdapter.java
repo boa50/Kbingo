@@ -13,7 +13,7 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
-import br.com.boa50.kbingo.util.CartelaUtils;
+import br.com.boa50.kbingo.util.StringUtils;
 
 public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, CartelasFiltroAdapter.ViewHolder> {
     private SorteioCartelaContract.Presenter mPresenter;
@@ -34,14 +34,14 @@ public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, Cartela
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mCheckBox.setText(CartelaUtils.formatarNumeroCartela(getItem(position).getCartelaId()));
+        holder.mCheckBox.setText(StringUtils.formatarNumeroCartela(getItem(position).getCartelaId()));
         holder.mCheckBox.setChecked(getItem(position).isSelecionada());
     }
 
     private static final DiffUtil.ItemCallback<CartelaFiltroDTO> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<CartelaFiltroDTO>() {
                 @Override
-                public boolean areItemsTheSame(CartelaFiltroDTO oldItem, CartelaFiltroDTO newItem) {
+                public boolean areItemsTheSame(CartelaFiltroDTO oldItem, @NonNull CartelaFiltroDTO newItem) {
                     return oldItem.equals(newItem);
                 }
 

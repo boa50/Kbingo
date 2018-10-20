@@ -45,6 +45,7 @@ import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.util.CartelaUtils;
+import br.com.boa50.kbingo.util.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -294,8 +295,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
         mIdInicial = idInicial;
         mIdFinal = idFinal;
-        etInicial.setText(CartelaUtils.formatarNumeroCartela(idInicial));
-        etFinal.setText(CartelaUtils.formatarNumeroCartela(idFinal));
+        etInicial.setText(StringUtils.formatarNumeroCartela(idInicial));
+        etFinal.setText(StringUtils.formatarNumeroCartela(idFinal));
 
         etInicial.addTextChangedListener(new TextWatcher() {
             @Override

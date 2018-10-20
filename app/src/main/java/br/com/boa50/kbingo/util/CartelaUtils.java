@@ -19,9 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
-import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 
@@ -43,13 +41,6 @@ public final class CartelaUtils {
             if (cartelaPedra.getPedraId() == pedra.getId()) return true;
         }
         return false;
-    }
-
-    public static String formatarNumeroCartela(int cartelaId) {
-        return String.format(
-                Locale.ENGLISH,
-                Constant.FORMAT_CARTELA,
-                cartelaId);
     }
 
     public static boolean validarExportarCartelas(int idInicial, int idFinal) {
@@ -247,7 +238,7 @@ public final class CartelaUtils {
 
         paint.setColor(Color.BLACK);
         paint.setTextSize(textCartelaSize);
-        String textoCartela = "Cartela: " + CartelaUtils.formatarNumeroCartela(
+        String textoCartela = "Cartela: " + StringUtils.formatarNumeroCartela(
                 cartelaPedras.get(0).getCartelaId());
         Rect r = new Rect();
         paint.getTextBounds(textoCartela, 0, textoCartela.length(), r);

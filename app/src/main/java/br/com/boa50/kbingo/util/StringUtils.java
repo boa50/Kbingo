@@ -5,10 +5,17 @@ import java.util.Locale;
 import br.com.boa50.kbingo.Constant;
 
 public class StringUtils {
-    public static String formatarNumeroPedra(int pedraNumero) {
+    static String formatarNumeroPedra(int pedraNumero) {
         return String.format(
                 Locale.ENGLISH,
                 Constant.FORMAT_PEDRA,
                 pedraNumero);
+    }
+
+    public static String formatarNumeroCartela(int cartelaId) {
+        return String.format(
+                Locale.ENGLISH,
+                Constant.FORMAT_CARTELA,
+                cartelaId);
     }
 }

@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.dto.CartelaDTO;
 import br.com.boa50.kbingo.di.ActivityScoped;
-import br.com.boa50.kbingo.util.CartelaUtils;
+import br.com.boa50.kbingo.util.StringUtils;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -51,7 +51,7 @@ public class ConfereCartelasPresenter implements ConfereCartelasContract.Present
                 .getCartelasGanhadoras()
                 .flatMap(cartelas -> Flowable.fromIterable(cartelas)
                 .filter(cartela ->
-                        CartelaUtils.formatarNumeroCartela(cartela.getCartelaId()).contains(filtro)))
+                        StringUtils.formatarNumeroCartela(cartela.getCartelaId()).contains(filtro)))
                 .toList()
                 .subscribeOn(mScheduleProvider.io())
                 .observeOn(mScheduleProvider.ui())
@@ -73,7 +73,7 @@ public class ConfereCartelasPresenter implements ConfereCartelasContract.Present
     private ArrayList<String> obterIdsCartelas(List<CartelaDTO> cartelas) {
         ArrayList<String> idsCartelas = new ArrayList<>();
         for (CartelaDTO cartela : cartelas) {
-            idsCartelas.add(CartelaUtils.formatarNumeroCartela(cartela.getCartelaId()));
+            idsCartelas.add(StringUtils.formatarNumeroCartela(cartela.getCartelaId()));
         }
         return idsCartelas;
     }

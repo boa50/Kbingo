@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.boa50.kbingo.data.AppDatabase;
-import br.com.boa50.kbingo.util.CartelaUtils;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -31,6 +30,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.boa50.kbingo.CustomGets.getTextViewText;
 import static br.com.boa50.kbingo.CustomMatchers.indexChildOf;
 import static br.com.boa50.kbingo.CustomMatchers.isFocused;
+import static br.com.boa50.kbingo.util.StringUtils.formatarNumeroCartela;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
@@ -111,8 +111,8 @@ public class VisualizaCartelasEspressoTest {
                 .perform(click());
 
         onView(withText(R.string.dialog_exportar_cartelas_content_text)).check(matches(isDisplayed()));
-        onView(withText(CartelaUtils.formatarNumeroCartela(1))).check(matches(isDisplayed()));
-        onView(withText(CartelaUtils.formatarNumeroCartela(200))).check(matches(isDisplayed()));
+        onView(withText(formatarNumeroCartela(1))).check(matches(isDisplayed()));
+        onView(withText(formatarNumeroCartela(200))).check(matches(isDisplayed()));
     }
 
     @Test
@@ -121,8 +121,8 @@ public class VisualizaCartelasEspressoTest {
         onView(withText(R.string.item_exportar_cartelas))
                 .perform(click());
 
-        String idInicial = CartelaUtils.formatarNumeroCartela(7);
-        String idFinal = CartelaUtils.formatarNumeroCartela(50);
+        String idInicial = formatarNumeroCartela(7);
+        String idFinal = formatarNumeroCartela(50);
         onView(withId(R.id.et_dialog_exportar_cartelas_inicial))
                 .perform(replaceText(idInicial));
         onView(withId(R.id.et_dialog_exportar_cartelas_final))
@@ -142,8 +142,8 @@ public class VisualizaCartelasEspressoTest {
 
         Context context = InstrumentationRegistry.getTargetContext();
         String erroCartelaValidacao = context.getResources().getString(R.string.validar_cartelas_erro);
-        String idInicial = CartelaUtils.formatarNumeroCartela(7);
-        String idFinal = CartelaUtils.formatarNumeroCartela(50);
+        String idInicial = formatarNumeroCartela(7);
+        String idFinal = formatarNumeroCartela(50);
         ViewInteraction viCartelaInicial = onView(withId(R.id.et_dialog_exportar_cartelas_inicial));
         ViewInteraction viCartelaFinal = onView(withId(R.id.et_dialog_exportar_cartelas_final));
         ViewInteraction viBotaoExportar =
