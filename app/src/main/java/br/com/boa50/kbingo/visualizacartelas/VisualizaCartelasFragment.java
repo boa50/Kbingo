@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayout;
@@ -79,8 +78,6 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     private int mIdInicial;
     private int mIdFinal;
 
-    private boolean mPermissaoEscirta;
-
     @Inject
     public VisualizaCartelasFragment() {}
 
@@ -135,8 +132,14 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_WRITE_EXTERNAL_STORAGE:
-                mPermissaoEscirta = grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mPresenter.prepararDialogExportar(0,0);
+                } else {
+                    String texto = mContext.getResources()
+                            .getText(R.string.toast_permissao_escrita_nao_concedida).toString();
+                    ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
+                }
                 return;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -145,7 +148,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.item_exportar_cartelas).setVisible(true);
+        MenuItem itemExportar = menu.findItem(R.id.item_exportar_cartelas);
+        if (itemExportar != null) itemExportar.setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -155,19 +159,10 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             case R.id.item_exportar_cartelas:
                 if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
                         Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             PERMISSION_WRITE_EXTERNAL_STORAGE);
                 } else {
-                    mPermissaoEscirta = true;
-                }
-
-                if (mPermissaoEscirta) {
                     mPresenter.prepararDialogExportar(0,0);
-                } else {
-                    String texto = mContext.getResources()
-                            .getText(R.string.toast_permissao_escrita_nao_concedida).toString();
-                    ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
                 }
 
                 return true;
@@ -347,9 +342,13 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
     }
 
     private void validarExprortarCartelas(TextInputEditText etInicial, TextInputEditText etFinal) {
-        String retornoValidacao = CartelaUtils.validarExportarCartelas(
+        String retornoValidacao = null;
+
+        if (!CartelaUtils.validarExportarCartelas(
                 Integer.parseInt(Objects.requireNonNull(etInicial.getText()).toString()),
-                Integer.parseInt(Objects.requireNonNull(etFinal.getText()).toString()));
+                Integer.parseInt(Objects.requireNonNull(etFinal.getText()).toString()))) {
+            retornoValidacao = getString(R.string.validar_cartelas_erro);
+        }
 
         if (retornoValidacao != null) {
             etInicial.setError(retornoValidacao);

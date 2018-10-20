@@ -52,12 +52,8 @@ public final class CartelaUtils {
                 cartelaId);
     }
 
-    public static String validarExportarCartelas(int idInicial, int idFinal) {
-        if (idInicial > idFinal) {
-            return "O número da Cartela Inicial não pode ser superior ao da Cartela Final";
-        }
-
-        return null;
+    public static boolean validarExportarCartelas(int idInicial, int idFinal) {
+        return idInicial <= idFinal;
     }
 
     public static File gerarCartelas(List<String> letras, List<CartelaPedra> cartelasPedras, File directory) {

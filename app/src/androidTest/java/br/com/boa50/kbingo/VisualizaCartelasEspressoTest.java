@@ -1,9 +1,12 @@
 package br.com.boa50.kbingo;
 
+import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.Button;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -20,12 +23,16 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.boa50.kbingo.CustomGets.getTextViewText;
 import static br.com.boa50.kbingo.CustomMatchers.indexChildOf;
 import static br.com.boa50.kbingo.CustomMatchers.isFocused;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
@@ -125,5 +132,38 @@ public class VisualizaCartelasEspressoTest {
         onView(withText(R.string.dialog_exportar_cartelas_content_text)).check(matches(isDisplayed()));
         onView(withText(idInicial)).check(matches(isDisplayed()));
         onView(withText(idFinal)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void abrirDialogEsportarCartelas_colocarCartelasInvalidas_validarCorretamente() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.item_exportar_cartelas))
+                .perform(click());
+
+        Context context = InstrumentationRegistry.getTargetContext();
+        String erroCartelaValidacao = context.getResources().getString(R.string.validar_cartelas_erro);
+        String idInicial = CartelaUtils.formatarNumeroCartela(7);
+        String idFinal = CartelaUtils.formatarNumeroCartela(50);
+        ViewInteraction viCartelaInicial = onView(withId(R.id.et_dialog_exportar_cartelas_inicial));
+        ViewInteraction viCartelaFinal = onView(withId(R.id.et_dialog_exportar_cartelas_final));
+        ViewInteraction viBotaoExportar =
+                onView(allOf(withText(R.string.dialog_exportar_cartelas_positive),
+                        instanceOf(Button.class)));
+
+
+        viCartelaInicial.perform(replaceText(idFinal));
+        viCartelaFinal.perform(replaceText(idInicial));
+
+        viCartelaInicial.check(matches(hasErrorText(erroCartelaValidacao)));
+        viCartelaFinal.check(matches(hasErrorText(erroCartelaValidacao)));
+        viBotaoExportar.check(matches(not(isEnabled())));
+
+
+        viCartelaInicial.perform(replaceText(idInicial));
+        viCartelaFinal.perform(replaceText(idFinal));
+
+        viCartelaInicial.check(matches(not(hasErrorText(erroCartelaValidacao))));
+        viCartelaFinal.check(matches(not(hasErrorText(erroCartelaValidacao))));
+        viBotaoExportar.check(matches(isEnabled()));
     }
 }

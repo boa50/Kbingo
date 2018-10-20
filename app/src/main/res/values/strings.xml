@@ -54,4 +54,5 @@
     <string name="toast_permissao_escrita_nao_concedida">Não é possível exportar as cartelas sem a permissão de escrita</string>
     <string name="toast_inicio_exportar_cartelas">Cartelas sendo exportadas\nIsso pode levar algum tempo</string>
     <string name="toast_fim_exportar_cartelas">Cartelas exportadas com sucesso para a pasta de Downloads</string>
+    <string name="validar_cartelas_erro">O número da Cartela Inicial não pode ser superior ao da Cartela Final</string>
 </resources>
