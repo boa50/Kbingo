@@ -30,8 +30,8 @@
     <string name="et_sorteio_cartela_numero_hint">Número da cartela</string>
     <string name="titulo_cartelas_sorteaveis">Cartelas Sorteáveis:</string>
     <string name="todas_cartelas_sorteaveis">Todas as cartelas</string>
-    <string name="item_filtrar_cartelas_sorteaveis">Filtrar cartelas sorteáveis</string>
-    <string name="item_limpar_filtro_cartelas">Limpar filtro de cartelas</string>
+    <string name="item_filtrar_cartelas_sorteaveis">Filtrar Cartelas Sorteáveis</string>
+    <string name="item_limpar_filtro_cartelas">Limpar Filtro de Cartelas</string>
     <string name="dialog_filtrar_cartelas_title">Filtrar cartelas sorteáveis</string>
     <string name="dialog_limpar_filtro_cartelas_title">Limpar filtro de cartelas sorteáveis?</string>
     <string name="dialog_limpar_filtro_cartelas_positive">Limpar Filtro</string>
@@ -44,4 +44,15 @@
     <!--Visualizar cartela-->
     <string name="et_numero_cartela_hint">Número da Cartela</string>
     <string name="toast_cartela_maxima">O maior número de cartela cadastrado é</string>
+    <string name="item_exportar_cartelas">Exportar Cartelas</string>
+    <string name="dialog_exportar_cartelas_title">Exportar Cartelas</string>
+    <string name="dialog_exportar_cartelas_positive">Exportar Cartelas</string>
+    <string name="dialog_exportar_cartelas_content_text">Informe os números das cartelas inicial e final para exportação</string>
+    <string name="dialog_exportar_cartelas_separator_text">-</string>
+    <string name="dialog_exportar_cartelas_et_inicial_hint">Cartela Inicial</string>
+    <string name="dialog_exportar_cartelas_et_final_hint">Cartela Final</string>
+    <string name="toast_permissao_escrita_nao_concedida">Não é possível exportar as cartelas sem a permissão de escrita</string>
+    <string name="toast_inicio_exportar_cartelas">Cartelas sendo exportadas\nIsso pode levar algum tempo</string>
+    <string name="toast_fim_exportar_cartelas">Cartelas exportadas com sucesso para a pasta de Downloads</string>
+    <string name="validar_cartelas_erro">O número da Cartela Inicial não pode ser superior ao da Cartela Final</string>
 </resources>

@@ -26,4 +26,10 @@
         android:title="@string/item_limpar_filtro_cartelas"
         android:orderInCategory="2"
         android:visible="false"/>
+
+    <!--Visualiza Cartelas-->
+    <item android:id="@+id/item_exportar_cartelas"
+        android:title="@string/item_exportar_cartelas"
+        android:orderInCategory="1"
+        android:visible="false" />
 </menu>
