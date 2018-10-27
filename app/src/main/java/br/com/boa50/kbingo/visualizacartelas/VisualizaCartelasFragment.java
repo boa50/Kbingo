@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -43,7 +44,6 @@ import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
-import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.util.CartelaUtils;
 import br.com.boa50.kbingo.util.StringUtils;
 import butterknife.BindView;
@@ -138,8 +138,10 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                     mPresenter.prepararDialogExportar(0,0);
                 } else {
                     String texto = mContext.getResources()
-                            .getText(R.string.toast_permissao_escrita_nao_concedida).toString();
-                    ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
+                            .getText(R.string.snack_permissao_escrita_nao_concedida).toString();
+                    Snackbar.make(Objects.requireNonNull(this.getView()), texto,
+                            Snackbar.LENGTH_LONG)
+                        .show();
                 }
                 return;
             default:
@@ -255,8 +257,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     @Override
     public void apresentarMaximoIdCartela(int id) {
-        String texto = mContext.getResources().getText(R.string.toast_cartela_maxima).toString() + " " + id;
-        ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
+        String texto = mContext.getResources().getText(R.string.snack_cartela_maxima).toString() + " " + id;
+        Snackbar.make(Objects.requireNonNull(this.getView()), texto, Snackbar.LENGTH_LONG).show();
     }
 
     private void estilizarCelulaCartela(TextView textView, boolean header, boolean sorteada) {
@@ -366,7 +368,9 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     @Override
     public void mostrarMensagemInicioExportacao() {
-        ActivityUtils.showToastEstilizado(mContext, R.string.toast_inicio_exportar_cartelas, Toast.LENGTH_SHORT);
+        Snackbar.make(Objects.requireNonNull(this.getView()),
+                    R.string.snack_inicio_exportar_cartelas, Snackbar.LENGTH_SHORT)
+                .show();
     }
 
     @Override
@@ -384,6 +388,6 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             }
         }
 
-        ActivityUtils.showToastEstilizado(mContext, R.string.toast_fim_exportar_cartelas, Toast.LENGTH_SHORT);
+        Toast.makeText(mContext, R.string.toast_fim_exportar_cartelas, Toast.LENGTH_SHORT).show();
     }
 }

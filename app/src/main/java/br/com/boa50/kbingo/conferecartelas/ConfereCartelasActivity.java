@@ -2,11 +2,11 @@ package br.com.boa50.kbingo.conferecartelas;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -81,8 +81,9 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
             bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
             bundle.putBoolean(Constant.EXTRA_CONFERE_CARTELA, true);
             setTitle(R.string.conferir_cartelas_title);
-            ActivityUtils.showToastEstilizado(getApplicationContext(),
-                    R.string.toast_sem_cartela_ganhadora, Toast.LENGTH_SHORT);
+            Snackbar.make(findViewById(R.id.conteudoFrame), R.string.snack_sem_cartela_ganhadora,
+                        Snackbar.LENGTH_LONG)
+                    .show();
             fragment.setArguments(bundle);
         }
 
