@@ -1,23 +1,35 @@
+/*
+    Kbingo é um programa utilizado para gerenciar partidas de bingo.
+    Copyright (C) 2018  Bruno Oliveira de Albuquerque
+
+    ActivityUtils.java is part of Kbingo
+
+    Kbingo is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Kbingo is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package br.com.boa50.kbingo.util;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Objects;
-
-import br.com.boa50.kbingo.R;
 
 public final class ActivityUtils {
     public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
@@ -56,27 +68,6 @@ public final class ActivityUtils {
             view = new View(activity);
         }
         hideSoftKeyboard(imm, view);
-    }
-
-    public static void showToastEstilizado(Context context, String texto, int length) {
-        Toast toast = Toast.makeText(context, texto, length);
-        estilizarToast(toast, context);
-        toast.show();
-    }
-
-    public static void showToastEstilizado(Context context, @StringRes int texto, int length) {
-        Toast toast = Toast.makeText(context, texto, length);
-        estilizarToast(toast, context);
-        toast.show();
-    }
-
-    private static void estilizarToast(Toast toast, Context context) {
-        ViewGroup group = (ViewGroup) toast.getView();
-        TextView messageTextView = (TextView) group.getChildAt(0);
-        messageTextView.setTextSize(
-                TypedValue.COMPLEX_UNIT_PX,
-                context.getResources().getDimension(R.dimen.toast_text_size)
-        );
     }
 
     public static void hideSoftKeyboardFrom(Context context, View view) {

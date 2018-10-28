@@ -1,3 +1,22 @@
+/*
+    Kbingo é um programa utilizado para gerenciar partidas de bingo.
+    Copyright (C) 2018  Bruno Oliveira de Albuquerque
+
+    CartelasFiltroAdapter.java is part of Kbingo
+
+    Kbingo is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Kbingo is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package br.com.boa50.kbingo.sorteiocartela;
 
 import android.support.annotation.NonNull;
@@ -13,7 +32,7 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
-import br.com.boa50.kbingo.util.CartelaUtils;
+import br.com.boa50.kbingo.util.StringUtils;
 
 public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, CartelasFiltroAdapter.ViewHolder> {
     private SorteioCartelaContract.Presenter mPresenter;
@@ -34,14 +53,14 @@ public class CartelasFiltroAdapter extends ListAdapter<CartelaFiltroDTO, Cartela
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mCheckBox.setText(CartelaUtils.formatarNumeroCartela(getItem(position).getCartelaId()));
+        holder.mCheckBox.setText(StringUtils.formatarNumeroCartela(getItem(position).getCartelaId()));
         holder.mCheckBox.setChecked(getItem(position).isSelecionada());
     }
 
     private static final DiffUtil.ItemCallback<CartelaFiltroDTO> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<CartelaFiltroDTO>() {
                 @Override
-                public boolean areItemsTheSame(CartelaFiltroDTO oldItem, CartelaFiltroDTO newItem) {
+                public boolean areItemsTheSame(CartelaFiltroDTO oldItem, @NonNull CartelaFiltroDTO newItem) {
                     return oldItem.equals(newItem);
                 }
 
