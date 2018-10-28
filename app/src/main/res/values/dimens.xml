@@ -65,7 +65,6 @@
     <dimen name="pedra_text">50sp</dimen>
     <dimen name="pedra_padding_left_right">20dp</dimen>
     <dimen name="pedra_padding_top_bottom">10dp</dimen>
-    <dimen name="toast_text_size">25dp</dimen>
     <dimen name="cartela_border">2dp</dimen>
     <dimen name="dot_padding">24dp</dimen>
     <dimen name="dialog_exportar_cartelas_content_margin">16dp</dimen>

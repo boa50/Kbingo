@@ -1,12 +1,31 @@
+/*
+    Kbingo é um programa utilizado para gerenciar partidas de bingo.
+    Copyright (C) 2018  Bruno Oliveira de Albuquerque
+
+    ConfereCartelasActivity.java is part of Kbingo
+
+    Kbingo is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Kbingo is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package br.com.boa50.kbingo.conferecartelas;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -81,8 +100,9 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
             bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
             bundle.putBoolean(Constant.EXTRA_CONFERE_CARTELA, true);
             setTitle(R.string.conferir_cartelas_title);
-            ActivityUtils.showToastEstilizado(getApplicationContext(),
-                    R.string.toast_sem_cartela_ganhadora, Toast.LENGTH_SHORT);
+            Snackbar.make(findViewById(R.id.conteudoFrame), R.string.snack_sem_cartela_ganhadora,
+                        Snackbar.LENGTH_LONG)
+                    .show();
             fragment.setArguments(bundle);
         }
 

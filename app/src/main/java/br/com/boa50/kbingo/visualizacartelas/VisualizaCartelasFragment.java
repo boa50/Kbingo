@@ -1,3 +1,22 @@
+/*
+    Kbingo é um programa utilizado para gerenciar partidas de bingo.
+    Copyright (C) 2018  Bruno Oliveira de Albuquerque
+
+    VizualizaCartelasFragment.java is part of Kbingo
+
+    Kbingo is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Kbingo is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package br.com.boa50.kbingo.visualizacartelas;
 
 import android.Manifest;
@@ -10,6 +29,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -43,8 +63,8 @@ import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
-import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.util.CartelaUtils;
+import br.com.boa50.kbingo.util.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -137,8 +157,10 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
                     mPresenter.prepararDialogExportar(0,0);
                 } else {
                     String texto = mContext.getResources()
-                            .getText(R.string.toast_permissao_escrita_nao_concedida).toString();
-                    ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
+                            .getText(R.string.snack_permissao_escrita_nao_concedida).toString();
+                    Snackbar.make(Objects.requireNonNull(this.getView()), texto,
+                            Snackbar.LENGTH_LONG)
+                        .show();
                 }
                 return;
             default:
@@ -254,8 +276,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     @Override
     public void apresentarMaximoIdCartela(int id) {
-        String texto = mContext.getResources().getText(R.string.toast_cartela_maxima).toString() + " " + id;
-        ActivityUtils.showToastEstilizado(mContext, texto, Toast.LENGTH_SHORT);
+        String texto = mContext.getResources().getText(R.string.snack_cartela_maxima).toString() + " " + id;
+        Snackbar.make(Objects.requireNonNull(this.getView()), texto, Snackbar.LENGTH_LONG).show();
     }
 
     private void estilizarCelulaCartela(TextView textView, boolean header, boolean sorteada) {
@@ -294,8 +316,8 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
         mIdInicial = idInicial;
         mIdFinal = idFinal;
-        etInicial.setText(CartelaUtils.formatarNumeroCartela(idInicial));
-        etFinal.setText(CartelaUtils.formatarNumeroCartela(idFinal));
+        etInicial.setText(StringUtils.formatarNumeroCartela(idInicial));
+        etFinal.setText(StringUtils.formatarNumeroCartela(idFinal));
 
         etInicial.addTextChangedListener(new TextWatcher() {
             @Override
@@ -365,7 +387,9 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
 
     @Override
     public void mostrarMensagemInicioExportacao() {
-        ActivityUtils.showToastEstilizado(mContext, R.string.toast_inicio_exportar_cartelas, Toast.LENGTH_SHORT);
+        Snackbar.make(Objects.requireNonNull(this.getView()),
+                    R.string.snack_inicio_exportar_cartelas, Snackbar.LENGTH_SHORT)
+                .show();
     }
 
     @Override
@@ -383,6 +407,6 @@ public class VisualizaCartelasFragment extends DaggerFragment implements Visuali
             }
         }
 
-        ActivityUtils.showToastEstilizado(mContext, R.string.toast_fim_exportar_cartelas, Toast.LENGTH_SHORT);
+        Toast.makeText(mContext, R.string.toast_fim_exportar_cartelas, Toast.LENGTH_SHORT).show();
     }
 }

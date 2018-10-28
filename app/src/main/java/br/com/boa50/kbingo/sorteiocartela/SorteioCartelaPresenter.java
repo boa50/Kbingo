@@ -1,3 +1,22 @@
+/*
+    Kbingo é um programa utilizado para gerenciar partidas de bingo.
+    Copyright (C) 2018  Bruno Oliveira de Albuquerque
+
+    SorteioCartelaPresenter.java is part of Kbingo
+
+    Kbingo is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Kbingo is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package br.com.boa50.kbingo.sorteiocartela;
 
 import android.support.annotation.NonNull;
@@ -10,7 +29,7 @@ import javax.inject.Inject;
 
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.di.ActivityScoped;
-import br.com.boa50.kbingo.util.CartelaUtils;
+import br.com.boa50.kbingo.util.StringUtils;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -66,11 +85,11 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
                 .flatMap(cartelasFiltro -> Flowable.fromIterable(cartelasFiltro)
                         .filter(cartelaFiltroDTO -> {
                             if (apenasGanhadoras) {
-                               return  CartelaUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
+                               return  StringUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
                                        .contains(filtro) &&
                                        cartelaFiltroDTO.isGanhadora();
                             } else {
-                                return CartelaUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
+                                return StringUtils.formatarNumeroCartela(cartelaFiltroDTO.getCartelaId())
                                         .contains(filtro);
                             }
                         })
