@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
 import br.com.boa50.kbingo.data.FakeAppRepository;
-import br.com.boa50.kbingo.util.CartelaUtils;
+import br.com.boa50.kbingo.util.StringUtils;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -49,7 +49,7 @@ public class ConfereCartelasEspressoTest {
 
         cartelasGanhadorasMock = new ArrayList<>();
         for (int i : repository.getIdsCartelasGanhadoras()) {
-            cartelasGanhadorasMock.add(CartelaUtils.formatarNumeroCartela(i));
+            cartelasGanhadorasMock.add(StringUtils.formatarNumeroCartela(i));
         }
     }
 
