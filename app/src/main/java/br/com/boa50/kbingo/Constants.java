@@ -2,7 +2,7 @@
     Kbingo é um programa utilizado para gerenciar partidas de bingo.
     Copyright (C) 2018  Bruno Oliveira de Albuquerque
 
-    Constant.java is part of Kbingo
+    Constants.java is part of Kbingo
 
     Kbingo is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,15 +19,24 @@
 */
 package br.com.boa50.kbingo;
 
-public class Constant {
-    public static final int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
-    public static final int QTDE_PEDRAS_LINHA_LANDSCAPE = 5;
-    public static final int QTDE_PEDRAS_LETRA = 15;
+public interface Constants {
+    int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
+    int QTDE_PEDRAS_LINHA_LANDSCAPE = 5;
+    int QTDE_PEDRAS_LETRA = 15;
 
-    public static final String FORMAT_CARTELA = "%04d";
-    public static final String FORMAT_PEDRA = "%02d";
+    String FORMAT_CARTELA = "%04d";
+    String FORMAT_PEDRA = "%02d";
 
-    public static final String EXTRA_ULTIMA_CARTELA = "extraUltimaCartela";
-    public static final String EXTRA_CARTELAS_GANHADORAS = "extraCartelasGanhadoras";
-    public static final String EXTRA_CONFERE_CARTELA = "extraConfereCartela";
+    int MESSAGE_READ = 0;
+    int MESSAGE_WRITE = 1;
+    int MESSAGE_TOAST = 2;
+
+    int STATE_NONE = 0;
+    int STATE_LISTEN = 1;
+    int STATE_CONNECTED = 2;
+
+    String EXTRA_ULTIMA_CARTELA = "extraUltimaCartela";
+    String EXTRA_CARTELAS_GANHADORAS = "extraCartelasGanhadoras";
+    String EXTRA_CONFERE_CARTELA = "extraConfereCartela";
+    String EXTRA_TOAST = "extraToast";
 }
