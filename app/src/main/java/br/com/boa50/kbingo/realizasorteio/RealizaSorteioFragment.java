@@ -49,7 +49,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.BuildConfig;
-import br.com.boa50.kbingo.Constant;
+import br.com.boa50.kbingo.Constants;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
@@ -62,7 +62,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
-import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
+import static br.com.boa50.kbingo.Constants.QTDE_PEDRAS_LETRA;
 
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {
@@ -136,7 +136,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
                 return true;
             case R.id.item_confere_cartelas:
                 Intent intent = new Intent(getActivity(), ConfereCartelasActivity.class);
-                intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS,
+                intent.putExtra(Constants.EXTRA_CARTELAS_GANHADORAS,
                         mTextoCartelasBadge.getVisibility() == View.VISIBLE);
                 startActivity(intent);
                 return true;
@@ -239,9 +239,9 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
         super.onResume();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mGridColunas = Constant.QTDE_PEDRAS_LINHA_PORTRAIT;
+            mGridColunas = Constants.QTDE_PEDRAS_LINHA_PORTRAIT;
         } else {
-            mGridColunas = Constant.QTDE_PEDRAS_LINHA_LANDSCAPE;
+            mGridColunas = Constants.QTDE_PEDRAS_LINHA_LANDSCAPE;
         }
 
         mPresenter.subscribe(this);
@@ -349,7 +349,7 @@ public class RealizaSorteioFragment extends DaggerFragment implements RealizaSor
             if (qtdCartelasGanhadoras <= 9) {
                 mTextoCartelasBadge.setText(String.format(
                         Locale.ENGLISH,
-                        Constant.FORMAT_PEDRA,
+                        Constants.FORMAT_PEDRA,
                         qtdCartelasGanhadoras));
             } else {
                 mTextoCartelasBadge.setText(R.string.item_confere_cartelas_badge_texto_plus);

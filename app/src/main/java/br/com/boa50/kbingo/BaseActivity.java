@@ -19,6 +19,9 @@
 */
 package br.com.boa50.kbingo;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -28,13 +31,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.Objects;
 
 import javax.inject.Inject;
 
+import br.com.boa50.kbingo.bluetooth.BluetoothManager;
 import br.com.boa50.kbingo.realizasorteio.RealizaSorteioFragment;
 import br.com.boa50.kbingo.sorteiocartela.SorteioCartelaFragment;
 import br.com.boa50.kbingo.util.ActivityUtils;
@@ -45,6 +51,8 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerAppCompatActivity;
 
 public class BaseActivity extends DaggerAppCompatActivity {
+    private static final String TAG = "BaseActivity";
+    private static final int REQUEST_ENABLE_BT = 0;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -61,12 +69,14 @@ public class BaseActivity extends DaggerAppCompatActivity {
     VisualizaCartelasFragment mVisualizaCartelasFragment;
 
     private Unbinder unbinder;
+    private BluetoothManager bluetoothManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.default_act);
         unbinder = ButterKnife.bind(this);
+        setupBluetoothManager();
 
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -87,9 +97,9 @@ public class BaseActivity extends DaggerAppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
+    protected void onResume() {
+        super.onResume();
+        bluetoothManager.restartServiceIfStopped();
     }
 
     @Override
@@ -123,17 +133,6 @@ public class BaseActivity extends DaggerAppCompatActivity {
         }
     }
 
-    private void abrirDialogSairApp() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(this));
-        builder.setTitle(R.string.dialog_sair_app_title)
-                .setPositiveButton(R.string.dialog_sair_app_positive,
-                        (dialog, which) -> this.finishAffinity())
-                .setNegativeButton(R.string.dialog_negative,
-                        (dialog, which) -> {})
-                .create()
-                .show();
-    }
-
     private void modificarFragment(int menuItemId) {
         Fragment fragment;
 
@@ -159,5 +158,57 @@ public class BaseActivity extends DaggerAppCompatActivity {
                 fragment,
                 R.id.conteudoFrame
         );
+    }
+
+    private void setupBluetoothManager() {
+        bluetoothManager = BluetoothManager.getInstance();
+        if (bluetoothManager.isBluetoothAdapterAvailable()) {
+            if (!bluetoothManager.getBluetoothAdapter().isEnabled()) {
+                enableBluetooth();
+            } else {
+                bluetoothManager.setupBluetoothService(getApplicationContext());
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "Bluetooth indisponível",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void enableBluetooth() {
+        Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+    }
+
+    private void abrirDialogSairApp() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(this));
+        builder.setTitle(R.string.dialog_sair_app_title)
+                .setPositiveButton(R.string.dialog_sair_app_positive,
+                        (dialog, which) -> this.finishAffinity())
+                .setNegativeButton(R.string.dialog_negative,
+                        (dialog, which) -> {})
+                .create()
+                .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+        bluetoothManager.stopService();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case REQUEST_ENABLE_BT:
+                if (resultCode == Activity.RESULT_OK) {
+                    bluetoothManager.setupBluetoothService(getApplicationContext());
+                } else {
+                    Log.d(TAG, "Bluetooth not enabled");
+                    Toast.makeText(getApplicationContext(), "Bluetooth não ativado",
+                            Toast.LENGTH_SHORT).show();
+                    this.finish();
+                }
+        }
     }
 }

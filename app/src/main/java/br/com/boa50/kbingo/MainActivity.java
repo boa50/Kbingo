@@ -19,26 +19,16 @@
 */
 package br.com.boa50.kbingo;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
 import javax.inject.Inject;
 
-import br.com.boa50.kbingo.bluetooth.BluetoothService;
-import br.com.boa50.kbingo.bluetooth.ServiceHandler;
 import br.com.boa50.kbingo.data.AppDataSource;
 import dagger.android.support.DaggerAppCompatActivity;
 
 public class MainActivity extends DaggerAppCompatActivity {
-    private static final int REQUEST_ENABLE_BT = 0;
-
-    private BluetoothAdapter bluetoothAdapter = null;
-    private BluetoothService bluetoothService = null;
-    private StringBuffer outputStringBuffer;
-    private Handler handler;
 
     @Inject
     AppDataSource appDataSource;
@@ -48,36 +38,11 @@ public class MainActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         appDataSource.initializeDatabase();
 
-        setupBluetooth();
-
         Intent intent = new Intent(MainActivity.this, BaseActivity.class);
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             setTheme(R.style.AppTheme);
             startActivity(intent);
         }, 2000);
-    }
-
-    private void setupBluetooth() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
-            Toast.makeText(getApplicationContext(), "Bluetooth indisponível",
-                    Toast.LENGTH_LONG).show();
-        }
-        if (this.handler == null) {
-            this.handler = new ServiceHandler(getApplicationContext());
-        }
-
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        } else if (bluetoothService == null) {
-            setupService();
-        }
-    }
-
-    private void setupService() {
-        bluetoothService = new BluetoothService(handler);
-        outputStringBuffer = new StringBuffer();
     }
 }

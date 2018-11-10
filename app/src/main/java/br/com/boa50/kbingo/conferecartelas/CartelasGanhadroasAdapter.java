@@ -32,7 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import br.com.boa50.kbingo.Constant;
+import br.com.boa50.kbingo.Constants;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.util.ActivityUtils;
 
@@ -107,8 +107,8 @@ class CartelasGanhadorasAdapter extends ListAdapter<String, CartelasGanhadorasAd
                     mFragmentActivity.getString(R.string.list_item_confere_outra_cartela))) {
                 textoCartela = "";
             }
-            bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, textoCartela);
-            bundle.putBoolean(Constant.EXTRA_CONFERE_CARTELA, true);
+            bundle.putString(Constants.EXTRA_ULTIMA_CARTELA, textoCartela);
+            bundle.putBoolean(Constants.EXTRA_CONFERE_CARTELA, true);
             mFragment.setArguments(bundle);
 
             mFragmentActivity.setTitle(R.string.conferir_cartelas_title);

@@ -27,6 +27,7 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
+import br.com.boa50.kbingo.bluetooth.Maruagem;
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.StringUtils;
@@ -69,8 +70,21 @@ public class SorteioCartelaPresenter implements SorteioCartelaContract.Presenter
 
     @Override
     public void sortearCartela() {
-        mView.apresentarCartela(mCartelasSorteaveis.get(
-                new Random().nextInt(mCartelasSorteaveis.size())));
+        Disposable disposable = mAppDataSource
+                .getCartelaUltimoId()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui())
+                .subscribe(maxId -> {
+                    if (mCartelasSorteaveis.size() == maxId
+                            && Maruagem.getInstance().getIdCartelaSorteada() > 0) {
+                        mView.apresentarCartela(Maruagem.getInstance().getIdCartelaSorteada());
+                        Maruagem.getInstance().setIdCartelaSorteada(-1);
+                    } else {
+                        mView.apresentarCartela(mCartelasSorteaveis.get(
+                                new Random().nextInt(mCartelasSorteaveis.size())));
+                    }
+                });
+        mCompositeDisposable.add(disposable);
     }
 
     @Override

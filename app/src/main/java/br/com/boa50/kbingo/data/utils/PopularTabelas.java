@@ -29,8 +29,8 @@ import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 
-import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
-import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
+import static br.com.boa50.kbingo.Constants.FORMAT_PEDRA;
+import static br.com.boa50.kbingo.Constants.QTDE_PEDRAS_LETRA;
 
 public final class PopularTabelas {
     public static void preencherDadosIniciais(AppDatabase db){

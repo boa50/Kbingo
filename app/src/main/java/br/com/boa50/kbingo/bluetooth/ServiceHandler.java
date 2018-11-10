@@ -22,6 +22,7 @@ package br.com.boa50.kbingo.bluetooth;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
@@ -29,10 +30,12 @@ import java.lang.ref.WeakReference;
 import br.com.boa50.kbingo.Constants;
 
 public class ServiceHandler extends Handler {
-    private WeakReference<Context> mContext;
+    private WeakReference<Context> context;
+    private StringBuffer outputStringBuffer;
 
-    public ServiceHandler(Context context) {
-        mContext = new WeakReference<>(context);
+    ServiceHandler(@NonNull Context context) {
+        this.context = new WeakReference<>(context);
+        outputStringBuffer = new StringBuffer();
     }
 
     @Override
@@ -41,20 +44,38 @@ public class ServiceHandler extends Handler {
             case Constants.MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
                 String readMsg = new String(readBuf, 0, msg.arg1);
-                Toast.makeText(mContext.get(), "Read: " + readMsg,
-                        Toast.LENGTH_LONG).show();
-//                mainActivity.get().sendMessage(readMsg + " ok!");
-                break;
-            case Constants.MESSAGE_WRITE:
-                byte[] writeBuf = (byte[]) msg.obj;
-                String writeMsg = new String(writeBuf);
-                Toast.makeText(mContext.get(), "Write: " + writeMsg,
-                        Toast.LENGTH_LONG).show();
+                manageMessage(readMsg);
                 break;
             case Constants.MESSAGE_TOAST:
-                Toast.makeText(mContext.get(), msg.getData().getString(Constants.EXTRA_TOAST),
+                Toast.makeText(context.get(), msg.getData().getString(Constants.EXTRA_TOAST),
                         Toast.LENGTH_LONG).show();
                 break;
+        }
+    }
+
+    private void manageMessage(String message) {
+        int idCartelaValue = Integer.valueOf(message);
+        if (idCartelaValue > 0) {
+            Toast.makeText(context.get(), "!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context.get(), "?", Toast.LENGTH_SHORT).show();
+        }
+
+        sendMessage(message + " ok!");
+        Maruagem.getInstance().setIdCartelaSorteada(idCartelaValue);
+    }
+
+    private void sendMessage(String message) {
+        BluetoothManager bluetoothManager = BluetoothManager.getInstance();
+        if (bluetoothManager.isServiceConnected()) {
+            if (message.length() > 0) {
+                byte[] send = message.getBytes();
+                bluetoothManager.writeMessage(send);
+                outputStringBuffer.setLength(0);
+            }
+        } else {
+            Toast.makeText(context.get(), "Não está conectado",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 }

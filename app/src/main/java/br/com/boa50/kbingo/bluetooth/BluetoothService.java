@@ -49,7 +49,7 @@ public class BluetoothService {
     private ConnectedThread mConnectedThread;
     private int mState;
 
-    public BluetoothService(Handler handler) {
+    BluetoothService(Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mHandler = handler;

@@ -56,7 +56,7 @@ public class ConfereCartelasEspressoTest {
     @Before
     public void setupTest() {
         Intent intent = new Intent();
-        intent.putExtra(Constant.EXTRA_CARTELAS_GANHADORAS, true);
+        intent.putExtra(Constants.EXTRA_CARTELAS_GANHADORAS, true);
         mActivityRule.launchActivity(intent);
     }
 

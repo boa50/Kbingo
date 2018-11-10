@@ -31,7 +31,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
-import br.com.boa50.kbingo.Constant;
+import br.com.boa50.kbingo.Constants;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.util.ActivityUtils;
 import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasFragment;
@@ -62,7 +62,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        hasCartelasGanhadoras = getIntent().getBooleanExtra(Constant.EXTRA_CARTELAS_GANHADORAS, false);
+        hasCartelasGanhadoras = getIntent().getBooleanExtra(Constants.EXTRA_CARTELAS_GANHADORAS, false);
 
         if (savedInstanceState == null) direcionarFragment();
     }
@@ -97,8 +97,8 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
         } else {
             Bundle bundle = new Bundle();
             fragment = mVisualizaCartelasFragment;
-            bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
-            bundle.putBoolean(Constant.EXTRA_CONFERE_CARTELA, true);
+            bundle.putString(Constants.EXTRA_ULTIMA_CARTELA, "");
+            bundle.putBoolean(Constants.EXTRA_CONFERE_CARTELA, true);
             setTitle(R.string.conferir_cartelas_title);
             Snackbar.make(findViewById(R.id.conteudoFrame), R.string.snack_sem_cartela_ganhadora,
                         Snackbar.LENGTH_LONG)
