@@ -40,12 +40,10 @@ android {
     productFlavors {
         prodSpeed {
             dimension "default"
-            applicationIdSuffix = ".prodSpeed"
             buildConfigField "int", "DELAY_CLICK", "0"
         }
         mock {
             dimension "default"
-            applicationIdSuffix = ".mock"
             buildConfigField "int", "DELAY_CLICK", "0"
         }
         prod {
@@ -94,6 +92,7 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:${roomVersion}"
     implementation "android.arch.persistence.room:rxjava2:${roomVersion}"
     implementation "com.itextpdf:itextpdf:${iTextVersion}"
+    implementation "com.google.firebase:firebase-core:${firebaseVersion}"
     testImplementation "junit:junit:${junitVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.hamcrest:java-hamcrest:${hamcrestVersion}"
@@ -109,3 +108,5 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:${daggerVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${roomVersion}"
 }
+
+apply plugin: 'com.google.gms.google-services'
