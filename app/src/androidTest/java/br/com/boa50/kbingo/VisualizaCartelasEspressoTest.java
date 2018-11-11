@@ -1,10 +1,12 @@
 package br.com.boa50.kbingo;
 
+import android.Manifest;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.Button;
 
@@ -42,6 +44,9 @@ public class VisualizaCartelasEspressoTest {
     @Rule
     public ActivityTestRule<BaseActivity> mActivityRule =
             new ActivityTestRule<>(BaseActivity.class);
+
+    @Rule public GrantPermissionRule mRuntimePermissionRule =
+            GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @BeforeClass
     public static void setup() {
@@ -135,7 +140,7 @@ public class VisualizaCartelasEspressoTest {
     }
 
     @Test
-    public void abrirDialogEsportarCartelas_colocarCartelasInvalidas_validarCorretamente() {
+    public void abrirDialogExportarCartelas_colocarCartelasInvalidas_validarCorretamente() {
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
         onView(withText(R.string.item_exportar_cartelas))
                 .perform(click());

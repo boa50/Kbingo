@@ -33,6 +33,11 @@ public class RepositoryTest {
     @BeforeClass
     public static void setup() {
         repository = CustomProcedures.initializeRepositoryDatabase();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         scheduleProvider = new ImmediateScheduleProvider();
         compositeDisposable = new CompositeDisposable();
     }

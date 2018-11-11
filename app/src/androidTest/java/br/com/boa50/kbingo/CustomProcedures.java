@@ -26,7 +26,7 @@ final class CustomProcedures {
     static AppDatabase initializeDatabase() {
         Context context = InstrumentationRegistry.getTargetContext();
         AppDatabase db = Room.databaseBuilder(context.getApplicationContext(),
-                AppDatabase.class, "Test.db").build();
+                AppDatabase.class, "Kbingo.db").build();
         AppDataSource appDataSource = new AppRepository(db);
         appDataSource.initializeDatabase();
         return db;
@@ -35,7 +35,7 @@ final class CustomProcedures {
     static AppRepository initializeRepositoryDatabase() {
         Context context = InstrumentationRegistry.getTargetContext();
         AppDatabase db = Room.databaseBuilder(context.getApplicationContext(),
-                AppDatabase.class, "Test.db").build();
+                AppDatabase.class, "Kbingo.db").build();
         AppRepository repository = new AppRepository(db);
         repository.initializeDatabase();
         return repository;

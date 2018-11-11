@@ -11,7 +11,7 @@ final class CustomProceduresMock {
     static FakeAppRepository initializeFakeDatabase() {
         Context context = InstrumentationRegistry.getTargetContext();
         AppDatabase db = Room.databaseBuilder(context.getApplicationContext(),
-                AppDatabase.class, "Test.db").build();
+                AppDatabase.class, "Kbingo.db").build();
         FakeAppRepository repository = new FakeAppRepository(db);
         repository.initializeDatabase();
         return repository;

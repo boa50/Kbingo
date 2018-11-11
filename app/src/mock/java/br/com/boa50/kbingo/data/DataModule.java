@@ -15,7 +15,7 @@ public abstract class DataModule {
     @Provides
     static AppDatabase providerAppDatabase(Context context) {
         return Room.databaseBuilder(context.getApplicationContext(),
-                AppDatabase.class, "KbingoMock.db").build();
+                AppDatabase.class, "Kbingo.db").build();
     }
 
     @Singleton

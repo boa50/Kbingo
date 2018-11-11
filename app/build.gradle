@@ -9,6 +9,7 @@ android {
         versionCode 13
         versionName "0.10.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
         vectorDrawables.useSupportLibrary = true
 
         javaCompileOptions {
@@ -29,6 +30,8 @@ android {
         }
     }
     testOptions {
+        execution 'ANDROID_TEST_ORCHESTRATOR'
+
         unitTests {
             includeAndroidResources = true
         }
@@ -99,6 +102,8 @@ dependencies {
     androidTestImplementation "com.android.support.test:rules:${testsVersion}"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${espressoVersion}"
     androidTestImplementation "com.android.support.test.espresso:espresso-contrib:${espressoVersion}"
+    androidTestImplementation "com.android.support.test:runner:${testsVersion}"
+    androidTestUtil "com.android.support.test:orchestrator:${testsVersion}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
     annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
     annotationProcessor "com.google.dagger:dagger-android-processor:${daggerVersion}"
