@@ -24,9 +24,7 @@ references:
         - firebase
 
   cache_key: &cache_key
-    key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-      -{{ checksum "build.gradle" }}
-      -{{ checksum "app/build.gradle" }}
+    key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
   save_cache: &save_cache
     save_cache:
       <<: *cache_key
@@ -123,33 +121,16 @@ jobs:
           command: gcloud config set project kbingo-ee99d
       - run:
           name: Authenticate with Google Cloud
-          command: gcloud auth activate-service-account
-            firebase-adminsdk-i636n@kbingo-ee99d.iam.gserviceaccount.com
-            --key-file ${HOME}/client-secret.json
+          command: gcloud auth activate-service-account firebase-adminsdk-i636n@kbingo-ee99d.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
       - run:
           name: Run instrumented test on Firebase Test Lab
-          command: gcloud firebase test android run
-            --type instrumentation
-            --app app/build/outputs/apk/debug/app-debug.apk
-            --test app/build/outputs/apk/androidTest/debug/app-debug.androidTest.apk
-            --device
-            model=Nexus7,
-            version=21,
-            locale=en_US,
-            orientation=portrait
-            --environment-variables
-            coverage=true,
-            coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec
-            --directories-to-pull=/sdcard/tmp
-            --timeout 20m
+          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/debug/app-debug.apk --test app/build/outputs/apk/androidTest/debug/app-debug.androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
       - run:
           name: Create directory to store test results
           command: mkdir firebase
       - run:
           name: Download instrumented test results from Firebase Test Lab
-          command: gsutil -m cp -r -U
-            "`gsutil ls gs://test-lab-85475nd9593a8-kv1c63as0p9c6 | tail -1`*"
-            /root/workspace/firebase/
+          command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-85475nd9593a8-kv1c63as0p9c6 | tail -1`*" /root/workspace/firebase/
       - *persist_firebase_workspace
       - store_artifacts:
           path: firebase/
