@@ -24,7 +24,7 @@ references:
         - firebase
 
   cache_key: &cache_key
-    key:  cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "mobile/build.gradle" }}
+    key:  cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
   save_cache: &save_cache
     save_cache:
       <<: *cache_key
