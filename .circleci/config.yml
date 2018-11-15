@@ -68,7 +68,7 @@ references:
   decode_google_cloud_key: &decode_google_cloud_key
     run:
       name: Decode Google Cloud Service key
-      command: echo $GOOGLE_CLOUD_SERVICE_KEY | base64 -di > ${HOME}/client-secret.json
+      command: echo $GCLOUD_SERVICE_KEY | base64 -di > ${HOME}/client-secret.json
 
 jobs:
   build_debug:
@@ -132,7 +132,7 @@ jobs:
             --type instrumentation \
             --app app/build/outputs/apk/debug/app-debug.apk \
             --test app/build/outputs/apk/androidTest/debug/app-debug.androidTest.apk \
-            --device model=Nexus7, version=16, locale=en_US, orientation=portrait \
+            --device model=Nexus7, version=21, locale=en_US, orientation=portrait \
             --enviroment-variables coverage=true, \
             coverage-file=/sdcard/tmp/code-coverage/connected/coverage.ec \
             --directories-to-pull=/sdcard/tmp \
