@@ -1,44 +1,161 @@
 version: 2
 references:
+  workspace: &workspace
+    ~/code
+  attach_debug_workspace: &attach_debug_workspace
+    attach_workspace:
+      at: *workspace
+  persist_debug_workspace: &persist_debug_workspace
+    persist_to_workspace:
+      root: *workspace
+      paths:
+        - app/build/intermediates
+        - app/build/outputs/androidTest-results
+        - app/build/outputs/apk
+        - app/build/outputs/code-coverage
+        - app/build/test-results
+  attach_firebase_workspace: &attach_firebase_workspace
+    attach_workspace:
+      at: *workspace
+  persist_firebase_workspace: &persist_firebase_workspace
+    persist_to_workspace:
+      root: *workspace
+      paths:
+        - firebase
 
-  export_googleservices_key: &export_googleservices_key
+  cache_key: &cache_key
+    key:  cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "mobile/build.gradle" }}
+  save_cache: &save_cache
+    save_cache:
+      <<: *cache_key
+      paths:
+        - ~/.gradle
+  restore_cache: &restore_cache
+    restore_cache:
+      <<: *cache_key
+
+  android_config: &android_config
+    working_directory: *workspace
+    docker:
+      - image: circleci/android:api-28-alpha
+    enviroment:
+      TERM: dumb
+      _JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m"'
+
+  google_cloud_config: &google_cloud_config
+    working_directory: *workspace
+    docker:
+      - image: google/cloud-sdk:latest
+    enviroment:
+      TERM: dumb
+
+  export_google_services_key: &export_google_services_key
     run:
       name: Export Google Services key environment variable
       command: echo 'export GOOGLE_SERVICES_KEY="$GOOGLE_SERVICES_KEY"' >> $BASH_ENV
-  decode_googleservices_key: &decode_googleservices_key
+  decode_google_services_key: &decode_google_services_key
     run:
       name: Decode Google Services key
       command: echo $GOOGLE_SERVICES_KEY | base64 -di > app/google-services.json
 
+  export_google_cloud_key: &export_google_cloud_key
+    run:
+      name: Export Google Cloud Service key environment variable
+      command: echo 'export GCLOUD_SERVICE_KEY="$GOOGLE_CLOUD_SERVICE_KEY"' >> $BASH_ENV
+  decode_google_cloud_key: &decode_google_cloud_key
+    run:
+      name: Decode Google Cloud Service key
+      command: echo $GOOGLE_CLOUD_SERVICE_KEY | base64 -di > ${HOME}/client-secret.json
+
 jobs:
-  build:
-    working_directory: ~/code
-    docker:
-      - image: circleci/android:api-28-alpha
-    environment:
-      JVM_OPTS: -Xmx3200m
+  build_debug:
+    <<: *android_config
     steps:
       - checkout
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-#      - run:
-#         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
-#         command: sudo chmod +x ./gradlew
+      - *restore_cache
       - run:
-          name: Download Dependencies
+          name: Download dependencies
           command: ./gradlew androidDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - *export_googleservices_key
-      - *decode_googleservices_key
+      - *save_cache
+      - *export_google_services_key
+      - *decode_google_services_key
       - run:
-          name: Run Tests
-          command: ./gradlew lint test
+          name: Gradle build
+          command: ./gradlew -PciBuild=true :app:assembleDebug :app:assembleAndroidTest
+      - *persist_debug_workspace
+      - store_artifacts:
+          path: app/build/outputs/apk
+          destination: /apk/
+
+  test_unit:
+    <<: *android_config
+    steps:
+      - checkout
+      - *restore_cache
+      - run:
+          name: Download dependencies
+          command: ./gradlew androidDependencies
+      - *save_cache
+      - *export_google_services_key
+      - *decode_google_services_key
+      - run:
+          name: Run unit tests
+          command: ./gradlew -PciBuild=true lint test
+      - *persist_debug_workspace
       - store_artifacts:
           path: app/build/reports
-          destination: reports
+          destination: /reports/
       - store_test_results:
-          path: app/build/test-results
-      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
+          path: app/build/test-results/
+          destination: /test-results/
+
+  test_instrumented:
+    <<: *google_cloud_config
+    steps:
+      - *attach_debug_workspace
+      - *export_google_cloud_key
+      - *decode_google_cloud_key
+      - run:
+          name: Set Google Cloud target project
+          command: gcloud config set project kbingo-ee99d
+      - run:
+          name: Authenticate with Google Cloud
+          command: gcloud auth activate-service-account \
+            firebase-adminsdk-i636n@kbingo-ee99d.iam.gserviceaccount.com \
+            --key-file ${HOME}/client-secret.json
+      - run:
+          name: Run instrumented test on Firebase Test Lab
+          command: gcloud firebase test android run \
+            --type instrumentation \
+            --app app/build/outputs/apk/debug/app-debug.apk \
+            --test app/build/outputs/apk/androidTest/debug/app-debug.androidTest.apk \
+            --device model=Nexus7, version=16, locale=en_US, orientation=portrait \
+            --enviroment-variables coverage=true, \
+            coverage-file=/sdcard/tmp/code-coverage/connected/coverage.ec \
+            --directories-to-pull=/sdcard/tmp \
+            --timeout 20m
+      - run:
+          name: Create directory to store test results
+          command: mkdir firebase
+      - run:
+          name: Download instrumented test results from Firebase Test Lab
+          command: gsutil -m cp -r -U \
+            "`gsutil ls gs://test-lab-85475nd9593a8-kv1c63as0p9c6 | tail -1`*" \
+            /root/workspace/firebase/
+      - *persist_firebase_workspace
+      - store_artifacts:
+          path: firebase/
+          destination: /firebase/
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build_debug
+      - test_unit:
+          requires:
+            - build_debug
+      - test_instrumented:
+          requires:
+            - build_debug
