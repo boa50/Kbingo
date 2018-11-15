@@ -24,7 +24,8 @@ references:
         - firebase
 
   cache_key: &cache_key
-    key:  cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+    key: >
+      cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       -{{ checksum "build.gradle" }}
       -{{ checksum "app/build.gradle" }}
   save_cache: &save_cache
@@ -133,7 +134,7 @@ jobs:
             --app app/build/outputs/apk/debug/app-debug.apk
             --test app/build/outputs/apk/androidTest/debug/app-debug.androidTest.apk
             --device model=Nexus7, version=21, locale=en_US, orientation=portrait
-            --enviroment-variables coverage=true,
+            --environment-variables coverage=true,
             coverage-file=/sdcard/tmp/code-coverage/connected/coverage.ec
             --directories-to-pull=/sdcard/tmp
             --timeout 20m
