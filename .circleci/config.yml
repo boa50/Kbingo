@@ -139,7 +139,7 @@ jobs:
             orientation=portrait
             --environment-variables
             coverage=true,
-            coverage-file=/sdcard/tmp/code-coverage/connected/coverage.ec
+            coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec
             --directories-to-pull=/sdcard/tmp
             --timeout 20m
       - run:
