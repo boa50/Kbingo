@@ -124,7 +124,7 @@ jobs:
           command: gcloud auth activate-service-account firebase-adminsdk-i636n@kbingo-ee99d.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
       - run:
           name: Run instrumented test on Firebase Test Lab on mockDebug
-          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug.androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
+          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
       - run:
           name: Create directory to store test results
           command: mkdir firebase
@@ -137,7 +137,7 @@ jobs:
           destination: /firebase/
       - run:
           name: Run instrumented test on Firebase Test Lab on prodDebug
-          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/prod/debug/app-prod-debug.apk --test app/build/outputs/apk/androidTest/prod/debug/app-prod-debug.androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
+          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/prod/debug/app-prod-debug.apk --test app/build/outputs/apk/androidTest/prod/debug/app-prod-debug-androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
       - run:
           name: Create directory to store test results
           command: mkdir firebase
@@ -150,7 +150,7 @@ jobs:
           destination: /firebase/
       - run:
           name: Run instrumented test on Firebase Test Lab on prodSpeedDebug
-          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/prodSpeed/debug/app-prodSpeed-debug.apk --test app/build/outputs/apk/androidTest/prodSpeed/debug/app-prodSpeed-debug.androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
+          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/prodSpeed/debug/app-prodSpeed-debug.apk --test app/build/outputs/apk/androidTest/prodSpeed/debug/app-prodSpeed-debug-androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
       - run:
           name: Create directory to store test results
           command: mkdir firebase
