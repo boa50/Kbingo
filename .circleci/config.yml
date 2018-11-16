@@ -14,14 +14,6 @@ references:
         - app/build/outputs/apk
         - app/build/outputs/code-coverage
         - app/build/test-results
-  attach_firebase_workspace: &attach_firebase_workspace
-    attach_workspace:
-      at: *workspace
-  persist_firebase_workspace: &persist_firebase_workspace
-    persist_to_workspace:
-      root: *workspace
-      paths:
-        - firebase
 
   cache_key: &cache_key
     key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
@@ -126,41 +118,11 @@ jobs:
           name: Run instrumented test on Firebase Test Lab on mockDebug
           command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
       - run:
-          name: Create directory to store test results
-          command: mkdir firebase
-      - run:
-          name: Download instrumented test results from Firebase Test Lab
-          command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-85475nd9593a8-kv1c63as0p9c6 | tail -1`*" /root/workspace/firebase/
-      - *persist_firebase_workspace
-      - store_artifacts:
-          path: firebase/
-          destination: /firebase/
-      - run:
           name: Run instrumented test on Firebase Test Lab on prodDebug
           command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/prod/debug/app-prod-debug.apk --test app/build/outputs/apk/androidTest/prod/debug/app-prod-debug-androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
       - run:
-          name: Create directory to store test results
-          command: mkdir firebase
-      - run:
-          name: Download instrumented test results from Firebase Test Lab
-          command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-85475nd9593a8-kv1c63as0p9c6 | tail -1`*" /root/workspace/firebase/
-      - *persist_firebase_workspace
-      - store_artifacts:
-          path: firebase/
-          destination: /firebase/
-      - run:
           name: Run instrumented test on Firebase Test Lab on prodSpeedDebug
           command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/prodSpeed/debug/app-prodSpeed-debug.apk --test app/build/outputs/apk/androidTest/prodSpeed/debug/app-prodSpeed-debug-androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
-      - run:
-          name: Create directory to store test results
-          command: mkdir firebase
-      - run:
-          name: Download instrumented test results from Firebase Test Lab
-          command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-85475nd9593a8-kv1c63as0p9c6 | tail -1`*" /root/workspace/firebase/
-      - *persist_firebase_workspace
-      - store_artifacts:
-          path: firebase/
-          destination: /firebase/
 
 workflows:
   version: 2
