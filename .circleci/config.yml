@@ -102,7 +102,7 @@ jobs:
           path: app/build/test-results/
           destination: /test-results/
 
-  test_instrumented:
+  test_instrumented_mock:
     <<: *google_cloud_config
     steps:
       - *attach_debug_workspace
@@ -117,9 +117,35 @@ jobs:
       - run:
           name: Run instrumented test on Firebase Test Lab on mockDebug
           command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
+
+  test_instrumented_prod:
+    <<: *google_cloud_config
+    steps:
+      - *attach_debug_workspace
+      - *export_google_cloud_key
+      - *decode_google_cloud_key
+      - run:
+          name: Set Google Cloud target project
+          command: gcloud config set project kbingo-ee99d
+      - run:
+          name: Authenticate with Google Cloud
+          command: gcloud auth activate-service-account firebase-adminsdk-i636n@kbingo-ee99d.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
       - run:
           name: Run instrumented test on Firebase Test Lab on prodDebug
           command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/prod/debug/app-prod-debug.apk --test app/build/outputs/apk/androidTest/prod/debug/app-prod-debug-androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
+
+  test_instrumented_prodSpeed:
+    <<: *google_cloud_config
+    steps:
+      - *attach_debug_workspace
+      - *export_google_cloud_key
+      - *decode_google_cloud_key
+      - run:
+          name: Set Google Cloud target project
+          command: gcloud config set project kbingo-ee99d
+      - run:
+          name: Authenticate with Google Cloud
+          command: gcloud auth activate-service-account firebase-adminsdk-i636n@kbingo-ee99d.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
       - run:
           name: Run instrumented test on Firebase Test Lab on prodSpeedDebug
           command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/prodSpeed/debug/app-prodSpeed-debug.apk --test app/build/outputs/apk/androidTest/prodSpeed/debug/app-prodSpeed-debug-androidTest.apk --device model=Nexus7,version=21,locale=en_US,orientation=portrait --environment-variables coverage=true,coverageFile=/sdcard/tmp/code-coverage/connected/coverage.ec --directories-to-pull=/sdcard/tmp --timeout 20m
@@ -132,6 +158,12 @@ workflows:
       - test_unit:
           requires:
             - build_debug
-      - test_instrumented:
+      - test_instrumented_mock:
+          requires:
+            - build_debug
+      - test_instrumented_prod:
+          requires:
+            - build_debug
+      - test_instrumented_prodSpeed:
           requires:
             - build_debug
