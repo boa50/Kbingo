@@ -19,8 +19,8 @@
 */
 package br.com.boa50.kbingo.di;
 
-import br.com.boa50.kbingo.BaseActivity;
 import br.com.boa50.kbingo.MainActivity;
+import br.com.boa50.kbingo.SplashScreenActivity;
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasModule;
 import br.com.boa50.kbingo.realizasorteio.RealizaSorteioModule;
@@ -33,12 +33,12 @@ import dagger.android.ContributesAndroidInjector;
 public abstract class ActivityBindingModule {
     @ActivityScoped
     @ContributesAndroidInjector
-    abstract MainActivity mainActivity();
+    abstract SplashScreenActivity splashScreenActivity();
 
     @ActivityScoped
     @ContributesAndroidInjector(modules = {RealizaSorteioModule.class, VisualizaCartelasModule.class,
             SorteioCartelaModule.class})
-    abstract BaseActivity baseActivity();
+    abstract MainActivity mainActivity();
 
     @ActivityScoped
     @ContributesAndroidInjector(modules = {VisualizaCartelasModule.class, ConfereCartelasModule.class})

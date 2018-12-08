@@ -39,8 +39,8 @@ public class RealizaSorteioEspressoTest {
     private final int QTDE_LETRAS = 5;
 
     @Rule
-    public ActivityTestRule<BaseActivity> mActivityRule =
-            new ActivityTestRule<>(BaseActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule =
+            new ActivityTestRule<>(MainActivity.class);
 
     @BeforeClass
     public static void setup() {

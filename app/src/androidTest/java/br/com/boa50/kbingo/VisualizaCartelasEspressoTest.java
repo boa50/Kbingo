@@ -42,8 +42,8 @@ public class VisualizaCartelasEspressoTest {
     private static AppDatabase db;
 
     @Rule
-    public ActivityTestRule<BaseActivity> mActivityRule =
-            new ActivityTestRule<>(BaseActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule =
+            new ActivityTestRule<>(MainActivity.class);
 
     @Rule public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);

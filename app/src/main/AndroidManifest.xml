@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashScreenActivity"
             android:noHistory="true"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BaseActivity"
+        <activity android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".conferecartelas.ConfereCartelasActivity"
             android:windowSoftInputMode="adjustNothing"/>

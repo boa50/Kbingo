@@ -31,20 +31,21 @@ import android.view.inputmethod.InputMethodManager;
 
 import java.util.Objects;
 
-public final class ActivityUtils {
-    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
-                                             @NonNull Fragment fragment, int layoutId){
+import br.com.boa50.kbingo.R;
 
-        addFragmentToActivity(fragmentManager, fragment, layoutId, false);
+public final class ActivityUtils {
+    public static void addFragmentToMainActivity(@NonNull FragmentManager fragmentManager,
+                                                 @NonNull Fragment fragment){
+
+        addFragmentToMainActivity(fragmentManager, fragment, false);
     }
 
-    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
-                                             @NonNull Fragment fragment,
-                                             int layoutId,
-                                             boolean backStack){
+    public static void addFragmentToMainActivity(@NonNull FragmentManager fragmentManager,
+                                                 @NonNull Fragment fragment,
+                                                 boolean backStack){
 
         FragmentTransaction transaction = fragmentManager.beginTransaction()
-                .replace(layoutId, fragment);
+                .replace(R.id.main_content, fragment);
 
         if (backStack) transaction.addToBackStack("");
 

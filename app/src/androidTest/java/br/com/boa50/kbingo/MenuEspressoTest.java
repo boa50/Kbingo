@@ -25,8 +25,8 @@ public class MenuEspressoTest {
     private static AppDatabase db;
 
     @Rule
-    public ActivityTestRule<BaseActivity> mActivityRule =
-            new ActivityTestRule<>(BaseActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule =
+            new ActivityTestRule<>(MainActivity.class);
 
     @BeforeClass
     public static void setup() {

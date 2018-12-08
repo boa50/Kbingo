@@ -56,7 +56,7 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.default_act_sem_navigation);
+        setContentView(R.layout.base_activity_sem_navigation);
         unbinder = ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
@@ -100,16 +100,15 @@ public class ConfereCartelasActivity extends DaggerAppCompatActivity {
             bundle.putString(Constant.EXTRA_ULTIMA_CARTELA, "");
             bundle.putBoolean(Constant.EXTRA_CONFERE_CARTELA, true);
             setTitle(R.string.conferir_cartelas_title);
-            Snackbar.make(findViewById(R.id.conteudoFrame), R.string.snack_sem_cartela_ganhadora,
+            Snackbar.make(findViewById(R.id.main_content), R.string.snack_sem_cartela_ganhadora,
                         Snackbar.LENGTH_LONG)
                     .show();
             fragment.setArguments(bundle);
         }
 
-        ActivityUtils.addFragmentToActivity(
+        ActivityUtils.addFragmentToMainActivity(
                 getSupportFragmentManager(),
-                fragment,
-                R.id.conteudoFrame
+                fragment
         );
     }
 }

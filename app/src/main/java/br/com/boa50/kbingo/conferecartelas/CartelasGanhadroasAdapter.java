@@ -113,10 +113,9 @@ class CartelasGanhadorasAdapter extends ListAdapter<String, CartelasGanhadorasAd
 
             mFragmentActivity.setTitle(R.string.conferir_cartelas_title);
 
-            ActivityUtils.addFragmentToActivity(
+            ActivityUtils.addFragmentToMainActivity(
                     mFragmentActivity.getSupportFragmentManager(),
                     mFragment,
-                    R.id.conteudoFrame,
                     true
             );
         }
