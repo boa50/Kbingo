@@ -35,6 +35,7 @@ import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
 import br.com.boa50.kbingo.util.schedulers.BaseSchedulerProvider;
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -152,43 +153,18 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
     }
 
     private void iniciarLayout() {
-        final List<Letra> outLetras = new ArrayList<>();
-        final ArrayList<Pedra> outPedras = new ArrayList<>();
-
-        Disposable disposable = mAppDataSource
-                .getLetras()
-                .subscribeOn(mScheduleProvider.io())
-                .observeOn(mScheduleProvider.ui())
-                .subscribe(
-                        letras -> {
-                            outLetras.addAll(letras);
-                            if (!outPedras.isEmpty()) {
-                                iniciarLayout(outLetras, outPedras);
-                            }
-                        }
+        Disposable disposable = getLetras().subscribe(
+            letras -> {
+                Disposable disposable2 = getPedras().subscribe(
+                    pedras -> {
+                        mView.iniciarLayout(letras, new ArrayList<>(pedras));
+                        preencherIdsSorteio();
+                    }
                 );
+                mCompositeDisposable.add(disposable2);
+            }
+        );
         mCompositeDisposable.add(disposable);
-
-        Disposable disposable2 = mAppDataSource
-                .getPedras()
-                .subscribeOn(mScheduleProvider.io())
-                .observeOn(mScheduleProvider.ui())
-                .subscribe(
-                        pedras -> {
-                            outPedras.addAll(pedras);
-                            if (!outLetras.isEmpty()) {
-                                iniciarLayout(outLetras, outPedras);
-                                preencherIdsSorteio();
-                            } else {
-                                iniciarLayout();
-                            }
-                        }
-                );
-        mCompositeDisposable.add(disposable2);
-    }
-
-    private void iniciarLayout(List<Letra> letras, ArrayList<Pedra> pedras) {
-        mView.iniciarLayout(letras, pedras);
     }
 
     private void preencherIdsSorteio() {
@@ -211,6 +187,20 @@ public class RealizaSorteioPresenter implements RealizaSorteioContract.Presenter
                     carregarCartelas();
                 });
         mCompositeDisposable.add(disposable);
+    }
+
+    private Single<List<Letra>> getLetras() {
+        return mAppDataSource
+                .getLetras()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui());
+    }
+
+    private Flowable<List<Pedra>> getPedras() {
+        return mAppDataSource
+                .getPedras()
+                .subscribeOn(mScheduleProvider.io())
+                .observeOn(mScheduleProvider.ui());
     }
 
     @VisibleForTesting

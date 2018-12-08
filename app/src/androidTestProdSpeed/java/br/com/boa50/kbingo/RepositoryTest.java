@@ -34,7 +34,7 @@ public class RepositoryTest {
     public static void setup() {
         repository = CustomProcedures.initializeRepositoryDatabase();
         try {
-            Thread.sleep(100);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
