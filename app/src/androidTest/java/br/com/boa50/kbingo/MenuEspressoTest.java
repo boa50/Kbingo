@@ -33,6 +33,11 @@ public class MenuEspressoTest {
         db = CustomProcedures.initializeDatabase();
     }
 
+    @BeforeClass
+    public static void setup() {
+        db = CustomProcedures.initializeDatabase();
+    }
+
     @Before
     public void setupTest() {
         try {
