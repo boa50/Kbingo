@@ -26,7 +26,7 @@ import android.arch.persistence.room.Index;
 
 import java.util.Locale;
 
-import static br.com.boa50.kbingo.Constant.FORMAT_CARTELA;
+import static br.com.boa50.kbingo.util.Constant.FORMAT_CARTELA;
 
 @Entity(primaryKeys = {"cartela_id", "pedra_id"},
         foreignKeys = {

@@ -49,20 +49,20 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import br.com.boa50.kbingo.BuildConfig;
-import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
 import br.com.boa50.kbingo.data.dto.TipoSorteioDTO;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.di.ActivityScoped;
+import br.com.boa50.kbingo.util.Constant;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
-import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
+import static br.com.boa50.kbingo.util.Constant.QTDE_PEDRAS_LETRA;
 
 @ActivityScoped
 public class RealizaSorteioFragment extends DaggerFragment implements RealizaSorteioContract.View {

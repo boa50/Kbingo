@@ -58,19 +58,19 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
-import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.data.entity.CartelaPedra;
 import br.com.boa50.kbingo.data.entity.Letra;
 import br.com.boa50.kbingo.data.entity.Pedra;
 import br.com.boa50.kbingo.util.CartelaUtils;
+import br.com.boa50.kbingo.util.Constant;
 import br.com.boa50.kbingo.util.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 
-import static br.com.boa50.kbingo.Constant.FORMAT_PEDRA;
+import static br.com.boa50.kbingo.util.Constant.FORMAT_PEDRA;
 
 public class VisualizaCartelasFragment extends DaggerFragment implements VisualizaCartelasContract.View {
     private static final String ARGS_CARTELA_ULTIMA = "ultimaCartela";

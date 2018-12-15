@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import br.com.boa50.kbingo.conferecartelas.ConfereCartelasActivity;
 import br.com.boa50.kbingo.data.FakeAppRepository;
+import br.com.boa50.kbingo.util.Constant;
 import br.com.boa50.kbingo.util.StringUtils;
 
 import static android.support.test.espresso.Espresso.onView;

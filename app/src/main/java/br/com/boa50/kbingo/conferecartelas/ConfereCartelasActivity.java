@@ -31,9 +31,9 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
-import br.com.boa50.kbingo.Constant;
 import br.com.boa50.kbingo.R;
 import br.com.boa50.kbingo.util.ActivityUtils;
+import br.com.boa50.kbingo.util.Constant;
 import br.com.boa50.kbingo.visualizacartelas.VisualizaCartelasFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;

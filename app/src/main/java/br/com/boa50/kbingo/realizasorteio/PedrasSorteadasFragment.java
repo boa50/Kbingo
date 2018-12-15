@@ -51,7 +51,7 @@ import br.com.boa50.kbingo.util.PedraUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static br.com.boa50.kbingo.Constant.QTDE_PEDRAS_LETRA;
+import static br.com.boa50.kbingo.util.Constant.QTDE_PEDRAS_LETRA;
 
 public class PedrasSorteadasFragment extends Fragment {
     private static final String ARGS_PEDRAS = "pedras";

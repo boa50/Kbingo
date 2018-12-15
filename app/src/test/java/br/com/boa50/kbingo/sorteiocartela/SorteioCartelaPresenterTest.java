@@ -12,6 +12,7 @@ import java.util.List;
 
 import br.com.boa50.kbingo.data.AppDataSource;
 import br.com.boa50.kbingo.data.dto.CartelaFiltroDTO;
+import br.com.boa50.kbingo.helper.RxHelper;
 import br.com.boa50.kbingo.util.schedulers.ImmediateScheduleProvider;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -49,7 +50,7 @@ public class SorteioCartelaPresenterTest {
     @Before
     public void setup() {
         initMocks(this);
-        presenter = new SorteioCartelaPresenter(appDataSource, new ImmediateScheduleProvider());
+        presenter = new SorteioCartelaPresenter(appDataSource, new RxHelper(new ImmediateScheduleProvider()));
 
         cartelasFiltro = Lists.newArrayList(
                 new CartelaFiltroDTO(1, false, false),

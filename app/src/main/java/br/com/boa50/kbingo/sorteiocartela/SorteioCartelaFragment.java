@@ -211,7 +211,9 @@ public class SorteioCartelaFragment extends DaggerFragment implements SorteioCar
 
     @Override
     public void preencherCartelasSorteaveis(List<Integer> cartelasSorteaveis) {
-        if (cartelasSorteaveis.isEmpty()) cartelasSorteaveis.add(-1);
+        if (cartelasSorteaveis.isEmpty()) {
+            cartelasSorteaveis.add(-1);
+        }
 
         if (rvCartelasSorteaveis.getAdapter() != null) {
             cartelasSorteaveisAdapter.submitList(cartelasSorteaveis);

@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package br.com.boa50.kbingo;
+package br.com.boa50.kbingo.util;
 
 public class Constant {
     public static final int QTDE_PEDRAS_LINHA_PORTRAIT = 5;
